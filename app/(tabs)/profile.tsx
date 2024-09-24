@@ -30,6 +30,9 @@ export default function ProfileScreen() {
                         <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
+                <Pressable style={styles.feedbackButton}>
+                <text style={styles.textColor}>Feedbacks</text>
+            </Pressable>
             </View>
             <Pressable style={styles.signoutButton}>
                 <text style={styles.signoutText}>Sign Out</text>
@@ -79,6 +82,20 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         //marginLeft: 5,
+    },
+    feedbackButton: {
+        backgroundColor: '#84b522',
+        borderRadius: 50,
+        width: 350,
+        height: 100,
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0.2, height: 10 },
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+        marginTop: 15,
+        borderStyle: 'solid',
+        borderWidth: 1,
     },
     textColor: {
         color: '#ffffff',
