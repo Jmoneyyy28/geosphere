@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
@@ -18,15 +18,15 @@ export default function HomeScreen() {
 
       {
         students.map((student) => {
-          return <div>
-            <div style={leaderboardStyle.studentLayer}>
-            <div style={leaderboardStyle.picture}></div>
-            <div style={leaderboardStyle.spacer}></div>
-            <p style={leaderboardStyle.namePositioan}>{student.name}</p>
-            <div style={leaderboardStyle.spacer}></div>
-            <p style={leaderboardStyle.namePositioan}>{student.score}</p>
-          </div>
-          </div>
+          return <View>
+              <View style={leaderboardStyle.studentLayer}>
+                <View style={leaderboardStyle.picture}></View>
+                <View style={leaderboardStyle.spacer}></View>
+                <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
+                <View style={leaderboardStyle.spacer}></View>
+                <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
+              </View>
+            </View>
         })
       }
     </ParallaxScrollView>
@@ -73,7 +73,7 @@ const leaderboardStyle = StyleSheet.create({
     display: 'flex',
     flexGrow: 1
   },
-  namePositioan: {
+  namePosition: {
     justifyContent: 'center',
     alignContent: 'center',
     position: 'static',

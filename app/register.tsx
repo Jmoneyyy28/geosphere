@@ -9,6 +9,7 @@ import {
     ImageBackground
  } from 'react-native';
 import React from 'react';
+import { Link } from 'expo-router';
 
 export default function RegisterScreen() {
     const [username, setUsername] = React.useState('');
@@ -20,11 +21,11 @@ export default function RegisterScreen() {
     }
 
     return (
-        <div style={styles.mainContainer}>
-            <div style={styles.backgroundImage}/>
+        <View style={styles.mainContainer}>
+            <View style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
-            <div style = {styles.centerContainer}>
+            <View style = {styles.centerContainer}>
                 <Text style = {styles.registerColor}>
                     Register
                 </Text>
@@ -53,12 +54,12 @@ export default function RegisterScreen() {
                 >
                     <Text>Sign Up</Text>
                 </Pressable>
-                <div style = {styles.registerContainer}>
+                <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
-                        Already have an account? <a style = {styles.registerButton} href = "">Log in</a>
+                        Already have an account? <Link style = {styles.registerButton} href = "/login">Log in</Link>
                     </Text>
-                </div>
-            </div>
+                </View>
+            </View>
             {/* END OF PAGEVIEW */}
 
             {/* BACKGROUND */}
@@ -77,14 +78,14 @@ export default function RegisterScreen() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <p>
+                        <Text>
                             Registered!
-                        </p>
+                        </Text>
                     </View>
                 </View>
             </Modal>
             {/* END OF MODAL */}
-        </div>
+        </View>
     )
 };
 

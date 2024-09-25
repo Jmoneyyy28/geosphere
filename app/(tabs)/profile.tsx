@@ -11,12 +11,19 @@ import {
 } from 'react-native';
 
 import React from 'react';
+import { useRouter } from 'expo-router';
 
 export default function ProfileScreen() {
+    const router = useRouter();
+
+    const signOut = () => {
+        router.replace("/login");
+    }
+
     return (
         <View style={styles.mainContainer}>
             <View style={styles.profilePicture}></View>
-            <Text>{profile.name}</Text>
+            <Text style={styles.name}>{profile.name}</Text>
             <View style={styles.dashboardContainer}>
                 <Pressable style={styles.platetectonicButton}>
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
@@ -29,7 +36,7 @@ export default function ProfileScreen() {
                     </Pressable>
 
                     <View style={styles.badgeContainer}>
-                        <div style={styles.badges}>
+                        <View style={styles.badges}>
                             {
                                 (
                                     profile.badges.earth_structures
@@ -50,7 +57,7 @@ export default function ProfileScreen() {
                                 : <Image style={styles.badge} source={badges.locked}/>
                             }
                             
-                        </div>
+                        </View>
                         <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
@@ -58,7 +65,7 @@ export default function ProfileScreen() {
                 <Text style={styles.textColor}>Feedbacks</Text>
             </Pressable>
             </View>
-            <Pressable style={styles.signoutButton}>
+            <Pressable onPress={() => signOut()} style={styles.signoutButton}>
                 <Text style={styles.signoutText}>Sign Out</Text>
             </Pressable>
         </View>
@@ -73,7 +80,7 @@ const badges = {
 }
 
 const profile = {
-    "name": "Maik",
+    "name": "Mastrile_3210472",
     "leaderboard_rank": 3,
     "badges": {
         "earth_structures": true,
@@ -89,7 +96,7 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         backgroundColor: 'white',
         justifyContent: 'center',
-        marginBottom: 30,
+        marginBottom: 20,
         marginTop: 80
     },
     mainContainer: {
@@ -199,7 +206,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     badge: {
-        width: 50,
-        height: 50
+        width: 68,
+        height: 68
+    },
+    name: {
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: 20,
+        textAlign: 'center',
+        marginBottom: 20
     }
 });

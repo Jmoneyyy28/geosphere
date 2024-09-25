@@ -15,20 +15,20 @@ import React from 'react';
 
 export default function DashboardScreen() {
     return (
-        <div style={styles.mainContainer}>
-            <div style={styles.plateContainer}>
-               <text style={styles.textColor}>Plate Tectonic Topics</text>
-            </div>
+        <View style={styles.mainContainer}>
+            <View style={styles.plateContainer}>
+               <Text style={styles.textColor}>Plate Tectonic Topics</Text>
+            </View>
             <Pressable style={styles.plateTectonicButton}>
-                <text style={styles.textColor}>Plate Boudaries</text>
+                <Text style={styles.textColor}>Plate Boudaries</Text>
             </Pressable>
             <Pressable style={styles.plateTectonicButton}>
-                <text style={styles.textColor}>Internal Structures of the Earth</text>
+                <Text style={styles.textColor}>Internal Structures of the Earth</Text>
             </Pressable>
             <Pressable style={styles.plateTectonicButton}>
-                <text style={styles.textColor}>Processes and Landforms</text>
+                <Text style={styles.textColor}>Processes and Landforms</Text>
             </Pressable>
-        </div>
+        </View>
 
         
         

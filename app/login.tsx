@@ -26,11 +26,11 @@ export default function LoginScreen() {
     };
 
     return (
-        <div style={styles.mainContainer}>
-            <div style={styles.backgroundImage}/>
+        <View style={styles.mainContainer}>
+            <View style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
-            <div style = {styles.centerContainer}>
+            <View style = {styles.centerContainer}>
                 <Text style ={styles.welcomeColor}>
                     Welcome!
                 </Text>
@@ -53,12 +53,12 @@ export default function LoginScreen() {
                 >
                     <Text>Log in</Text>
                 </Pressable>
-                <div style = {styles.registerContainer}>
+                <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Don't have an Account? <Link style={styles.registerButton} href="/register">Register</Link>
                     </Text>
-                </div>
-            </div>
+                </View>
+            </View>
             {/* END OF PAGEVIEW */}
 
             {/* MODAL */}
@@ -73,14 +73,14 @@ export default function LoginScreen() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <p>
+                        <Text>
                             Invalid username/password!
-                        </p>
+                        </Text>
                     </View>
                 </View>
             </Modal>
             {/* END OF MODAL */}
-        </div>
+        </View>
     )
 };
 
