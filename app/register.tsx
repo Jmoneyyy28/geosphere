@@ -21,7 +21,7 @@ export default function RegisterScreen() {
 
     return (
         <div style={styles.mainContainer}>
-            <div id="ASD" style={styles.backgroundImage}/>
+            <div style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
             <div style = {styles.centerContainer}>

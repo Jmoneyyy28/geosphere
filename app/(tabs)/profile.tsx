@@ -16,31 +16,70 @@ export default function ProfileScreen() {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.profilePicture}></View>
+            <Text>{profile.name}</Text>
             <View style={styles.dashboardContainer}>
                 <Pressable style={styles.platetectonicButton}>
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
                 </Pressable>
 
-                
+                {/* Horizontal container for Leaderboard and Badge buttons */}
                 <View style={styles.horizontalContainer}>
                     <Pressable style={styles.leaderboardButton}>
-                        <Text style={styles.textColor}>No. 1 Leaderboard</Text>
+                        <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
                     </Pressable>
+
                     <View style={styles.badgeContainer}>
+                        <div style={styles.badges}>
+                            {
+                                (
+                                    profile.badges.earth_structures
+                                        ? <Image style={styles.badge} source={badges.earth_structures}/>
+                                        : <Image style={styles.badge} source={badges.locked}/>
+                                )
+                            }
+                            {
+                                (
+                                    profile.badges.plate_boundaries
+                                    ? <Image style={styles.badge} source={badges.plate_boundaries}/>
+                                    : <Image style={styles.badge} source={badges.locked}/>
+                                )
+                            }
+                            {
+                                profile.badges.landform_process
+                                ? <Image style={styles.badge} source={badges.landform_process}/>
+                                : <Image style={styles.badge} source={badges.locked}/>
+                            }
+                            
+                        </div>
                         <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
-                <Pressable style={styles.platetectonicButton}>
-                    <text style={styles.textColor}>Feedback</text>
-                </Pressable>
+                <Pressable style={styles.feedbackButton}>
+                <Text style={styles.textColor}>Feedbacks</Text>
+            </Pressable>
             </View>
-
             <Pressable style={styles.signoutButton}>
-                <text style={styles.signoutText}>Sign Out</text>
+                <Text style={styles.signoutText}>Sign Out</Text>
             </Pressable>
         </View>
-        
     );
+}
+const badges = {
+    locked: "https://i.imgur.com/cgmbSaF.png",
+    earth_structures: "https://i.imgur.com/AYxZLVf.png",
+    plate_boundaries: "https://i.imgur.com/N3keyxj.png",
+    landform_process: "https://i.imgur.com/MjTQiO8.png"
+
+}
+
+const profile = {
+    "name": "Maik",
+    "leaderboard_rank": 3,
+    "badges": {
+        "earth_structures": true,
+        "plate_boundaries": true,
+        "landform_process": false
+    }
 }
 
 const styles = StyleSheet.create({
@@ -84,6 +123,20 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         //marginLeft: 5,
     },
+    feedbackButton: {
+        backgroundColor: '#84b522',
+        borderRadius: 50,
+        width: 350,
+        height: 100,
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0.2, height: 10 },
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+        marginTop: 15,
+        borderStyle: 'solid',
+        borderWidth: 1,
+    },
     textColor: {
         color: '#ffffff',
         fontWeight: 'bold',
@@ -100,7 +153,7 @@ const styles = StyleSheet.create({
     leaderboardButton: {
         backgroundColor: '#ffd700',
         borderRadius: 20,
-        width: 130, 
+        width: 130, // Adjusted width for side-by-side layout
         height: 120,
         justifyContent: 'center',
         shadowColor: '#000',
@@ -111,7 +164,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     badgeContainer: {
-        width: 200, 
+        width: 200, // Adjusted width for side-by-side layout
         height: 120,
         justifyContent: 'center',
         backgroundColor: 'green',
@@ -119,6 +172,10 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         alignItems: 'center',
+    },
+    badges: {
+        display: 'flex',
+        flexDirection: 'row'
     },
     signoutButton: {
         backgroundColor: 'white',
@@ -140,5 +197,9 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 15,
         textAlign: 'center',
+    },
+    badge: {
+        width: 50,
+        height: 50
     }
 });

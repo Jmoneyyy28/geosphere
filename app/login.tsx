@@ -9,18 +9,25 @@ import {
     ImageBackground
  } from 'react-native';
 import React from 'react';
+import { Link, useRouter } from 'expo-router';
 
 export default function LoginScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
-    const login = () => {
-        setModalVisible(!modalVisible);
-    }
+    const router = useRouter();
+    const login = (username, password) => {
+        if (username == "admin" && password == "password") {
+            router.replace("/profile");
+        } else {
+            console.log("Invalid");
+            // setModalVisible(!modalVisible);
+        }
+    };
 
     return (
         <div style={styles.mainContainer}>
-            <div id="ASD" style={styles.backgroundImage}/>
+            <div style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
             <div style = {styles.centerContainer}>
@@ -37,25 +44,22 @@ export default function LoginScreen() {
                     placeholder="Password"
                     onChangeText={setPassword}
                     value={password}
+                    secureTextEntry={true}
                     placeholderTextColor={'#ffffff'}
                 />
                 <Pressable
                     style={styles.loginButton}
-                    onPress={login}
+                    onPress={ () => login(username, password) }
                 >
                     <Text>Log in</Text>
                 </Pressable>
                 <div style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
-                        Don't have an Account? <a style = {styles.registerButton} href = "">Register</a>
+                        Don't have an Account? <Link style={styles.registerButton} href="/register">Register</Link>
                     </Text>
                 </div>
             </div>
             {/* END OF PAGEVIEW */}
-
-            {/* BACKGROUND */}
-            {/* <ImageBackground style={styles.backgroundImage} source={require('@/assets/images/backgroundimage.png')} resizeMode="cover"/> */}
-            {/* END OF BACKGROUND */}
 
             {/* MODAL */}
 
@@ -70,7 +74,7 @@ export default function LoginScreen() {
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <p>
-                            Welcome!
+                            Invalid username/password!
                         </p>
                     </View>
                 </View>
