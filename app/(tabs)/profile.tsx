@@ -21,7 +21,7 @@ export default function ProfileScreen() {
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
                 </Pressable>
 
-                {/* Horizontal container for Leaderboard and Badge buttons */}
+                
                 <View style={styles.horizontalContainer}>
                     <Pressable style={styles.leaderboardButton}>
                         <Text style={styles.textColor}>No. 1 Leaderboard</Text>
@@ -30,7 +30,11 @@ export default function ProfileScreen() {
                         <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
+                <Pressable style={styles.platetectonicButton}>
+                    <text style={styles.textColor}>Feedback</text>
+                </Pressable>
             </View>
+
             <Pressable style={styles.signoutButton}>
                 <text style={styles.signoutText}>Sign Out</text>
             </Pressable>
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     leaderboardButton: {
         backgroundColor: '#ffd700',
         borderRadius: 20,
-        width: 130, // Adjusted width for side-by-side layout
+        width: 130, 
         height: 120,
         justifyContent: 'center',
         shadowColor: '#000',
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     badgeContainer: {
-        width: 200, // Adjusted width for side-by-side layout
+        width: 200, 
         height: 120,
         justifyContent: 'center',
         backgroundColor: 'green',
