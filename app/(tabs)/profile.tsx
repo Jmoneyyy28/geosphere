@@ -16,6 +16,7 @@ export default function ProfileScreen() {
     return (
         <View style={styles.mainContainer}>
             <View style={styles.profilePicture}></View>
+            <Text>{profile.name}</Text>
             <View style={styles.dashboardContainer}>
                 <Pressable style={styles.platetectonicButton}>
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
@@ -24,22 +25,61 @@ export default function ProfileScreen() {
                 {/* Horizontal container for Leaderboard and Badge buttons */}
                 <View style={styles.horizontalContainer}>
                     <Pressable style={styles.leaderboardButton}>
-                        <Text style={styles.textColor}>No. 1 Leaderboard</Text>
+                        <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
                     </Pressable>
+
                     <View style={styles.badgeContainer}>
+                        <div style={styles.badges}>
+                            {
+                                (
+                                    profile.badges.earth_structures
+                                        ? <Image style={styles.badge} source={badges.earth_structures}/>
+                                        : <Image style={styles.badge} source={badges.locked}/>
+                                )
+                            }
+                            {
+                                (
+                                    profile.badges.plate_boundaries
+                                    ? <Image style={styles.badge} source={badges.plate_boundaries}/>
+                                    : <Image style={styles.badge} source={badges.locked}/>
+                                )
+                            }
+                            {
+                                profile.badges.landform_process
+                                ? <Image style={styles.badge} source={badges.landform_process}/>
+                                : <Image style={styles.badge} source={badges.locked}/>
+                            }
+                            
+                        </div>
                         <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
                 <Pressable style={styles.feedbackButton}>
-                <text style={styles.textColor}>Feedbacks</text>
+                <Text style={styles.textColor}>Feedbacks</Text>
             </Pressable>
             </View>
             <Pressable style={styles.signoutButton}>
-                <text style={styles.signoutText}>Sign Out</text>
+                <Text style={styles.signoutText}>Sign Out</Text>
             </Pressable>
         </View>
-        
     );
+}
+const badges = {
+    locked: "https://i.imgur.com/cgmbSaF.png",
+    earth_structures: "https://i.imgur.com/AYxZLVf.png",
+    plate_boundaries: "https://i.imgur.com/N3keyxj.png",
+    landform_process: "https://i.imgur.com/MjTQiO8.png"
+
+}
+
+const profile = {
+    "name": "Maik",
+    "leaderboard_rank": 3,
+    "badges": {
+        "earth_structures": true,
+        "plate_boundaries": true,
+        "landform_process": false
+    }
 }
 
 const styles = StyleSheet.create({
@@ -133,6 +173,10 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         alignItems: 'center',
     },
+    badges: {
+        display: 'flex',
+        flexDirection: 'row'
+    },
     signoutButton: {
         backgroundColor: 'white',
         borderRadius: 50,
@@ -153,5 +197,9 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 15,
         textAlign: 'center',
+    },
+    badge: {
+        width: 50,
+        height: 50
     }
 });
