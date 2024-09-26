@@ -9,9 +9,9 @@ import { ScrollView } from 'react-native';
 export default function LeaderboardScreen() {
   return (
     <ScrollView>
-    <View style={styles.leaderboardContainer}>
+      <View style={styles.leaderboardContainer}>
        <Text style={styles.LeaderboardColor}>Leaderboard</Text>
-     </View>
+      </View>
     <View>
        {
         students.map((student, index) => {
@@ -104,13 +104,13 @@ const leaderboardStyle = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     //borderRadius: 10,
-    width: 410,
+    width: '98%',
     height: 60,
     borderStyle: 'solid',
     borderWidth: 1,
     marginBottom: 2,
     marginTop: 3,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   picture: {
     width: 32,
@@ -141,6 +141,10 @@ scoreContainer: {
 },
 studentAlignment: {
   alignItems: 'center'
+},
+mainCointainer: {
+  justifyContent: 'center',
+  alignContent: 'center'
 }
 
 })
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     alignContent: 'center'
 },
 leaderboardContainer: {
-  width: 440,
+  width: 'auto',
   height: 50,
   backgroundColor: '#84b522',
   alignItems: 'center',
