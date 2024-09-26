@@ -6,11 +6,11 @@ import {
     View,
     Pressable,
     Text,
-    ImageBackground
+    ImageBackground,
+    TouchableHighlight
  } from 'react-native';
 import React from 'react';
 import { Link, useRouter } from 'expo-router';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default function LoginScreen() {
     const [username, setUsername] = React.useState('');

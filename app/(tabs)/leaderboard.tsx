@@ -4,9 +4,9 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native';
 
-export default function HomeScreen() {
+export default function LeaderboardScreen() {
   return (
     <ScrollView>
     <View style={styles.leaderboardContainer}>
@@ -14,16 +14,16 @@ export default function HomeScreen() {
      </View>
     <View>
        {
-        students.map((student) => {
-          return <View style={leaderboardStyle.studentAlignment}>
-                <View style={leaderboardStyle.studentLayer}>
-                <View style={leaderboardStyle.picture}></View>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
-              </View>
-            </View>
+        students.map((student, index) => {
+          return  <View key={index} style={leaderboardStyle.studentAlignment}>
+                    <View style={leaderboardStyle.studentLayer}>
+                      <View style={leaderboardStyle.picture}></View>
+                      <View style={leaderboardStyle.spacer}></View>
+                      <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
+                      <View style={leaderboardStyle.spacer}></View>
+                      <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
+                    </View>
+                  </View>
         })
       }
     </View>

@@ -1,101 +1,108 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  TextInput,
+  Modal,
+  View,
+  Pressable,
+  Text,
+  ImageBackground,
+  TouchableOpacity
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+} from 'react-native';
 
-export default function HomeScreen() {
+import React from 'react';
+
+import { useRouter } from 'expo-router';
+
+export default function LearnScreen() {
+  const router = useRouter();
+
+  const openTopic = (id) => {
+    console.log(id);
+    router.push(`/topic/${id}`);
+  };
+
+  const topics = [
+    {
+      "id": "1",
+      "name": "Plate Boudaries"
+    },
+    {
+      "id": "2",
+      "name": "Internal Structures of the Earth"
+    },
+    {
+      "id": "3",
+      "name": "Processes and Landforms"
+    }
+  ];
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
+      <View style={styles.mainContainer}>
+          <View style={styles.plateContainer}>
+             <Text style={styles.textColor}>Plate Tectonic Topics</Text>
+          </View>
+          {
+            topics.map((topic) => {
+              return (
+                <Pressable style={styles.plateTectonicButton} onPress={() => openTopic(topic.id)}>
+                    <Text style={styles.textColor}>{topic.name}</Text>
+                </Pressable>
+              )
+            })
+          }
+      </View>
 
-      {
-        students.map((student) => {
-          return <View>
-              <View style={leaderboardStyle.studentLayer}>
-                <View style={leaderboardStyle.picture}></View>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
-              </View>
-            </View>
-        })
-      }
-    </ParallaxScrollView>
-  );
-}
-
-const students = [
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  }
-]
-
-const leaderboardStyle = StyleSheet.create({
-  studentLayer: {
-    backgroundColor: 'green',
-    display: 'flex',
-    borderRadius: 50,
-    width: 350,
-    height: 70,
-  },
-  picture: {
-    width: 32,
-    height: 32,
-    backgroundColor: 'white',
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 18,
-    borderRadius: 40
-  },
-  spacer: {
-    display: 'flex',
-    flexGrow: 1
-  },
-  namePosition: {
-    justifyContent: 'center',
-    alignContent: 'center',
-    position: 'static',
-    marginRight: 18
- }
-})
+      
+      
+  )
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+
+  plateTectonicButton:{
+      backgroundColor: '#84b522',
+      borderRadius: 20,
+      width: 250,
+      height: 100,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0.2, height: 10},
+      shadowOpacity: 0.5,
+      shadowRadius: 10,
+      marginTop: 40,
+      borderStyle: 'solid',
+      borderWidth: 1
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  mainContainer: {
+      flex: 1,
+      alignItems: 'center',
+      display: 'flex',
+      backgroundColor: '#228b22',
+      flexDirection: 'column',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  plateContainer:{
+      width: 370,
+      height: 100,
+      borderRadius: 50,
+      backgroundColor: '#84b522',
+      marginTop: 90,
+      marginBottom: 0,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderStyle: 'solid',
+      borderWidth: 1,
+      shadowColor: '#000',
+      shadowOffset: { width: 0.2, height: 10}
   },
-});
+  textColor:{
+      color: '#ffffff',
+      fontWeight: 'bold',
+      fontSize: 20,
+      textAlign: 'center'
+  }
+  
+})
