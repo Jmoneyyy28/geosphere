@@ -8,12 +8,11 @@ import {
     Text,
     ImageBackground,
     TouchableOpacity,
-    TouchableHighlight
+    TouchableHighlight,
 } from 'react-native';
 
 import React from 'react';
 import { useRouter } from 'expo-router';
-
 
 export default function ProfileScreen() {
     const router = useRouter();
