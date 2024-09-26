@@ -10,6 +10,7 @@ import {
  } from 'react-native';
 import React from 'react';
 import { Link } from 'expo-router';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default function RegisterScreen() {
     const [username, setUsername] = React.useState('');
@@ -17,7 +18,8 @@ export default function RegisterScreen() {
     const [idnumber, setIdnumber] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
     const signin = () => {
-        setModalVisible(!modalVisible);
+        console.log ("Invalid");
+        //setModalVisible(!modalVisible);
     }
 
     return (
@@ -48,12 +50,14 @@ export default function RegisterScreen() {
                     value={password}
                     placeholderTextColor={'#ffffff'}
                 />
-                <Pressable
+                <TouchableHighlight
+                    activeOpacity={0.6}
+                    underlayColor="white"
                     style={styles.signinButton}
                     onPress={signin}
                 >
                     <Text>Sign Up</Text>
-                </Pressable>
+                </TouchableHighlight>
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Already have an account? <Link style = {styles.registerButton} href = "/login">Log in</Link>
@@ -127,12 +131,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         height: 200,
-        margin: 100,
-        borderWidth: 1,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        borderTopWidth: 0,
-        borderColor: '#ff0000'        
+        margin: 100       
     },
     signinButton: {
         backgroundColor: '#ffff',
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     registerButton: {
-        textDecorationLine: 'none'
+        color: 'blue'
     },
     logo: {
         width: 250,

@@ -10,6 +10,7 @@ import {
  } from 'react-native';
 import React from 'react';
 import { Link, useRouter } from 'expo-router';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
 export default function LoginScreen() {
     const [username, setUsername] = React.useState('');
@@ -47,12 +48,14 @@ export default function LoginScreen() {
                     secureTextEntry={true}
                     placeholderTextColor={'#ffffff'}
                 />
-                <Pressable
+                <TouchableHighlight
+                    activeOpacity={0.6}
+                    underlayColor="white"
                     style={styles.loginButton}
                     onPress={ () => login(username, password) }
                 >
                     <Text>Log in</Text>
-                </Pressable>
+                </TouchableHighlight>
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Don't have an Account? <Link style={styles.registerButton} href="/register">Register</Link>
@@ -141,7 +144,7 @@ const styles = StyleSheet.create({
         margin: 20
     },
     registerButton: {
-        textDecorationLine: 'none'
+        color: 'blue'
     },
     logo: {
         width: 250,

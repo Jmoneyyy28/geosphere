@@ -15,7 +15,7 @@ export default function HomeScreen() {
     <View>
        {
         students.map((student) => {
-          return <View>
+          return <View style={leaderboardStyle.studentAlignment}>
                 <View style={leaderboardStyle.studentLayer}>
                 <View style={leaderboardStyle.picture}></View>
                 <View style={leaderboardStyle.spacer}></View>
@@ -103,12 +103,14 @@ const leaderboardStyle = StyleSheet.create({
     backgroundColor: 'green',
     display: 'flex',
     flexDirection: 'row',
-    borderRadius: 50,
-    width: 350,
-    height: 70,
+    //borderRadius: 10,
+    width: 410,
+    height: 60,
     borderStyle: 'solid',
     borderWidth: 1,
     marginBottom: 2,
+    marginTop: 3,
+    justifyContent: 'center'
   },
   picture: {
     width: 32,
@@ -116,7 +118,7 @@ const leaderboardStyle = StyleSheet.create({
     backgroundColor: 'white',
     marginLeft: 10,
     marginRight: 10,
-    marginTop: 18,
+    marginTop: 10,
     borderRadius: 40
   },
   spacer: {
@@ -136,6 +138,9 @@ scoreContainer: {
   alignItems: 'center',
   height: 50,
   margin: 100
+},
+studentAlignment: {
+  alignItems: 'center'
 }
 
 })
@@ -148,7 +153,7 @@ const styles = StyleSheet.create({
     alignContent: 'center'
 },
 leaderboardContainer: {
-  width: 414,
+  width: 440,
   height: 50,
   backgroundColor: '#84b522',
   alignItems: 'center',
@@ -162,7 +167,7 @@ leaderboardContainer: {
 },
 mainContainer: {
   alignItems: 'stretch',
-  display: 'flex'
+  display: 'flex',
 }
 
 });

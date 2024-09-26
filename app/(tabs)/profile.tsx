@@ -7,11 +7,13 @@ import {
     Pressable,
     Text,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    TouchableHighlight
 } from 'react-native';
 
 import React from 'react';
 import { useRouter } from 'expo-router';
+
 
 export default function ProfileScreen() {
     const router = useRouter();
@@ -19,21 +21,36 @@ export default function ProfileScreen() {
     const signOut = () => {
         router.replace("/login");
     }
+    const plateTectonicScreen = () => {
+        router.replace("/dashboard");
+    }
+    const leaderboardScreen = () => {
+        router.replace("/leaderboard");
+    }
+    
 
     return (
         <View style={styles.mainContainer}>
             <View style={styles.profilePicture}></View>
             <Text style={styles.name}>{profile.name}</Text>
             <View style={styles.dashboardContainer}>
-                <Pressable style={styles.platetectonicButton}>
+                <TouchableHighlight 
+                activeOpacity={0.6}
+                underlayColor="white"
+                onPress={ () => plateTectonicScreen()}
+                style={styles.platetectonicButton}>
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
-                </Pressable>
+                </TouchableHighlight>
 
                 {/* Horizontal container for Leaderboard and Badge buttons */}
                 <View style={styles.horizontalContainer}>
-                    <Pressable style={styles.leaderboardButton}>
+                    <TouchableHighlight
+                    activeOpacity={0.6}
+                    underlayColor="white"
+                    onPress={ () => leaderboardScreen()}
+                    style={styles.leaderboardButton}>
                         <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
-                    </Pressable>
+                    </TouchableHighlight>
 
                     <View style={styles.badgeContainer}>
                         <View style={styles.badges}>
@@ -58,21 +75,27 @@ export default function ProfileScreen() {
                             }
                             
                         </View>
-                        <Text style={styles.textColor}>Badges</Text>
+                            <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
-                <Pressable style={styles.feedbackButton}>
-                <Text style={styles.textColor}>Feedbacks</Text>
-            </Pressable>
+                    <TouchableHighlight 
+                    activeOpacity={0.6}
+                    underlayColor="white"
+                    style={styles.feedbackButton}>
+                        <Text style={styles.textColor}>Feedbacks</Text>
+                    </TouchableHighlight>
             </View>
-            <Pressable onPress={() => signOut()} style={styles.signoutButton}>
-                <Text style={styles.signoutText}>Sign Out</Text>
-            </Pressable>
+                <TouchableHighlight
+                    activeOpacity={0.6}
+                    underlayColor="white"
+                    onPress={() => signOut()} style={styles.signoutButton}>
+                    <Text style={styles.signoutText}>Sign Out</Text>
+                </TouchableHighlight>
         </View>
     );
 }
 const badges = {
-    locked: "https://i.imgur.com/cgmbSaF.png",
+    locked:  "https://i.imgur.com/cgmbSaF.png",
     earth_structures: "https://i.imgur.com/AYxZLVf.png",
     plate_boundaries: "https://i.imgur.com/N3keyxj.png",
     landform_process: "https://i.imgur.com/MjTQiO8.png"
@@ -206,8 +229,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     badge: {
-        width: 68,
-        height: 68
+        width: 65,
+        height: 85
     },
     name: {
         color: '#ffffff',
