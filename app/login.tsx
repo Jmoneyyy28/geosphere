@@ -10,12 +10,14 @@ import {
     TouchableHighlight
  } from 'react-native';
 import React from 'react';
-import { Link, useRouter } from 'expo-router';
+import { Link, useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
 
 export default function LoginScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [modalVisible, setModalVisible] = React.useState(false);
+    const navigation = useNavigation();
     const router = useRouter();
     const login = (username, password) => {
         if (username == "admin" && password == "password") {
@@ -24,7 +26,11 @@ export default function LoginScreen() {
             console.log("Invalid");
             // setModalVisible(!modalVisible);
         }
+        
     };
+    useEffect(() => {
+        navigation.setOptions({ headerShown: false });
+      }, [navigation]);
 
     return (
         <View style={styles.mainContainer}>
@@ -125,7 +131,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         height: 50,
-        margin: 100
+        margin: 130
         
     },
     loginButton: {
@@ -144,7 +150,8 @@ const styles = StyleSheet.create({
         margin: 20
     },
     registerButton: {
-        color: 'blue'
+        color: 'blue',
+        fontFamily: 'sans-serif'
     },
     logo: {
         width: 250,
@@ -153,7 +160,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         flex: 1,
-        backgroundColor: '#228b22',
+        backgroundColor: '#008000',
         position: 'absolute',
         top: 370,
         height: 1600,
@@ -173,7 +180,8 @@ const styles = StyleSheet.create({
     welcomeColor: {
         color: '#ffffff',
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'sans-serif'
     },
     accountColor:{
         color: '#ffffff'

@@ -10,18 +10,22 @@ import {
     TouchableHighlight
  } from 'react-native';
 import React from 'react';
-import { Link } from 'expo-router';
+import { Link, useNavigation, useLocalSearchParams} from 'expo-router';
+import { useEffect } from 'react';
 
 export default function RegisterScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [idnumber, setIdnumber] = React.useState('');
+    const navigation = useNavigation();
     const [modalVisible, setModalVisible] = React.useState(false);
     const signin = () => {
         console.log ("Invalid");
         //setModalVisible(!modalVisible);
     }
-
+    useEffect(() => {
+        navigation.setOptions({ headerShown: false });
+      }, [navigation]);
     return (
         <View style={styles.mainContainer}>
             <View style={styles.backgroundImage}/>
@@ -29,7 +33,7 @@ export default function RegisterScreen() {
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
             <View style = {styles.centerContainer}>
                 <Text style = {styles.registerColor}>
-                    Register
+                    Register!
                 </Text>
                 <TextInput style = {styles.borderUnderline}
                     placeholder="Username"
@@ -131,7 +135,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         height: 200,
-        margin: 100       
+        margin: 130       
     },
     signinButton: {
         backgroundColor: '#ffff',
@@ -149,7 +153,8 @@ const styles = StyleSheet.create({
         margin: 20,
     },
     registerButton: {
-        color: 'blue'
+        color: 'blue',
+        fontFamily: 'sans-serif'
     },
     logo: {
         width: 250,
@@ -158,7 +163,7 @@ const styles = StyleSheet.create({
     },
     backgroundImage: {
         flex: 1,
-        backgroundColor: '#228b22',
+        backgroundColor: '#008000',
         position: 'absolute',
         top: 370,
         height: 1600,
@@ -172,15 +177,18 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
         borderTopWidth: 0,
         borderColor: '#ffffff',
-        margin: 15
+        margin: 15,
+        fontFamily: 'sans-serif'
     },
     registerColor: {
         color: '#ffffff',
         fontSize: 30,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        fontFamily: 'sans-serif'
     },
     accountColor:{
-        color: '#ffffff'
+        color: '#ffffff',
+        fontFamily: 'sans-serif'
     }
     
 })

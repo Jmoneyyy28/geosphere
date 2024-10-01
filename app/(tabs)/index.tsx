@@ -7,7 +7,8 @@ import {
   Pressable,
   Text,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 
 } from 'react-native';
 
@@ -26,7 +27,7 @@ export default function LearnScreen() {
   const topics = [
     {
       "id": "1",
-      "name": "Plate Boudaries"
+      "name": "Plate Boundaries"
     },
     {
       "id": "2",
@@ -40,15 +41,18 @@ export default function LearnScreen() {
 
   return (
       <View style={styles.mainContainer}>
-          <View style={styles.plateContainer}>
-             <Text style={styles.textColor}>Plate Tectonic Topics</Text>
+          <View style={styles.topicContainer}>
+             <Text style={styles.headerText}>Plate Tectonic Topics</Text>
           </View>
           {
             topics.map((topic) => {
               return (
-                <Pressable style={styles.plateTectonicButton} onPress={() => openTopic(topic.id)}>
-                    <Text style={styles.textColor}>{topic.name}</Text>
-                </Pressable>
+                <TouchableHighlight 
+                    activeOpacity={0.2}
+                    underlayColor="green" 
+                    style={styles.plateTectonicButton} onPress={() => openTopic(topic.id)}>
+                        <Text style={styles.textColor}>{topic.name}</Text>
+                </TouchableHighlight>
               )
             })
           }
@@ -62,47 +66,62 @@ export default function LearnScreen() {
 const styles = StyleSheet.create({
 
   plateTectonicButton:{
-      backgroundColor: '#84b522',
-      borderRadius: 20,
-      width: 250,
-      height: 100,
+      backgroundColor: '#008000',
+      borderRadius: 10,
+      width: '90%',
+      height: 150,
       alignItems: 'center',
       justifyContent: 'center',
       shadowColor: '#000',
       shadowOffset: { width: 0.2, height: 10},
       shadowOpacity: 0.5,
       shadowRadius: 10,
-      marginTop: 40,
-      borderStyle: 'solid',
-      borderWidth: 1
+      marginTop: 20,
+      // borderStyle: 'solid',
+      // borderWidth: 1
   },
   mainContainer: {
       flex: 1,
-      alignItems: 'center',
+      alignItems:'center',
       display: 'flex',
-      backgroundColor: '#228b22',
+      backgroundColor: 'white',
       flexDirection: 'column',
   },
-  plateContainer:{
-      width: 370,
-      height: 100,
-      borderRadius: 50,
-      backgroundColor: '#84b522',
-      marginTop: 90,
-      marginBottom: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderStyle: 'solid',
-      borderWidth: 1,
-      shadowColor: '#000',
-      shadowOffset: { width: 0.2, height: 10}
-  },
+  // plateContainer:{
+  //   width: '100%',
+  //   height: 100,
+  //   //borderRadius: 10,
+  //   backgroundColor: '#84b522',
+  //   //marginTop: 90,
+  //   marginBottom: 10,
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   borderStyle: 'solid',
+  //   borderWidth: 1,
+  //   // shadowColor: '#000',
+  //   // shadowOffset: { width: 0.2, height: 10}
+  // },
   textColor:{
       color: '#ffffff',
+      fontWeight: 'normal',
+      fontSize: 30,
+      textAlign: 'center',
+      fontFamily: 'sans-serif'
+  },
+  headerText: {
+      color: 'black',
       fontWeight: 'bold',
-      fontSize: 20,
-      textAlign: 'center'
+      fontSize: 33,
+      fontFamily: 'sans-serif',
+      // textAlign: 'center',
+      // textShadowColor: '#000',
+      // textShadowOffset: {width: 0, height: 3}
+  },
+  topicContainer: {
+      marginTop: 40,
+      alignSelf: 'baseline',
+      marginLeft: '6%'
   }
   
 })

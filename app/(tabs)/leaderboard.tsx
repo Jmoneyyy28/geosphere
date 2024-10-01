@@ -10,7 +10,7 @@ export default function LeaderboardScreen() {
   return (
     <ScrollView>
       <View style={styles.leaderboardContainer}>
-       <Text style={styles.LeaderboardColor}>Leaderboard</Text>
+       <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
       </View>
     <View>
        {
@@ -100,17 +100,21 @@ const students = [
 
 const leaderboardStyle = StyleSheet.create({
   studentLayer: {
-    backgroundColor: 'green',
+    backgroundColor: '#008000',
     display: 'flex',
     flexDirection: 'row',
     //borderRadius: 10,
-    width: '98%',
+    width: '100%',
     height: 60,
     borderStyle: 'solid',
     borderWidth: 1,
-    marginBottom: 2,
-    marginTop: 3,
-    justifyContent: 'center',
+    borderColor: 'white',
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    //marginBottom: 2,
+    //marginTop: 3,
+    justifyContent: 'center'
   },
   picture: {
     width: 32,
@@ -129,7 +133,10 @@ const leaderboardStyle = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     position: 'static',
-    marginRight: 18
+    marginRight: 18,
+    color: 'white',
+    fontFamily: 'sans-serif'
+    
  },
 scoreContainer: {
   flex: 1,
@@ -140,7 +147,8 @@ scoreContainer: {
   margin: 100
 },
 studentAlignment: {
-  alignItems: 'center'
+  alignItems: 'center',
+  backgroundColor: 'white'
 },
 mainCointainer: {
   justifyContent: 'center',
@@ -151,22 +159,27 @@ mainCointainer: {
 
 const styles = StyleSheet.create({
  LeaderboardColor: {
-    color: '#ff000',
-    fontSize: 30,
+    color: 'black',
+    fontSize: 28,
     fontWeight: 'bold',
-    alignContent: 'center'
+    alignContent: 'center',
+    fontFamily: 'sans-serif'
 },
 leaderboardContainer: {
-  width: 'auto',
+  width: '100%',
   height: 50,
-  backgroundColor: '#84b522',
+  backgroundColor: '#008000',
   alignItems: 'center',
   justifyContent: 'center',
   borderStyle: 'solid',
-  borderWidth: 1,
+  borderWidth: 2,
+  borderColor: 'white',
+  borderTopWidth: 0,
+  borderLeftWidth: 0,
+  borderRightWidth: 0,
   position: 'sticky',
   zIndex: 1,
-  top: 0,
+  top: -0.9,
   
 },
 mainContainer: {
