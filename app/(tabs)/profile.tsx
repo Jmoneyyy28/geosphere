@@ -8,11 +8,12 @@ import {
     Text,
     ImageBackground,
     TouchableOpacity,
-    TouchableHighlight,
+    TouchableHighlight
 } from 'react-native';
 
 import React from 'react';
 import { useRouter } from 'expo-router';
+
 
 export default function ProfileScreen() {
     const router = useRouter();
@@ -26,7 +27,18 @@ export default function ProfileScreen() {
     const leaderboardScreen = () => {
         router.replace("/leaderboard");
     }
-    
+        const openFeedback = (id) => {
+          console.log(id);
+          router.push(`/feedback/${id}`);
+        };
+
+      const feedback = [
+        {
+          "id": "1",
+          "name": "Plate boundaries"
+        }
+
+        ];
 
     return (
         <View style={styles.mainContainer}>
@@ -34,8 +46,8 @@ export default function ProfileScreen() {
             <Text style={styles.name}>{profile.name}</Text>
             <View style={styles.dashboardContainer}>
                 <TouchableHighlight 
-                activeOpacity={0.1}
-                underlayColor="green"
+                activeOpacity={0.6}
+                underlayColor="white"
                 onPress={ () => plateTectonicScreen()}
                 style={styles.platetectonicButton}>
                     <Text style={styles.textColor}>Plate Tectonic Topics</Text>
@@ -44,12 +56,13 @@ export default function ProfileScreen() {
                 {/* Horizontal container for Leaderboard and Badge buttons */}
                 <View style={styles.horizontalContainer}>
                     <TouchableHighlight
-                    activeOpacity={0.1}
-                    underlayColor="gold"
+                    activeOpacity={0.6}
+                    underlayColor="white"
                     onPress={ () => leaderboardScreen()}
                     style={styles.leaderboardButton}>
                         <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
                     </TouchableHighlight>
+
 
                     <View style={styles.badgeContainer}>
                         <View style={styles.badges}>
@@ -77,16 +90,24 @@ export default function ProfileScreen() {
                             <Text style={styles.textColor}>Badges</Text>
                     </View>
                 </View>
+              
+                {
+            feedback.map((feedback) => {
+              return (
                     <TouchableHighlight 
                     activeOpacity={0.6}
                     underlayColor="white"
-                    style={styles.feedbackButton}>
+                    style={styles.feedbackButton}onPress={() => openFeedback(feedback.id)}>
                         <Text style={styles.textColor}>Feedbacks</Text>
                     </TouchableHighlight>
+             )
+            })
+          }
+         
             </View>
                 <TouchableHighlight
                     activeOpacity={0.6}
-                    underlayColor="green"
+                    underlayColor="white"
                     onPress={() => signOut()} style={styles.signoutButton}>
                     <Text style={styles.signoutText}>Sign Out</Text>
                 </TouchableHighlight>
@@ -103,7 +124,7 @@ const badges = {
 
 const profile = {
     "name": "Mastrile_3210472",
-    "leaderboard_rank": 1,
+    "leaderboard_rank": 3,
     "badges": {
         "earth_structures": true,
         "plate_boundaries": true,
@@ -119,62 +140,58 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         justifyContent: 'center',
         marginBottom: 20,
-        marginTop: 80,
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: 'green'
+        marginTop: 80
     },
     mainContainer: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#228b22',
         alignItems: 'center',
         verticalAlign: 'top'
     },
-    // // dashboardContainer: {
-    // //     width: 400,
-    // //     height: 400,
-    // //     borderRadius: 10,
-    // //     backgroundColor: '#84b522',
-    // //     alignItems: 'center',
-    // //     justifyContent: 'flex-start',
-    // //     borderStyle: 'solid',
-    // //     borderWidth: 1,
-    // },
-    platetectonicButton: {
-        backgroundColor: '#008000',
+    dashboardContainer: {
+        width: 400,
+        height: 400,
         borderRadius: 10,
+        backgroundColor: '#84b522',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        borderStyle: 'solid',
+        borderWidth: 1,
+    },
+    platetectonicButton: {
+        backgroundColor: '#84b522',
+        borderRadius: 50,
         width: 350,
         height: 100,
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0.2, height: 10 },
-        shadowOpacity: 0.7,
+        shadowOpacity: 0.5,
         shadowRadius: 10,
         marginTop: 15,
-        // borderStyle: 'solid',
-        // borderWidth: 1,
+        borderStyle: 'solid',
+        borderWidth: 1,
         //marginLeft: 5,
     },
     feedbackButton: {
-        backgroundColor: '#008000',
-        borderRadius: 10,
+        backgroundColor: '#84b522',
+        borderRadius: 50,
         width: 350,
         height: 100,
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0.2, height: 10 },
-        shadowOpacity: 0.7,
+        shadowOpacity: 0.5,
         shadowRadius: 10,
         marginTop: 15,
-        // borderStyle: 'solid',
-        // borderWidth: 1,
+        borderStyle: 'solid',
+        borderWidth: 1,
     },
     textColor: {
         color: '#ffffff',
         fontWeight: 'bold',
         fontSize: 20,
-        textAlign: 'center',
-        fontFamily: 'sans-serif'
+        textAlign: 'center'
     },
     // New container for horizontal layout
     horizontalContainer: {
@@ -185,25 +202,25 @@ const styles = StyleSheet.create({
     },
     leaderboardButton: {
         backgroundColor: '#ffd700',
-        borderRadius: 10,
+        borderRadius: 20,
         width: 130, // Adjusted width for side-by-side layout
         height: 120,
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0.2, height: 10 },
-        shadowOpacity: 0.7,
+        shadowOpacity: 0.5,
         shadowRadius: 10,
-        // borderStyle: 'solid',
-        // borderWidth: 1,
+        borderStyle: 'solid',
+        borderWidth: 1,
     },
     badgeContainer: {
         width: 200, // Adjusted width for side-by-side layout
         height: 120,
         justifyContent: 'center',
-        backgroundColor: '#008000',
-        // borderStyle: 'solid',
-        // borderWidth: 1,
-        borderRadius: 10,
+        backgroundColor: 'green',
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderRadius: 20,
         alignItems: 'center',
     },
     badges: {
@@ -211,7 +228,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     signoutButton: {
-        backgroundColor: '#008000',
+        backgroundColor: 'white',
         borderRadius: 50,
         width: 250,
         height: 45,
@@ -221,26 +238,26 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10},
         shadowOpacity: 0.5,
         shadowRadius: 10,
+        borderStyle: 'solid',
+        borderWidth: 1,
         marginTop: 50,
         
     },
     signoutText: {
-        color: 'white',
+        color: 'red',
         fontSize: 15,
         textAlign: 'center',
-        fontFamily: 'sans-serif'
     },
     badge: {
         width: 65,
         height: 85
     },
     name: {
-        color: 'black',
+        color: '#ffffff',
         fontWeight: 'bold',
         fontSize: 20,
         textAlign: 'center',
-        marginBottom: 20,
-        fontFamily: 'sans-serif'
+        marginBottom: 20
     }
     
 });
