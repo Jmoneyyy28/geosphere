@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         flex: 1, // Allow scrollable content to fill remaining space
     },
     lessonText: {
-        fontSize: 14, // Slightly smaller size for body text
+        fontSize: 15, // Slightly smaller size for body text
         textAlign: 'justify', // Justify the text
     }
 });

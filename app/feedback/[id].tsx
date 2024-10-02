@@ -25,8 +25,12 @@ export default function FeedbackScreen() {
 
     const feedbacks = {
         "1": {
-            "name": "You did well",
+            "name": "plate boundaries",
             "feedback": "You did well"
+        },
+        "2": {
+            "name": "James",
+            "feedback": "bad"
         }
     }
 
@@ -45,7 +49,7 @@ export default function FeedbackScreen() {
             <View style={styles.descriptionContainer}>
                 <Text style={styles.topicText}>{feedback.name}</Text>
                 <ScrollView style={styles.scrollView}>
-                    <Text style={styles.lessonText}> {feedback.lesson}</Text>
+                    <Text style={styles.lessonText}> {feedback.feedback}</Text>
                 </ScrollView>
             </View>
         </View>

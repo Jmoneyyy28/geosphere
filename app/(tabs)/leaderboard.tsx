@@ -8,10 +8,10 @@ import { ScrollView } from 'react-native';
 
 export default function LeaderboardScreen() {
   return (
-    <ScrollView>
-      <View style={styles.leaderboardContainer}>
-       <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
-      </View>
+      <ScrollView>
+        <View style={styles.leaderboardContainer}>
+          <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
+        </View>
     <View>
        {
         students.map((student, index) => {
@@ -104,10 +104,11 @@ const leaderboardStyle = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     //borderRadius: 10,
-    width: '100%',
-    height: 60,
+    width: '90%',
+    height: 80,
+    borderRadius: 25,
     borderStyle: 'solid',
-    borderWidth: 1,
+    borderWidth: 5,
     borderColor: 'white',
     borderLeftWidth: 0,
     borderTopWidth: 0,
@@ -121,9 +122,10 @@ const leaderboardStyle = StyleSheet.create({
     height: 32,
     backgroundColor: 'white',
     marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
-    borderRadius: 40
+    // marginRight: 10,
+    // marginTop: 10,
+    borderRadius: 40,
+    alignSelf: 'center'
   },
   spacer: {
     display: 'flex',
@@ -160,31 +162,34 @@ mainCointainer: {
 const styles = StyleSheet.create({
  LeaderboardColor: {
     color: 'black',
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: 'bold',
     alignContent: 'center',
-    fontFamily: 'sans-serif'
+    fontFamily: 'sans-serif',
+    alignSelf: 'center'
 },
 leaderboardContainer: {
   width: '100%',
-  height: 50,
-  backgroundColor: '#008000',
+  height: 60,
+  backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
-  borderStyle: 'solid',
-  borderWidth: 2,
-  borderColor: 'white',
-  borderTopWidth: 0,
-  borderLeftWidth: 0,
-  borderRightWidth: 0,
+  // borderStyle: 'solid',
+  // borderWidth: 2,
+  // borderColor: 'red',
+  // borderTopWidth: 0,
+  // borderLeftWidth: 0,
+  // borderRightWidth: 0,
   position: 'sticky',
   zIndex: 1,
-  top: -0.9,
+  top: -1,
+  marginBottom: 2
   
 },
-mainContainer: {
+mainContainer: {  
   alignItems: 'stretch',
   display: 'flex',
+  backgroundColor: 'green'
 }
 
 });

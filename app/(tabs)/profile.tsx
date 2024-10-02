@@ -57,7 +57,7 @@ export default function ProfileScreen() {
                 <View style={styles.horizontalContainer}>
                     <TouchableHighlight
                     activeOpacity={0.6}
-                    underlayColor="white"
+                    underlayColor="yellow"
                     onPress={ () => leaderboardScreen()}
                     style={styles.leaderboardButton}>
                         <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
@@ -100,17 +100,18 @@ export default function ProfileScreen() {
                     style={styles.feedbackButton}onPress={() => openFeedback(feedback.id)}>
                         <Text style={styles.textColor}>Feedbacks</Text>
                     </TouchableHighlight>
+                    
              )
             })
           }
-         
-            </View>
-                <TouchableHighlight
+          <TouchableHighlight
                     activeOpacity={0.6}
-                    underlayColor="white"
+                    underlayColor="#27fa00"
                     onPress={() => signOut()} style={styles.signoutButton}>
                     <Text style={styles.signoutText}>Sign Out</Text>
                 </TouchableHighlight>
+         
+            </View>
         </View>
     );
 }
@@ -127,8 +128,8 @@ const profile = {
     "leaderboard_rank": 3,
     "badges": {
         "earth_structures": true,
-        "plate_boundaries": true,
-        "landform_process": false
+        "plate_boundaries": false,
+        "landform_process": true
     }
 }
 
@@ -137,30 +138,33 @@ const styles = StyleSheet.create({
         width: 120,
         height: 120,
         borderRadius: 60,
-        backgroundColor: 'white',
+        backgroundColor: '#e0e0e0',
         justifyContent: 'center',
-        marginBottom: 20,
-        marginTop: 80
+        marginBottom: 10,
+        marginTop: 50
     },
     mainContainer: {
         flex: 1,
-        backgroundColor: '#228b22',
+        flexDirection: 'column',
+        backgroundColor: '#008000',
         alignItems: 'center',
         verticalAlign: 'top'
     },
     dashboardContainer: {
-        width: 400,
-        height: 400,
-        borderRadius: 10,
-        backgroundColor: '#84b522',
+        height: 1600,
+        width: 1300,
+        borderRadius: 3600,
+        backgroundColor: '#f9f9f9',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        borderStyle: 'solid',
-        borderWidth: 1,
+        // borderStyle: 'solid',
+        // borderWidth: 1,
+        zIndex: 1000,
+        marginTop: 40
     },
     platetectonicButton: {
-        backgroundColor: '#84b522',
-        borderRadius: 50,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 20,
         width: 350,
         height: 100,
         justifyContent: 'center',
@@ -168,28 +172,28 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10 },
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        marginTop: 15,
-        borderStyle: 'solid',
-        borderWidth: 1,
+        marginTop: 55,
+        // borderStyle: 'solid',
+        // borderWidth: 1,
         //marginLeft: 5,
     },
     feedbackButton: {
-        backgroundColor: '#84b522',
-        borderRadius: 50,
+        backgroundColor: '#e0e0e0',
+        borderRadius: 20,
         width: 350,
-        height: 100,
+        height: 55,
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0.2, height: 10 },
         shadowOpacity: 0.5,
         shadowRadius: 10,
         marginTop: 15,
-        borderStyle: 'solid',
-        borderWidth: 1,
+        // borderStyle: 'solid',
+        // borderWidth: 1,
     },
     textColor: {
-        color: '#ffffff',
-        fontWeight: 'bold',
+        color: '#008000',
+        //fontWeight: 'condensed',
         fontSize: 20,
         textAlign: 'center'
     },
@@ -210,17 +214,17 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10 },
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        borderStyle: 'solid',
-        borderWidth: 1,
+        // borderStyle: 'solid',
+        // borderWidth: 1,
     },
     badgeContainer: {
         width: 200, // Adjusted width for side-by-side layout
         height: 120,
         justifyContent: 'center',
-        backgroundColor: 'green',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderRadius: 20,
+        backgroundColor: '#e0e0e0',
+        // borderStyle: 'solid',
+        // borderWidth: 1,
+         borderRadius: 20,
         alignItems: 'center',
     },
     badges: {
@@ -228,7 +232,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     signoutButton: {
-        backgroundColor: 'white',
+        backgroundColor: '#008000',
         borderRadius: 50,
         width: 250,
         height: 45,
@@ -238,13 +242,13 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10},
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        borderStyle: 'solid',
-        borderWidth: 1,
-        marginTop: 50,
+        marginTop: 60,
+        // borderStyle: 'solid',
+        // borderWidth: 1
         
     },
     signoutText: {
-        color: 'red',
+        color: 'white',
         fontSize: 15,
         textAlign: 'center',
     },
@@ -253,11 +257,11 @@ const styles = StyleSheet.create({
         height: 85
     },
     name: {
-        color: '#ffffff',
-        fontWeight: 'bold',
+        color: 'white',
+        fontWeight: 'condensed',
         fontSize: 20,
         textAlign: 'center',
-        marginBottom: 20
+        marginBottom: 10    
     }
     
 });
