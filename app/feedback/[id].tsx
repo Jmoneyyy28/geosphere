@@ -18,6 +18,7 @@ import {
 } from 'expo-router';
 
 import { useEffect } from 'react';
+import { GeoButton } from '@/components/GeoButton';
 
 export default function FeedbackScreen() {
     const navigation = useNavigation();
@@ -46,6 +47,7 @@ export default function FeedbackScreen() {
 
     return (
         <View style={styles.container}>
+            <GeoButton name="ANOTHER BUTTON" />
             <View style={styles.descriptionContainer}>
                 <Text style={styles.topicText}>{feedback.name}</Text>
                 <ScrollView style={styles.scrollView}>

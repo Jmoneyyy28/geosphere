@@ -13,6 +13,8 @@ import {
 
 import React from 'react';
 import { useRouter } from 'expo-router';
+import { GeoButton } from '@/components/GeoButton';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function ProfileScreen() {
@@ -42,8 +44,13 @@ export default function ProfileScreen() {
 
     return (
         <View style={styles.mainContainer}>
-            <View style={styles.profilePicture}></View>
-            <Text style={styles.name}>{profile.name}</Text>
+            <GeoButton style={styles.signOutButton} onPress={signOut}>
+                <Ionicons name="log-out-outline" style={styles.icon}/>
+            </GeoButton>
+            <View style={styles.profile}>
+                <View style={styles.profilePicture}></View>
+                <Text style={styles.name}>Welcome, {profile.name}!</Text>
+            </View>
             <View style={styles.dashboardContainer}>
                 <TouchableHighlight 
                 activeOpacity={0.6}
@@ -92,25 +99,12 @@ export default function ProfileScreen() {
                 </View>
               
                 {
-            feedback.map((feedback) => {
-              return (
-                    <TouchableHighlight 
-                    activeOpacity={0.6}
-                    underlayColor="white"
-                    style={styles.feedbackButton}onPress={() => openFeedback(feedback.id)}>
-                        <Text style={styles.textColor}>Feedbacks</Text>
-                    </TouchableHighlight>
-                    
-             )
-            })
-          }
-          <TouchableHighlight
-                    activeOpacity={0.6}
-                    underlayColor="#27fa00"
-                    onPress={() => signOut()} style={styles.signoutButton}>
-                    <Text style={styles.signoutText}>Sign Out</Text>
-                </TouchableHighlight>
-         
+                    feedback.map((feedback) => {
+                        return (
+                             <GeoButton name="Feedbacks" theme="light" textStyle={styles.textColor} style={styles.feedbackButton} onPress={() => openFeedback(feedback.id)}/>
+                        )
+                    })
+                }
             </View>
         </View>
     );
@@ -134,14 +128,33 @@ const profile = {
 }
 
 const styles = StyleSheet.create({
-    profilePicture: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: '#e0e0e0',
+    profile: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: 10,
-        marginTop: 50
+        position: 'absolute',
+        top: 15,
+        left: 15
+    },
+    signOutButton: {
+        height: 50,
+        width: 50,
+        position: 'absolute',
+        top: 15,
+        right: 15
+    },
+    icon: {
+        color: 'white',
+        fontSize: 35
+    },
+    profilePicture: {
+        width: 60,
+        height: 60,
+        borderRadius: 60,
+        marginRight: 15,
+        backgroundColor: '#e0e0e0',
+        justifyContent: 'center'
     },
     mainContainer: {
         flex: 1,
@@ -160,7 +173,7 @@ const styles = StyleSheet.create({
         // borderStyle: 'solid',
         // borderWidth: 1,
         zIndex: 1000,
-        marginTop: 40
+        marginTop: 100
     },
     platetectonicButton: {
         backgroundColor: '#e0e0e0',
@@ -178,16 +191,9 @@ const styles = StyleSheet.create({
         //marginLeft: 5,
     },
     feedbackButton: {
-        backgroundColor: '#e0e0e0',
-        borderRadius: 20,
         width: 350,
         height: 55,
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0.2, height: 10 },
-        shadowOpacity: 0.5,
-        shadowRadius: 10,
-        marginTop: 15,
+        marginTop: 15
         // borderStyle: 'solid',
         // borderWidth: 1,
     },
@@ -232,19 +238,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     signoutButton: {
-        backgroundColor: '#008000',
-        borderRadius: 50,
         width: 250,
         height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0.2, height: 10},
-        shadowOpacity: 0.5,
-        shadowRadius: 10,
-        marginTop: 60,
-        // borderStyle: 'solid',
-        // borderWidth: 1
+        marginTop: 60
         
     },
     signoutText: {
@@ -259,9 +255,8 @@ const styles = StyleSheet.create({
     name: {
         color: 'white',
         fontWeight: 'condensed',
-        fontSize: 20,
-        textAlign: 'center',
-        marginBottom: 10    
+        fontSize: 15,
+        textAlign: 'center'
     }
     
 });
