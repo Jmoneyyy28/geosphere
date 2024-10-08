@@ -15,6 +15,7 @@ import React from 'react';
 import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
+import SegmentedControl from '@react-native-segmented-control/segmented-control';
 
 
 export default function ProfileScreen() {
@@ -96,6 +97,9 @@ export default function ProfileScreen() {
                         </View>
                             <Text style={styles.textColor}>Badges</Text>
                     </View>
+                    <View>
+
+                    </View>
                 </View>
               
                 {
@@ -110,10 +114,10 @@ export default function ProfileScreen() {
     );
 }
 const badges = {
-    locked:  "https://i.imgur.com/cgmbSaF.png",
-    earth_structures: "https://i.imgur.com/AYxZLVf.png",
-    plate_boundaries: "https://i.imgur.com/N3keyxj.png",
-    landform_process: "https://i.imgur.com/MjTQiO8.png"
+    locked:  "https://i.imgur.com/wFCKPUT.png",
+    earth_structures: "https://i.imgur.com/50D8GOH.png",
+    plate_boundaries: "https://i.imgur.com/g2Lj9XF.png",
+    landform_process: "https://i.imgur.com/YABdVql.png"
 
 }
 
@@ -128,6 +132,10 @@ const profile = {
 }
 
 const styles = StyleSheet.create({
+    testing: {
+        backgroundColor: 'black',
+        height: 20
+    },
     profile: {
         display: 'flex',
         flexDirection: 'row',
