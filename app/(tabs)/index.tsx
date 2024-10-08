@@ -15,6 +15,7 @@ import {
 import React from 'react';
 
 import { useRouter } from 'expo-router';
+import { GeoButton } from '@/components/GeoButton';
 
 export default function LearnScreen() {
   const router = useRouter();
@@ -47,12 +48,7 @@ export default function LearnScreen() {
           {
             topics.map((topic) => {
               return (
-                <TouchableHighlight 
-                    activeOpacity={0.2}
-                    underlayColor="green" 
-                    style={styles.plateTectonicButton} onPress={() => openTopic(topic.id)}>
-                        <Text style={styles.textColor}>{topic.name}</Text>
-                </TouchableHighlight>
+                <GeoButton name = {topic.name} style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)}></GeoButton>
               )
             })
           }

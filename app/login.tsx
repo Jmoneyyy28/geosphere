@@ -12,6 +12,7 @@ import {
 import React from 'react';
 import { Link, useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
+import { GeoButton } from '@/components/GeoButton';
 
 export default function LoginScreen() {
     const [username, setUsername] = React.useState('');
@@ -54,14 +55,8 @@ export default function LoginScreen() {
                     secureTextEntry={true}
                     placeholderTextColor={'#ffffff'}
                 />
-                <TouchableHighlight
-                    activeOpacity={0.6}
-                    underlayColor="white"
-                    style={styles.loginButton}
-                    onPress={ () => login(username, password) }
-                >
-                    <Text>Log in</Text>
-                </TouchableHighlight>
+                <GeoButton name='Log In' theme='light' style={styles.loginButton} onPress={ () => login(username,password)}></GeoButton>
+
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Don't have an Account? <Link style={styles.registerButton} href="/register">Register</Link>
@@ -135,16 +130,9 @@ const styles = StyleSheet.create({
         
     },
     loginButton: {
-        backgroundColor: '#ffff',
         borderRadius: 50,
         width: 250,
-        height: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0.2, height: 10},
-        shadowOpacity: 0.5,
-        shadowRadius: 10,  
+        height: 45
     },
     registerContainer: {
         margin: 20

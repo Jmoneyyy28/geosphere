@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
         // borderStyle: 'solid',
         // borderWidth: 1,
         zIndex: 1000,
-        marginTop: 100
+        marginTop: 130
     },
     platetectonicButton: {
         backgroundColor: '#e0e0e0',
