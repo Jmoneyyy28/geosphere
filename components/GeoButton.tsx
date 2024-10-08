@@ -5,7 +5,7 @@ import {
     TouchableHighlight
 } from "react-native";
 
-export function GeoButton({children, name, onPress, style, textStyle, theme='default'}: PropsWithChildren & {children?: any, name?: string, onPress?: any, style?: any, theme?: string, textStyle?: any}) {
+export function GeoButton({children, name, onPress, style, textStyle, isActive, theme='default'}: PropsWithChildren & {children?: any, name?: string, onPress?: any, style?: any, theme?: string, textStyle?: any, isActive?: boolean}) {
     const getBackgroundStyle = () => {
         if (theme == 'default') {
             return styles.background
@@ -13,19 +13,28 @@ export function GeoButton({children, name, onPress, style, textStyle, theme='def
             return styles.background_light
         } else if (theme == 'plain') {
             return styles.background_plain
+        } else if (theme == 'light-bordered') {
+            return styles.background_light_bordered
+        } else if (theme == 'transparent') {
+            return null
         }
     }
 
     const getTextStyle = () => {
         if (theme == 'default') {
             return [
-                textStyle ? textStyle : styles.font,
+                textStyle ? textStyle : {},
                 styles.text
             ];
         } else if (theme == 'light') {
             return [
-                textStyle ? textStyle : styles.font,
+                textStyle ? textStyle : {},
                 styles.text_light
+            ];
+        } else if (theme == 'light-bordered') {
+            return [
+                textStyle ? textStyle : {},
+                styles.text_light_bordered
             ];
         }
     }
@@ -35,13 +44,22 @@ export function GeoButton({children, name, onPress, style, textStyle, theme='def
             onPress={onPress}
             style={[
                 styles.container,
+                getBackgroundStyle(),
                 style,
-                getBackgroundStyle()
+                isActive ? styles.active : {}
             ]}>
             {
                 children
                     ? children
-                    : <Text style={getTextStyle()}>{name}</Text>
+                    :
+                    <Text style={[
+                        styles.font,
+                        styles.text,
+                        getTextStyle(),
+                        isActive ? styles.active_text : {},
+                        ]}>
+                            {name}
+                    </Text>
             }
 
         </TouchableHighlight>
@@ -58,18 +76,33 @@ const styles = StyleSheet.create({
         backgroundColor: '#008000'
     },
     font: {
-        fontSize: 15
+        fontSize: 15,
+        fontFamily: 'Roboto_500Medium'
+    },
+    active_text: {
+        color: '#ffffff'
     },
     text: {
-        color: '#ffffff',
+        color: '#9e9e9e'
     },
     text_light: {
-        color: '#008000'
+        color: '#9e9e9e'
+    },
+    text_light_bordered: {
+        color: '#9e9e9e'
     },
     background_light: {
-        backgroundColor: '#e0e0e0'
+        backgroundColor: '#ffffff'
     },
     background_plain: {
-        
+        backgroundColor: '#e0e0e0'
+    },
+    background_light_bordered: {
+        borderColor: '#9e9e9e',
+        borderWidth: 2,
+        borderStyle: 'solid'
+    },
+    active: {
+        backgroundColor: '#4caf50'
     }
 });

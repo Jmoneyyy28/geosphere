@@ -8,16 +8,32 @@ import {
     Text,
     ImageBackground,
     TouchableOpacity,
-    TouchableHighlight
+    TouchableHighlight,
+    ScrollView
 } from 'react-native';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
 
 
 export default function ProfileScreen() {
+    const [segmentButtons, setSegmentButtons] = useState([
+        {
+            name: "Lessons",
+            isActive: true
+        },
+        {
+            name: "Badges",
+            isActive: false
+        },
+        {
+            name: "Feedback",
+            isActive: false
+        }
+    ]);
+
     const router = useRouter();
 
     const signOut = () => {
@@ -29,151 +45,259 @@ export default function ProfileScreen() {
     const leaderboardScreen = () => {
         router.replace("/leaderboard");
     }
-        const openFeedback = (id) => {
-          console.log(id);
-          router.push(`/feedback/${id}`);
-        };
-
-      const feedback = [
+    const openFeedback = (id) => {
+        console.log(id);
+        router.push(`/feedback/${id}`);
+    };
+    const feedback = [
         {
-          "id": "1",
-          "name": "Plate boundaries"
+            "id": "1",
+            "name": "Plate boundaries"
         }
+    ];
+    const updateView = (name) => {
+        const updatedButtons = [];
 
-        ];
+        segmentButtons.map((button) => {
+            const temp = {...button};
+            temp.isActive = temp.name == name;
+
+            updatedButtons.push(temp);
+        });
+
+        setSegmentButtons(updatedButtons);
+    }
 
     return (
-        <View style={styles.mainContainer}>
-            <GeoButton style={styles.signOutButton} onPress={signOut}>
-                <Ionicons name="log-out-outline" style={styles.icon}/>
-            </GeoButton>
-            <View style={styles.profile}>
-                <View style={styles.profilePicture}></View>
-                <Text style={styles.name}>Welcome, {profile.name}!</Text>
-            </View>
-            <View style={styles.dashboardContainer}>
-                <TouchableHighlight 
-                activeOpacity={0.6}
-                underlayColor="white"
-                onPress={ () => plateTectonicScreen()}
-                style={styles.platetectonicButton}>
-                    <Text style={styles.textColor}>Plate Tectonic Topics</Text>
-                </TouchableHighlight>
+        <View style={styles.container}>
 
-                {/* Horizontal container for Leaderboard and Badge buttons */}
-                <View style={styles.horizontalContainer}>
-                    <TouchableHighlight
-                    activeOpacity={0.6}
-                    underlayColor="yellow"
-                    onPress={ () => leaderboardScreen()}
-                    style={styles.leaderboardButton}>
-                        <Text style={styles.textColor}>No. {profile.leaderboard_rank} Leaderboard</Text>
-                    </TouchableHighlight>
+            <View style={styles.header}>
 
+                <View style={styles.profileContainer}>
+                    <Image
+                        style={styles.profilePicture}
+                        source={require('@/assets/images/profile-male.png')} />
 
-                    <View style={styles.badgeContainer}>
-                        <View style={styles.badges}>
-                            {
-                                (
-                                    profile.badges.earth_structures
-                                        ? <Image style={styles.badge} source={badges.earth_structures}/>
-                                        : <Image style={styles.badge} source={badges.locked}/>
-                                )
-                            }
-                            {
-                                (
-                                    profile.badges.plate_boundaries
-                                    ? <Image style={styles.badge} source={badges.plate_boundaries}/>
-                                    : <Image style={styles.badge} source={badges.locked}/>
-                                )
-                            }
-                            {
-                                profile.badges.landform_process
-                                ? <Image style={styles.badge} source={badges.landform_process}/>
-                                : <Image style={styles.badge} source={badges.locked}/>
-                            }
-                            
-                        </View>
-                            <Text style={styles.textColor}>Badges</Text>
-                    </View>
+                    <Text style={styles.name}>
+                        Welcome, {profile.name}!
+                    </Text>
                 </View>
-              
+
+                <View style={{flex: 1}}/>
+
+                <View style={styles.headerButtons}>
+                    <GeoButton
+                        onPress={signOut}
+                        theme='transparent'>
+
+                        <Ionicons
+                            name="log-out-outline"
+                            style={styles.signOutIcon}
+                        />
+                    </GeoButton>
+                </View>
+
+            </View>
+
+            <View style={styles.content}>
+
+                <View style={styles.segmentButtons}>
+                    {
+                        segmentButtons.map((button) => {
+                            return (
+                                <GeoButton style={styles.segmentButton} theme="transparent" name={button.name} isActive={button.isActive} onPress={() => updateView(button.name)}/>
+                            )
+                        })
+                    }
+                </View>
+                
                 {
-                    feedback.map((feedback) => {
-                        return (
-                             <GeoButton name="Feedbacks" theme="light" textStyle={styles.textColor} style={styles.feedbackButton} onPress={() => openFeedback(feedback.id)}/>
-                        )
+                    segmentButtons.map((segment) => {
+                        if (segment.name == "Lessons" && segment.isActive) {
+                            return (
+                                <View style={styles.segmentContainer}>
+                                    Lessons
+                                </View>
+                            )
+                        } else if (segment.name == "Badges" && segment.isActive) {
+                            return (
+                                <ScrollView>
+                                    <View style={styles.segmentContainer}>
+                                        {
+                                            profile.badges.map((badge) => {
+                                                return (
+                                                    <View style={styles.badgeContainer}>
+                                                        <Image
+                                                            style={styles.badgeImage}
+                                                            source={badge.isAcquired ? badge.image : locked_badge}
+                                                        />
+                                                        <Text style={styles.badgeName}>
+                                                            { badge.name }
+                                                        </Text>
+                                                        <Text style={styles.badgeDescription}>
+                                                            { badge.description }
+                                                        </Text>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                </ScrollView>
+                            )
+                        } else if (segment.name == "Feedback" && segment.isActive) {
+                            return (
+                                <View style={styles.segmentContainer}>
+                                    Feedback
+                                </View>
+                            )
+                        }
                     })
                 }
+
             </View>
+
         </View>
     );
 }
-const badges = {
-    locked:  "https://i.imgur.com/cgmbSaF.png",
-    earth_structures: "https://i.imgur.com/AYxZLVf.png",
-    plate_boundaries: "https://i.imgur.com/N3keyxj.png",
-    landform_process: "https://i.imgur.com/MjTQiO8.png"
 
-}
+const locked_badge = "https://i.imgur.com/cgmbSaF.png";
+
+// const badges = {
+//     locked:  "https://i.imgur.com/cgmbSaF.png",
+//     earth_structures: "https://i.imgur.com/AYxZLVf.png",
+//     plate_boundaries: "https://i.imgur.com/N3keyxj.png",
+//     landform_process: "https://i.imgur.com/MjTQiO8.png"
+
+// }
 
 const profile = {
     "name": "Mastrile_3210472",
     "leaderboard_rank": 3,
-    "badges": {
-        "earth_structures": true,
-        "plate_boundaries": false,
-        "landform_process": true
-    }
+    "badges": [
+        {
+            name: "Earth Structures",
+            image: "https://i.imgur.com/AYxZLVf.png",
+            description: "Badge acquired for completing the lesson Earth Structures",
+            isAcquired: false
+        },
+        {
+            name: "Plate Boundaries",
+            image: "https://i.imgur.com/N3keyxj.png",
+            description: "Badge acquired for completing the lesson Plate Boundaries",
+            isAcquired: true
+        },
+        {
+            name: "Landform Process",
+            image: "https://i.imgur.com/MjTQiO8.png",
+            description: "Badge acquired for completing the lesson Landform Process",
+            isAcquired: false
+        }
+    ]
 }
 
 const styles = StyleSheet.create({
-    profile: {
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+    },
+    header: {
+        padding: 15,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        position: 'absolute',
-        top: 15,
-        left: 15
+        height: 65
     },
-    signOutButton: {
-        height: 50,
-        width: 50,
-        position: 'absolute',
-        top: 15,
-        right: 15
+    headerButtons: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center'
     },
-    icon: {
-        color: 'white',
-        fontSize: 35
+    content: {
+        display: 'flex',
+        flex: 1
+    },
+    profileContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    name: {
+        fontWeight: 'bold',
+        fontSize: 14,
+        textAlign: 'center',
+        fontFamily: 'Roboto_100Thin'
+    },
+    signOutIcon: {
+        color: '#9e9e9e',
+        fontSize: 25
     },
     profilePicture: {
-        width: 60,
-        height: 60,
-        borderRadius: 60,
+        width: 35,
+        height: 35,
+        borderRadius: 35,
         marginRight: 15,
         backgroundColor: '#e0e0e0',
         justifyContent: 'center'
     },
-    mainContainer: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#008000',
-        alignItems: 'center',
-        verticalAlign: 'top'
+    segmentButtons: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderWidth: 2,
+        borderColor: "#EAEAEA",
+        padding: 1,
+        margin: 15,
+        borderRadius: 5
     },
+    segmentButton: {
+        flex: 1,
+        height: 25,
+        borderRadius: 5
+    },
+    segmentContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+    badgeContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 25,
+        marginBottom: 25,
+        padding: 25,
+        height: 320,
+        width: 250,
+        shadowColor: '#212121',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 50,
+    },
+    badgeImage: {
+        width: 200,
+        height: 200
+    },
+    badgeName: {
+        color: '#212121',
+        fontSize: 24,
+        fontFamily: 'Roboto_500Medium'
+    },
+    badgeDescription: {
+        marginTop: 5,
+        color: '#212121',
+        textAlign: 'center',
+        fontSize: 10,
+        fontFamily: 'Roboto_300Light'
+    },
+
+
     dashboardContainer: {
-        height: 1600,
-        width: 1300,
-        borderRadius: 3600,
-        backgroundColor: '#f9f9f9',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        // borderStyle: 'solid',
-        // borderWidth: 1,
-        zIndex: 1000,
-        marginTop: 130
+        marginTop: 50
     },
     platetectonicButton: {
         backgroundColor: '#e0e0e0',
@@ -223,16 +347,6 @@ const styles = StyleSheet.create({
         // borderStyle: 'solid',
         // borderWidth: 1,
     },
-    badgeContainer: {
-        width: 200, // Adjusted width for side-by-side layout
-        height: 120,
-        justifyContent: 'center',
-        backgroundColor: '#e0e0e0',
-        // borderStyle: 'solid',
-        // borderWidth: 1,
-         borderRadius: 20,
-        alignItems: 'center',
-    },
     badges: {
         display: 'flex',
         flexDirection: 'row'
@@ -247,16 +361,5 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 15,
         textAlign: 'center',
-    },
-    badge: {
-        width: 65,
-        height: 85
-    },
-    name: {
-        color: 'white',
-        fontWeight: 'condensed',
-        fontSize: 15,
-        textAlign: 'center'
     }
-    
 });
