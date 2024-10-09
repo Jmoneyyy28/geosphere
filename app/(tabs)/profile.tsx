@@ -28,27 +28,55 @@ export default function ProfileScreen() {
         }
     ]);
 
+    const openTopic = (id) => {
+        console.log(id);
+        router.push(`/topic/${id}`);
+      };
+
     const router = useRouter();
 
     const signOut = () => {
         router.replace("/login");
     }
+
     const plateTectonicScreen = () => {
         router.replace("/");
     }
+
     const leaderboardScreen = () => {
         router.replace("/leaderboard");
     }
+
     const openFeedback = (id) => {
         console.log(id);
         router.push(`/feedback/${id}`);
     };
-    const feedback = [
+
+    const feedbacks = [
         {
-            "id": "1",
-            "name": "Plate boundaries"
-        }
+            "id": 1,
+            "name": "Plate boundaries",
+            "Teacher": "Sir.",
+            "feedback": "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well!You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! "
+        },
+        {
+            "id": 2,
+            "name": "Internal Structures of the Earth",
+            "feedback": "Bad!"
+        },
+        {
+            "id": 3,
+            "name": "Processes and Landforms",
+            "feedback": "Excellent"
+        },
+        {
+            "id": 4,
+            "name": "Internal Structures of the Earth",
+            "feedback": "Bad!"
+        },
+        
     ];
+    
     const updateView = (name) => {
         const updatedButtons = [];
 
@@ -61,6 +89,21 @@ export default function ProfileScreen() {
 
         setSegmentButtons(updatedButtons);
     }
+    
+    const topics = [
+        {
+            "id": "1",
+            "name": "Plate Boundaries",
+        },
+        {
+            "id": "2",
+            "name": "Internal Structures of the Earth"
+        },
+        {
+            "id": "3",
+            "name": "Processes and Landforms"
+        }
+    ];
 
     return (
         <View style={styles.container}>
@@ -80,7 +123,7 @@ export default function ProfileScreen() {
                 <View style={{flex: 1}}/>
 
                 <View style={styles.headerButtons}>
-                    <GeoButton
+                    <GeoButton 
                         onPress={signOut}
                         theme='transparent'>
 
@@ -110,7 +153,13 @@ export default function ProfileScreen() {
                         if (segment.name == "Lessons" && segment.isActive) {
                             return (
                                 <View style={styles.segmentContainer}>
-                                    Lessons
+                                    {
+                                        topics.map((topic) => {
+                                            return (
+                                                <GeoButton name = {topic.name} style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)}></GeoButton>
+                                            )
+                                        })
+                                    }
                                 </View>
                             )
                         } else if (segment.name == "Badges" && segment.isActive) {
@@ -140,13 +189,37 @@ export default function ProfileScreen() {
                             )
                         } else if (segment.name == "Feedback" && segment.isActive) {
                             return (
-                                <View style={styles.segmentContainer}>
-                                    Feedback
-                                </View>
-                            )
-                        }
-                    })
-                }
+                                <ScrollView>
+                                    <View style={styles.segmentContainer}>
+                                        {
+                                            feedbacks.map((feedback) => {
+                                                return (
+                                                    
+                                                        
+                                                            <View style={styles.descriptionContainer}>
+                                                               <View>
+
+                                                                    <Image style={styles.feedbackStyle}
+                                                        
+                                                                    source={require('@/assets/images/profile-male.png')} />
+                                                                        <Text style={styles.name}>
+                                                                        Welcome, {profile.name}!
+                                                                        </Text>
+                                                                        <ScrollView style={styles.scrollView}>
+                                                                            <Text style={styles.lessonText}> {feedback.feedback}</Text>
+                                                                        </ScrollView>
+                                                                    </View>
+                                                            </View>
+                                                        
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                </ScrollView>
+                        )
+                    }
+                })
+            }
 
             </View>
 
@@ -182,6 +255,57 @@ const profile = {
 }
 
 const styles = StyleSheet.create({
+    descriptionContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 25,
+        marginBottom: 25,
+        padding: 25,
+        height: 150,
+        width: 350,
+        shadowColor: '#212121',
+        shadowOffset: {
+            width: 0,
+            height: 0
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 50,
+    },
+    feedbackStyle:{
+        width: 35,
+        height: 35,
+        borderRadius: 35,
+        marginRight: 15,
+        backgroundColor: '#e0e0e0',
+        //justifyContent: 'center',
+        alignItems: 'baseline'
+    },
+    topicText: {
+        fontWeight: 'bold', // Make the text bold
+        fontSize: 20, // Increase the font size for better visibility
+        marginBottom: 25, // Add some margin below the topic text
+    },
+    scrollView: {
+        flex: 1, // Allow scrollable content to fill remaining space
+    },
+    lessonText: {
+        fontSize: 14, // Slightly smaller size for body text
+        textAlign: 'justify', // Justify the text
+    },
+    plateTectonicButton:{
+        backgroundColor: '#008000',
+        borderRadius: 10,
+        width: '90%',
+        height: 150,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0.2, height: 10},
+        shadowOpacity: 0.5,
+        shadowRadius: 10,
+        marginTop: 20
+    },
     container: {
         flex: 1,
         flexDirection: 'column',
