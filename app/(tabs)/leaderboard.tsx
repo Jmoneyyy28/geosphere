@@ -137,7 +137,8 @@ const leaderboardStyle = StyleSheet.create({
     position: 'static',
     marginRight: 18,
     color: 'white',
-    fontFamily: 'sans-serif'
+    fontFamily: 'Roboto_400Regular',
+    fontSize: 15
     
  },
 scoreContainer: {
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     alignContent: 'center',
-    fontFamily: 'sans-serif',
+    fontFamily: 'Roboto_900Black',
     alignSelf: 'center'
 },
 leaderboardContainer: {

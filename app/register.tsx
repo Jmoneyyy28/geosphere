@@ -55,7 +55,7 @@ export default function RegisterScreen() {
                     value={password}
                     placeholderTextColor={'#ffffff'}
                 />
-                <GeoButton name='Register' theme='light' style={styles.signinButton} onPress={signin}></GeoButton>
+                <GeoButton name='Sign Up' theme='light' style={styles.signinButton} textStyle={styles.signupText} onPress={signin}></GeoButton>
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Already have an account? <Link style = {styles.registerButton} href = "/login">Log in</Link>
@@ -92,6 +92,9 @@ export default function RegisterScreen() {
 };
 
 const styles = StyleSheet.create({
+    signupText: {
+        fontFamily: 'Roboto_500Medium'
+    },
     centeredView: {
       flex: 1,
       justifyContent: 'center',
@@ -134,14 +137,15 @@ const styles = StyleSheet.create({
     signinButton: {
         borderRadius: 50,
         width: 250,
-        height: 45  
+        height: 45,
+        marginTop: 5
     },
     registerContainer: {
         margin: 20,
     },
     registerButton: {
         color: 'blue',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Roboto_100Thin'
     },
     logo: {
         width: 250,
@@ -171,11 +175,12 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 30,
         fontWeight: 'bold',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Roboto_900Black',
+        marginBottom: 10
     },
     accountColor:{
         color: '#ffffff',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Roboto_100Thin'
     }
     
 })

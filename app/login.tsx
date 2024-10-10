@@ -56,7 +56,7 @@ export default function LoginScreen() {
                     secureTextEntry={true}
                     placeholderTextColor={'#ffffff'}
                 />
-                <GeoButton name='Log In' theme='light' style={styles.loginButton} onPress={ () => login(username,password)}></GeoButton>
+                <GeoButton name='Log In' theme='light' style={styles.loginButton} textStyle={styles.loginText}onPress={ () => login(username,password)}></GeoButton>
 
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
@@ -90,6 +90,9 @@ export default function LoginScreen() {
 };
 
 const styles = StyleSheet.create({
+    loginText: {
+        fontFamily: 'Roboto_500Medium'
+    },
     centeredView: {
       flex: 1,
       justifyContent: 'center',
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     },
     registerButton: {
         color: 'blue',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Roboto_100Thin'
     },
     logo: {
         width: 250,
@@ -170,10 +173,11 @@ const styles = StyleSheet.create({
         color: '#ffffff',
         fontSize: 30,
         fontWeight: 'bold',
-        fontFamily: 'sans-serif'
+        fontFamily: 'Roboto_900Black'
     },
     accountColor:{
-        color: '#ffffff'
+        color: '#ffffff',
+        fontFamily: 'Roboto_100Thin'
     }
     
 })

@@ -42,7 +42,7 @@ export function GeoButton({children, name, onPress, style, textStyle, isActive, 
     return (
         <TouchableHighlight
             activeOpacity={0.6}
-            underlayColor="gray"
+            underlayColor="#ffffff"
             onPress={onPress}
             style={[
                 styles.container,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         color: '#9e9e9e'
     },
     text_light: {
-        color: '#9e9e9e'
+        color: '#008000'
     },
     text_light_bordered: {
         color: '#9e9e9e'

@@ -28,6 +28,15 @@ export default function ProfileScreen() {
         }
     ]);
 
+    const getBadge = (badge) => {
+        if (badge.score > 75){
+            return badge.images.gold
+        } else if (badge.score > 50){
+            return badge.images.silver
+        } else {
+            return badge.images.bronze
+        }
+    }
     const openTopic = (id) => {
         console.log(id);
         router.push(`/topic/${id}`);
@@ -56,22 +65,25 @@ export default function ProfileScreen() {
         {
             "id": 1,
             "name": "Plate boundaries",
-            "Teacher": "Sir.",
-            "feedback": "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well!You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! "
+            "Teacher": "Sir. 1",
+            "feedback": "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! "
         },
         {
             "id": 2,
             "name": "Internal Structures of the Earth",
+            "Teacher": "Sir. 2",
             "feedback": "Bad!"
         },
         {
             "id": 3,
             "name": "Processes and Landforms",
+            "Teacher": "Sir. 3",
             "feedback": "Excellent"
         },
         {
             "id": 4,
             "name": "Internal Structures of the Earth",
+            "Teacher": "Sir. 4",
             "feedback": "Bad!"
         },
         
@@ -156,7 +168,7 @@ export default function ProfileScreen() {
                                     {
                                         topics.map((topic) => {
                                             return (
-                                                <GeoButton name = {topic.name} style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)}></GeoButton>
+                                                <GeoButton name = {topic.name} theme = "default" style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)}></GeoButton>
                                             )
                                         })
                                     }
@@ -172,7 +184,7 @@ export default function ProfileScreen() {
                                                     <View style={styles.badgeContainer}>
                                                         <Image
                                                             style={styles.badgeImage}
-                                                            source={badge.isAcquired ? badge.image : locked_badge}
+                                                            source={badge.isAcquired ? getBadge(badge) : locked_badge}
                                                         />
                                                         <Text style={styles.badgeName}>
                                                             { badge.name }
@@ -197,18 +209,18 @@ export default function ProfileScreen() {
                                                     
                                                         
                                                             <View style={styles.descriptionContainer}>
-                                                               <View>
-
+                                                                <View style={styles.teacherName}>
                                                                     <Image style={styles.feedbackStyle}
-                                                        
-                                                                    source={require('@/assets/images/profile-male.png')} />
-                                                                        <Text style={styles.name}>
-                                                                        Welcome, {profile.name}!
-                                                                        </Text>
-                                                                        <ScrollView style={styles.scrollView}>
-                                                                            <Text style={styles.lessonText}> {feedback.feedback}</Text>
-                                                                        </ScrollView>
-                                                                    </View>
+                                                                        source={require('@/assets/images/profile-male.png')} />
+                                                                            <Text style={styles.teacherName}>
+                                                                                {feedback.Teacher}
+                                                                            </Text>
+                                                                </View>
+                                                                                <ScrollView style={styles.contentText}>
+                                                                                    <Text style={styles.topicText2}>{feedback.name}</Text>
+                                                                                    <Text style={styles.lessonText}>{feedback.feedback}</Text>
+                                                                                </ScrollView>
+                                                                    
                                                             </View>
                                                         
                                                 )
@@ -227,7 +239,7 @@ export default function ProfileScreen() {
     );
 }
 
-const locked_badge = "https://i.imgur.com/wFCKPUT.png";
+const locked_badge = "https://i.imgur.com/ZJS5FQJ.png";
 
 const profile = {
     "name": "Mastrile_3210472",
@@ -235,32 +247,60 @@ const profile = {
     "badges": [
         {
             name: "Earth Structures",
-            image: "https://i.imgur.com/50D8GOH.png",
+            images: {
+                bronze: "https://i.imgur.com/auHaCIs.png",
+                silver: "https://i.imgur.com/nQMeKD9.png",
+                gold: "https://i.imgur.com/Yszl4Jp.png"
+            },
             description: "Badge acquired for completing the lesson Earth Structures",
-            isAcquired: false
+            isAcquired: false,
+            score: 100
         },
         {
             name: "Plate Boundaries",
-            image: "https://i.imgur.com/g2Lj9XF.png",
+            images: {
+                bronze: "https://i.imgur.com/yzvNj2Q.png",
+                silver: "https://i.imgur.com/a8FZ3zO.png",
+                gold: "https://i.imgur.com/AOSXqWc.png"
+            },
             description: "Badge acquired for completing the lesson Plate Boundaries",
-            isAcquired: true
+            isAcquired: true,
+            score: 60
         },
         {
             name: "Landform Process",
-            image: "https://i.imgur.com/YABdVql.png",
+            images: {
+                bronze: "https://i.imgur.com/ZUySv72.png",
+                silver: "https://i.imgur.com/LCq81ws.png",
+                gold: "https://i.imgur.com/IFYOtOp.png"
+            },
             description: "Badge acquired for completing the lesson Landform Process",
-            isAcquired: false
+            isAcquired: true,
+            score: 50
         }
     ]
 }
 
 const styles = StyleSheet.create({
+    topicText2:{
+        fontFamily: 'Roboto_500Medium',
+        //fontWeight: 'bold'
+    },
+    teacherName: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontWeight: 'bold',
+        fontFamily: 'Roboto_100Thin'
+    },
+    contentText: {
+        marginTop: 10
+    },
     descriptionContainer: {
         flexDirection: 'column',
-        alignItems: 'center',
+        alignItems: 'baseline',
         justifyContent: 'center',
         marginTop: 25,
-        marginBottom: 25,
         padding: 25,
         height: 150,
         width: 350,
@@ -292,6 +332,7 @@ const styles = StyleSheet.create({
     lessonText: {
         fontSize: 14, // Slightly smaller size for body text
         textAlign: 'justify', // Justify the text
+        marginTop: 5
     },
     plateTectonicButton:{
         backgroundColor: '#008000',
@@ -304,7 +345,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10},
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        marginTop: 20
+        marginTop: 20,
     },
     container: {
         flex: 1,
@@ -432,9 +473,9 @@ const styles = StyleSheet.create({
         // borderWidth: 1,
     },
     textColor: {
-        color: '#008000',
+        color: 'white',
         //fontWeight: 'condensed',
-        fontSize: 20,
+        fontSize: 30,
         textAlign: 'center'
     },
     // New container for horizontal layout
