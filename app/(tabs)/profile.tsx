@@ -104,18 +104,24 @@ export default function ProfileScreen() {
     
     const topics = [
         {
-            "id": "1",
-            "name": "Plate Boundaries",
+          "id": "1",
+          "name": "Plate Boundaries",
+          "image": 'https://i.imgur.com/Jd0plRs.png',
+          "description": "Learn about the three types of plate boundaries: divergent, convergent, and transform."
         },
         {
-            "id": "2",
-            "name": "Internal Structures of the Earth"
+          "id": "2",
+          "name": "Internal Structures of the Earth",
+          "image": 'https://i.imgur.com/KGYRdPT.png',
+          "description": "Explore the Earth's core, mantle, and crust."
         },
         {
-            "id": "3",
-            "name": "Processes and Landforms"
+          "id": "3",
+          "name": "Processes and Landforms",
+          "image": 'https://i.imgur.com/q7aNvwZ.png',
+          "description": "Understand various geological processes and the landforms they create."
         }
-    ];
+      ];
 
     return (
         <View style={styles.container}>
@@ -168,7 +174,15 @@ export default function ProfileScreen() {
                                     {
                                         topics.map((topic) => {
                                             return (
-                                                <GeoButton name = {topic.name} theme = "default" style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)}></GeoButton>
+                                <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
+                                    <View style={styles.test}>
+                                            <Image style={styles.logoStyle} source={{ uri: topic.image }} />
+                                        <View style={styles.textContentContainer}>
+                                            <Text style={styles.topicText}>{topic.name}</Text>
+                                            <Text style={styles.bodyText}>{topic.description}</Text>
+                                        </View>
+                                    </View>
+                                </GeoButton>
                                             )
                                         })
                                     }
@@ -282,6 +296,40 @@ const profile = {
 }
 
 const styles = StyleSheet.create({
+    bodyText: {
+        color: '#000000',
+        fontSize: 15, 
+        fontFamily: 'Roboto_400Regular',
+        zIndex: 2, // layer
+        marginTop: 5, // space of text and topic
+      },
+    textContentContainer: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'baseline',
+        //marginLeft: 1, // Space between the image and text
+        maxWidth: '95%', 
+        zIndex: 2, // text layer
+        position: 'absolute',
+        marginTop: 10
+      },
+    logoStyle: {
+        width: '90%', // Adjusted width
+        height: '100%', // Adjusted height
+        position: 'absolute', // Position behind the text
+        opacity: 0.4, // Make sure the image is faint and doesn't interfere with text readability
+        borderRadius: 10,
+        zIndex: 1, // Ensure the logo stays behind the text
+        resizeMode: 'cover', // Ensure the image covers the background
+      },
+    test: {
+        flex: 1,
+        width: '90%',
+        flexDirection: 'row', 
+        alignItems: 'flex-start', 
+        justifyContent: 'flex-start'
+        //paddingHorizontal: 10, // Add padding on the sides
+      },
     topicText2:{
         fontFamily: 'Roboto_500Medium',
         //fontWeight: 'bold'
@@ -322,9 +370,11 @@ const styles = StyleSheet.create({
         alignItems: 'baseline'
     },
     topicText: {
-        fontWeight: 'bold', // Make the text bold
-        fontSize: 20, // Increase the font size for better visibility
-        marginBottom: 25, // Add some margin below the topic text
+        color: '#000000',
+        fontWeight: 'bold',
+        fontSize: 22,
+        fontFamily: 'Roboto_500Medium',
+        zIndex: 2, // topic layer
     },
     scrollView: {
         flex: 1, // Allow scrollable content to fill remaining space
@@ -335,17 +385,19 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     plateTectonicButton:{
-        backgroundColor: '#008000',
-        borderRadius: 10,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
         width: '90%',
         height: 150,
         alignItems: 'center',
         justifyContent: 'center',
         shadowColor: '#000',
-        shadowOffset: { width: 0.2, height: 10},
+        shadowOffset: { width: 0.2, height: 10 },
         shadowOpacity: 0.5,
         shadowRadius: 10,
         marginTop: 20,
+        opacity: 0.7,
+        overflow: 'hidden', // Ensure content stays within the button
     },
     container: {
         flex: 1,
