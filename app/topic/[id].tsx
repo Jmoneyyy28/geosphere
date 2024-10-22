@@ -111,9 +111,9 @@ const styles = StyleSheet.create({
     },
     optionContainer: {
         position: 'absolute',
-        top: 310, // Adjust this value as needed to position vertically
-        right: 30, // Adjust this value for horizontal position
-        zIndex: 1, // Ensure it is on top of other elements
+        top: 310,
+        right: 30, 
+        zIndex: 1, // top of other elements
         display: 'flex',
         flexDirection: 'row'
     },
@@ -123,43 +123,43 @@ const styles = StyleSheet.create({
     },
     backButtonContainer: {
         position: 'absolute',
-        top: 20, // Adjust this value as needed to position vertically
-        left: 25, // Adjust this value for horizontal position
-        zIndex: 1, // Ensure it is on top of other elements
+        top: 20, 
+        left: 25, 
+        zIndex: 1, // top of other elements
     },
     container: {
         flex: 1,
-        backgroundColor: '#008000', // Set the background color to green
+        backgroundColor: '#008000', 
         justifyContent: 'flex-start', // Align items from the top of the page
-        alignItems: 'center',
+        alignItems: 'center'
     },
     image: {
-        width: 190, // Set image to 70% of the screen width
-        height: 190, // Set a fixed height for the image
+        width: 190, 
+        height: 190, 
         resizeMode: 'contain', // Ensure the image maintains aspect ratio
-        marginTop: 60, // Add some margin at the top to give space
+        marginTop: 60,
     },
     descriptionContainer: {
-        marginTop: 110, // Add space between the image and the text
+        marginTop: 110, 
         width: '105%',
-        height: '75%', // Increase height for better visibility
+        height: '75%', 
         borderRadius: 40,
         backgroundColor: 'white',
         padding: 15, // Add padding to give some space inside
     },
     topicText: {
-        fontWeight: 'bold', // Make the text bold
+        fontWeight: 'bold', 
         fontSize: 20, // Increase the font size for better visibility
         marginBottom: 10, // Add some margin below the topic text
         marginTop: 10,
         marginLeft: 10
     },
     scrollView: {
-        flex: 1, // Allow scrollable content to fill remaining space
+        flex: 1, 
     },
     lessonText: {
-        fontSize: 15, // Slightly smaller size for body text
-        textAlign: 'justify', // Justify the text
+        fontSize: 15, 
+        textAlign: 'justify',
         marginLeft: 20,
         marginRight: 20
     }
