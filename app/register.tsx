@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         height: 200,
-        margin: 130       
+        margin: 10
     },
     signinButton: {
         borderRadius: 50,
@@ -148,9 +148,9 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto_100Thin'
     },
     logo: {
-        width: 250,
-        height: 250, 
-        margin: 15
+        width: 350,
+        height: 350, 
+        margin: 20
     },
     backgroundImage: {
         flex: 1,

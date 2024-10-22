@@ -28,19 +28,16 @@ export default function LearnScreen() {
     {
       "id": "1",
       "name": "Plate Boundaries",
-      "image": 'https://i.imgur.com/Jd0plRs.png',
       "description": "Learn about the three types of plate boundaries: divergent, convergent, and transform."
     },
     {
       "id": "2",
       "name": "Internal Structures of the Earth",
-      "image": 'https://i.imgur.com/KGYRdPT.png',
       "description": "Explore the Earth's core, mantle, and crust."
     },
     {
       "id": "3",
       "name": "Processes and Landforms",
-      "image": 'https://i.imgur.com/q7aNvwZ.png',
       "description": "Understand various geological processes and the landforms they create."
     }
   ];
@@ -55,7 +52,6 @@ export default function LearnScreen() {
           return (
             <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
               <View style={styles.test}>
-                <Image style={styles.logoStyle} source={{ uri: topic.image }} />
                 <View style={styles.textContentContainer}>
                   <Text style={styles.topicText}>{topic.name}</Text>
                   <Text style={styles.bodyText}>{topic.description}</Text>
@@ -81,16 +77,15 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   topicText: {
-    color: '#000000',
-    fontWeight: 'bold',
+    color: '#ffffff',
     fontSize: 22,
     fontFamily: 'Roboto_500Medium',
     zIndex: 2, // topic layer
   },
   bodyText: {
-    color: '#000000',
+    color: '#ffffff',
     fontSize: 15, 
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Roboto_300Light',
     zIndex: 2, // layer
     marginTop: 5, // space of text and topic
   },
@@ -103,7 +98,7 @@ const styles = StyleSheet.create({
     //paddingHorizontal: 10, // Add padding on the sides
   },
   plateTectonicButton: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#008000',
     borderRadius: 5,
     width: '90%',
     height: 150,
@@ -114,17 +109,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     marginTop: 20,
-    opacity: 0.7,
-    overflow: 'hidden', // Ensure content stays within the button
-  },
-  logoStyle: {
-    width: '90%', // Adjusted width
-    height: '100%', // Adjusted height
-    position: 'absolute', // Position behind the text
-    opacity: 0.4, // Make sure the image is faint and doesn't interfere with text readability
-    borderRadius: 10,
-    zIndex: 1, // Ensure the logo stays behind the text
-    resizeMode: 'cover', // Ensure the image covers the background
+    
   },
   mainContainer: {
     flex: 1,
@@ -141,7 +126,7 @@ const styles = StyleSheet.create({
     fontFamily: 'sans-serif'
   },
   headerText: {
-    color: '#008000',
+    color: '#000000',
     fontWeight: 'bold',
     fontSize: 28,
     fontFamily: 'Roboto_900Black',

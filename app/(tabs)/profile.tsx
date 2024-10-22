@@ -106,19 +106,16 @@ export default function ProfileScreen() {
         {
           "id": "1",
           "name": "Plate Boundaries",
-          "image": 'https://i.imgur.com/Jd0plRs.png',
           "description": "Learn about the three types of plate boundaries: divergent, convergent, and transform."
         },
         {
           "id": "2",
           "name": "Internal Structures of the Earth",
-          "image": 'https://i.imgur.com/KGYRdPT.png',
           "description": "Explore the Earth's core, mantle, and crust."
         },
         {
           "id": "3",
           "name": "Processes and Landforms",
-          "image": 'https://i.imgur.com/q7aNvwZ.png',
           "description": "Understand various geological processes and the landforms they create."
         }
       ];
@@ -176,7 +173,6 @@ export default function ProfileScreen() {
                                             return (
                                 <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
                                     <View style={styles.test}>
-                                            <Image style={styles.logoStyle} source={{ uri: topic.image }} />
                                         <View style={styles.textContentContainer}>
                                             <Text style={styles.topicText}>{topic.name}</Text>
                                             <Text style={styles.bodyText}>{topic.description}</Text>
@@ -267,7 +263,7 @@ const profile = {
                 gold: "https://i.imgur.com/Yszl4Jp.png"
             },
             description: "Badge acquired for completing the lesson Earth Structures",
-            isAcquired: false,
+            isAcquired: true,
             score: 100
         },
         {
@@ -297,9 +293,9 @@ const profile = {
 
 const styles = StyleSheet.create({
     bodyText: {
-        color: '#000000',
+        color: '#ffffff',
         fontSize: 15, 
-        fontFamily: 'Roboto_400Regular',
+        fontFamily: 'Roboto_300Light',
         zIndex: 2, // layer
         marginTop: 5, // space of text and topic
       },
@@ -313,15 +309,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         marginTop: 10
       },
-    logoStyle: {
-        width: '90%', // Adjusted width
-        height: '100%', // Adjusted height
-        position: 'absolute', // Position behind the text
-        opacity: 0.4, // Make sure the image is faint and doesn't interfere with text readability
-        borderRadius: 10,
-        zIndex: 1, // Ensure the logo stays behind the text
-        resizeMode: 'cover', // Ensure the image covers the background
-      },
+
     test: {
         flex: 1,
         width: '90%',
@@ -370,8 +358,7 @@ const styles = StyleSheet.create({
         alignItems: 'baseline'
     },
     topicText: {
-        color: '#000000',
-        fontWeight: 'bold',
+        color: '#ffffff',
         fontSize: 22,
         fontFamily: 'Roboto_500Medium',
         zIndex: 2, // topic layer
@@ -385,7 +372,7 @@ const styles = StyleSheet.create({
         marginTop: 5
     },
     plateTectonicButton:{
-        backgroundColor: '#ffffff',
+        backgroundColor: '#008000',
         borderRadius: 5,
         width: '90%',
         height: 150,
@@ -395,9 +382,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0.2, height: 10 },
         shadowOpacity: 0.5,
         shadowRadius: 10,
-        marginTop: 20,
-        opacity: 0.7,
-        overflow: 'hidden', // Ensure content stays within the button
+        marginTop: 20
     },
     container: {
         flex: 1,
@@ -492,7 +477,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         color: '#212121',
         textAlign: 'center',
-        fontSize: 10,
+        fontSize: 13,
         fontFamily: 'Roboto_300Light'
     },
 
