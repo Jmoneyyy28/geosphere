@@ -5,8 +5,29 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { ScrollView } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function LeaderboardScreen() {
+  const BASE_URL = "https://dev-gt7gzrbyx15dlna.api.raw-labs.com/api/v1/";
+  const ENDPOINTS = {
+    "leaderboards": "leaderboards"
+  }
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    getStudents();
+  }, [])
+
+  const getStudents = () => {
+    let students = [];
+    axios.get(`${BASE_URL}${ENDPOINTS.leaderboards}`)
+      .then(res => {
+        students = res.data;
+        setStudents(students);
+      })
+  }
+
   return (
       <ScrollView>
         <View style={styles.leaderboardContainer}>
@@ -30,73 +51,6 @@ export default function LeaderboardScreen() {
     </ScrollView>
   );
 }
-
-const students = [
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  }
-]
 
 const leaderboardStyle = StyleSheet.create({
   studentLayer: {
@@ -140,23 +94,23 @@ const leaderboardStyle = StyleSheet.create({
     fontFamily: 'Roboto_400Regular',
     fontSize: 15
     
- },
-scoreContainer: {
-  flex: 1,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  height: 50,
-  margin: 100
-},
-studentAlignment: {
-  alignItems: 'center',
-  backgroundColor: 'white'
-},
-mainCointainer: {
-  justifyContent: 'center',
-  alignContent: 'center'
-}
+  },
+  scoreContainer: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    height: 50,
+    margin: 100
+  },
+  studentAlignment: {
+    alignItems: 'center',
+    backgroundColor: 'white'
+  },
+  mainCointainer: {
+    justifyContent: 'center',
+    alignContent: 'center'
+  }
 
 })
 
@@ -175,12 +129,6 @@ leaderboardContainer: {
   backgroundColor: 'white',
   alignItems: 'center',
   justifyContent: 'center',
-  // borderStyle: 'solid',
-  // borderWidth: 2,
-  // borderColor: 'red',
-  // borderTopWidth: 0,
-  // borderLeftWidth: 0,
-  // borderRightWidth: 0,
   position: 'sticky',
   zIndex: 1,
   top: -1,
