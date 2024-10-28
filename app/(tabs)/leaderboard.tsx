@@ -68,7 +68,12 @@ export default function LeaderboardScreen() {
                   {index + 1}
                 </Text>
               </View>
-              <View style={leaderboardStyle.picture}></View>
+              <View style={leaderboardStyle.picture}>
+                <Image
+                  style={leaderboardStyle.picture}
+                  source={require('@/assets/images/profile-male.png')}
+                />
+              </View>
               <Text style={leaderboardStyle.topThreeName}>{student.name}</Text>
               <Text style={leaderboardStyle.topThreeScore}>{student.score}</Text>
             </View>
@@ -85,7 +90,12 @@ export default function LeaderboardScreen() {
                 <View style={leaderboardStyle.positionCircle}>
                   <Text style={leaderboardStyle.topThreePosition}>{index + 4}</Text>
                 </View>
-                <View style={leaderboardStyle.picture}></View>
+                <View style={leaderboardStyle.picture}>
+                <Image
+                  style={leaderboardStyle.picture}
+                  source={require('@/assets/images/profile-male.png')}
+                />
+                </View>
                 <View style={leaderboardStyle.spacer}></View>
                 <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
                 <View style={leaderboardStyle.spacer}></View>
@@ -165,7 +175,7 @@ const leaderboardStyle = StyleSheet.create({
   picture: {
     width: 40,
     height: 40,
-    backgroundColor: '#ffffff',
+    // backgroundColor: '#ffffff',
     borderRadius: 20,
     alignSelf: 'center',
   },
