@@ -1,11 +1,36 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native';
-import crownImage from '@/assets/images/Crown.png'; 
+import crownImage from '@/assets/images/crown.png'; 
+import { useEffect, useState } from 'react';
+import axios from "axios";
 
 export default function LeaderboardScreen() {
-  const sortedStudents = students.sort((a, b) => b.score - a.score);
-  const topThree = sortedStudents.slice(0, 3);
-  const others = sortedStudents.slice(3);
+  const [topThree, setTopThree] = useState([]);
+  const [others, setOthers] = useState([]);
+  const BASE_URL = "https://dev-gt7gzrbyx15dlna.api.raw-labs.com/api/v1/";
+  const ENDPOINTS = {
+    "leaderboards": "leaderboards"
+  }
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    getStudents();
+  }, [])
+
+  const getStudents = () => {
+    let students = [];
+    axios.get(`${BASE_URL}${ENDPOINTS.leaderboards}`)
+      .then(res => {
+        students = res.data;
+        setStudents(students);
+
+        const sortedStudents = students.sort((a, b) => b.score - a.score);
+        const topThree = sortedStudents.slice(0, 3);
+        const others = sortedStudents.slice(3);
+        setTopThree(topThree);
+        setOthers(others);
+      })
+  }
 
   return (
     <ScrollView>
@@ -74,72 +99,72 @@ export default function LeaderboardScreen() {
   );
 }
 
-const students = [
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 5
-  },
-  {
-    "name": "Ivan",
-    "score": 5
-  },
-  {
-    "name": "Kim",
-    "score": 5
-  },
-  {
-    "name": "Walter",
-    "score": 4
-  },
-  {
-    "name": "Sebastien",
-    "score": 4
-  },
-  {
-    "name": "Ivan",
-    "score": 4
-  },
-  {
-    "name": "Kim",
-    "score": 4
-  },
-  {
-    "name": "Walter",
-    "score": 5
-  }
-]
+// const students = [
+//   {
+//     "name": "Sebastien",
+//     "score": 5
+//   },
+//   {
+//     "name": "Ivan",
+//     "score": 5
+//   },
+//   {
+//     "name": "Kim",
+//     "score": 5
+//   },
+//   {
+//     "name": "Walter",
+//     "score": 4
+//   },
+//   {
+//     "name": "Sebastien",
+//     "score": 5
+//   },
+//   {
+//     "name": "Ivan",
+//     "score": 5
+//   },
+//   {
+//     "name": "Kim",
+//     "score": 5
+//   },
+//   {
+//     "name": "Walter",
+//     "score": 4
+//   },
+//   {
+//     "name": "Sebastien",
+//     "score": 5
+//   },
+//   {
+//     "name": "Ivan",
+//     "score": 5
+//   },
+//   {
+//     "name": "Kim",
+//     "score": 5
+//   },
+//   {
+//     "name": "Walter",
+//     "score": 4
+//   },
+//   {
+//     "name": "Sebastien",
+//     "score": 4
+//   },
+//   {
+//     "name": "Ivan",
+//     "score": 4
+//   },
+//   {
+//     "name": "Kim",
+//     "score": 4
+//   },
+//   {
+//     "name": "Walter",
+//     "score": 5
+//   }
+// ]
 
 const leaderboardStyle = StyleSheet.create({
   topThreeContainer: {
