@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.teamgeo.geosphere"
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +33,11 @@
     "experiments": {
       "typedRoutes": true
     },
-    "entryPoint": "./app/login.tsx"
+    "entryPoint": "./app/login.tsx",
+    "extra": {
+      "eas": {
+        "projectId": "59f3ffb6-eb87-4db1-a5a0-430246ec248a"
+      }
+    }
   }
 }
