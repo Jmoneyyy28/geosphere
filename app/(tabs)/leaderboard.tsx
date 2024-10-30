@@ -1,36 +1,37 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native';
-import crownImage from '@/assets/images/crown.png'; 
-import { useEffect, useState } from 'react';
-import axios from "axios";
+import crownImage from '@/assets/images/Crown.png';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+
+// API Constants
+const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+const ENDPOINTS = {
+  leaderboards: "leaderboards"
+};
 
 export default function LeaderboardScreen() {
-  const [topThree, setTopThree] = useState([]);
-  const [others, setOthers] = useState([]);
-  const BASE_URL = "https://dev-gt7gzrbyx15dlna.api.raw-labs.com/api/v1/";
-  const ENDPOINTS = {
-    "leaderboards": "leaderboards"
-  }
+  // State for students data
   const [students, setStudents] = useState([]);
 
+  // Fetch students data on component mount
   useEffect(() => {
     getStudents();
-  }, [])
+  }, []);
 
+  // Function to fetch students from API
   const getStudents = () => {
-    let students = [];
     axios.get(`${BASE_URL}${ENDPOINTS.leaderboards}`)
       .then(res => {
-        students = res.data;
-        setStudents(students);
-
-        const sortedStudents = students.sort((a, b) => b.score - a.score);
-        const topThree = sortedStudents.slice(0, 3);
-        const others = sortedStudents.slice(3);
-        setTopThree(topThree);
-        setOthers(others);
+        setStudents(res.data);
       })
-  }
+      .catch(error => console.error("Error fetching leaderboard data:", error));
+  };
+
+  // Sort students by score
+  const sortedStudents = students.sort((a, b) => b.score - a.score);
+  const topThree = sortedStudents.slice(0, 3);
+  const others = sortedStudents.slice(3);
 
   return (
     <ScrollView>
@@ -42,10 +43,12 @@ export default function LeaderboardScreen() {
       <View style={leaderboardStyle.topThreeContainer}>
         {
           topThree.map((student, index) => (
-            <View key={index} style={[leaderboardStyle.topThreeLayer, 
+            <View key={index} style={[
+              leaderboardStyle.topThreeLayer,
               index === 0 ? styles.gold : 
               index === 1 ? styles.silver : 
-              index === 2 ? styles.bronze : {}]}>
+              index === 2 ? styles.bronze : {}
+            ]}>
               
               {/* Image for the top player */}
               {index === 0 && (
@@ -56,24 +59,23 @@ export default function LeaderboardScreen() {
               )}
 
               {/* Circle position for top players */}
-              <View style={[leaderboardStyle.positionCircle, 
+              <View style={[
+                leaderboardStyle.positionCircle,
                 index === 0 ? { borderColor: 'gold' } : 
                 index === 1 ? { borderColor: 'silver' } : 
                 index === 2 ? { borderColor: '#cd7f32' } : 
-                { borderColor: '#008000' }]}>
-                <Text style={[leaderboardStyle.topThreePosition, 
+                { borderColor: '#008000' }
+              ]}>
+                <Text style={[
+                  leaderboardStyle.topThreePosition,
                   index === 0 ? styles.goldNumber : 
                   index === 1 ? styles.silverNumber : 
-                  index === 2 ? styles.bronzeNumber : {}]}>
+                  index === 2 ? styles.bronzeNumber : {}
+                ]}>
                   {index + 1}
                 </Text>
               </View>
-              <View style={leaderboardStyle.picture}>
-                <Image
-                  style={leaderboardStyle.picture}
-                  source={require('@/assets/images/profile-male.png')}
-                />
-              </View>
+              <View style={leaderboardStyle.picture}></View>
               <Text style={leaderboardStyle.topThreeName}>{student.name}</Text>
               <Text style={leaderboardStyle.topThreeScore}>{student.score}</Text>
             </View>
@@ -90,12 +92,7 @@ export default function LeaderboardScreen() {
                 <View style={leaderboardStyle.positionCircle}>
                   <Text style={leaderboardStyle.topThreePosition}>{index + 4}</Text>
                 </View>
-                <View style={leaderboardStyle.picture}>
-                <Image
-                  style={leaderboardStyle.picture}
-                  source={require('@/assets/images/profile-male.png')}
-                />
-                </View>
+                <View style={leaderboardStyle.picture}></View>
                 <View style={leaderboardStyle.spacer}></View>
                 <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
                 <View style={leaderboardStyle.spacer}></View>
@@ -108,7 +105,6 @@ export default function LeaderboardScreen() {
     </ScrollView>
   );
 }
-
 
 const leaderboardStyle = StyleSheet.create({
   topThreeContainer: {
@@ -175,7 +171,7 @@ const leaderboardStyle = StyleSheet.create({
   picture: {
     width: 40,
     height: 40,
-    // backgroundColor: '#ffffff',
+    backgroundColor: '#ffffff',
     borderRadius: 20,
     alignSelf: 'center',
   },

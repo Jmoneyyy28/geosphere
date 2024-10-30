@@ -11,36 +11,40 @@ import {
   TouchableHighlight
 } from 'react-native';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 
+const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+const ENDPOINTS = {
+  lessons: "lessons"
+};
+
 export default function LearnScreen() {
+
+  const [lessons, setLessons] = useState([]);
+
+  useEffect(() => {
+    getLessons();
+  }, []);
+
+  const getLessons = () => {
+    axios.get(`${BASE_URL}${ENDPOINTS.lessons}`)
+      .then(res => {
+        setLessons(res.data);
+      })
+      .catch(error => console.error("Error fetching leaderboard data:", error));
+  };
+
   const router = useRouter();
 
-  const openTopic = (id) => {
+  const openLessons = (id) => {
     console.log(id);
     router.push(`/topic/${id}`);
   };
 
-  const topics = [
-    {
-      "id": "1",
-      "name": "Plate Boundaries",
-      "description": "Learn about the three types of plate boundaries: divergent, convergent, and transform."
-    },
-    {
-      "id": "2",
-      "name": "Internal Structures of the Earth",
-      "description": "Explore the Earth's core, mantle, and crust."
-    },
-    {
-      "id": "3",
-      "name": "Processes and Landforms",
-      "description": "Understand various geological processes and the landforms they create."
-    }
-  ];
 
   return (
     <View style={styles.mainContainer}>
@@ -48,13 +52,13 @@ export default function LearnScreen() {
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
       {
-        topics.map((topic) => {
+        lessons.map((lesson) => {
           return (
-            <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
+            <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openLessons(lesson.id)} key={lesson.id}>
               <View style={styles.test}>
                 <View style={styles.textContentContainer}>
-                  <Text style={styles.topicText}>{topic.name}</Text>
-                  <Text style={styles.bodyText}>{topic.description}</Text>
+                  <Text style={styles.topicText}>{lesson.name}</Text>
+                  <Text style={styles.bodyText}>{lesson.description}</Text>
                 </View>
               </View>
             </GeoButton>

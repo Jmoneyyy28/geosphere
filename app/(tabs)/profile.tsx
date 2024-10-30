@@ -226,10 +226,10 @@ export default function ProfileScreen() {
                                                                                 {feedback.Teacher}
                                                                             </Text>
                                                                 </View>
-                                                                                <ScrollView style={styles.contentText}>
+                                                                                <View style={styles.contentText}>
                                                                                     <Text style={styles.topicText2}>{feedback.name}</Text>
                                                                                     <Text style={styles.lessonText}>{feedback.feedback}</Text>
-                                                                                </ScrollView>
+                                                                                </View>
                                                                     
                                                             </View>
                                                         
@@ -338,7 +338,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginTop: 25,
         padding: 25,
-        height: 150,
         width: 350,
         shadowColor: '#212121',
         shadowOffset: {
@@ -347,6 +346,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.1,
         shadowRadius: 50,
+        flexShrink: 1
     },
     feedbackStyle:{
         width: 35,
