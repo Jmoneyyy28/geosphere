@@ -49,18 +49,13 @@ export default function ProfileScreen() {
   }, []);
 
   const getBadges = () => {
-    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+    axios.get(`${BASE_URL}${ENDPOINTS.badges}`)
       .then(res => {
         setBadges(res.data);
       })
       .catch(error => {
-        console.error("Error fetching topics:", error);
+        console.error("Error fetching badges:", error);
       });
-  };
-
-  const openBadges = (id) => {
-    console.log(id);
-    router.push(`/badge/${id}`);
   };
 
     const [segmentButtons, setSegmentButtons] = useState([

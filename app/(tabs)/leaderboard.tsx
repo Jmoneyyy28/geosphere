@@ -11,7 +11,9 @@ export default function LeaderboardScreen() {
     leaderboards: "leaderboards"
   };
   // State for students data
-  const [students, setStudents] = useState([]);
+  const [students, setStudents] = useState(null);
+  const [topThree, setTopThree] = useState(null);
+  const [others, setOthers] = useState(null);
 
   // Fetch students data on component mount
   useEffect(() => {
@@ -22,15 +24,17 @@ export default function LeaderboardScreen() {
   const getStudents = () => {
     axios.get(`${BASE_URL}${ENDPOINTS.leaderboards}`)
       .then(res => {
-        setStudents(res.data);
+        const students = res.data;
+        setStudents(students);
+        // Sort students by score
+        const sortedStudents = students.sort((a, b) => b.score - a.score);
+        const topThree = sortedStudents.slice(0, 3);
+        const others = sortedStudents.slice(3);
+        setTopThree(topThree);
+        setOthers(others);
       })
       .catch(error => console.error("Error fetching leaderboard data:", error));
   };
-
-  // Sort students by score
-  const sortedStudents = students.sort((a, b) => b.score - a.score);
-  const topThree = sortedStudents.slice(0, 3);
-  const others = sortedStudents.slice(3);
 
   return (
     <ScrollView>
@@ -38,69 +42,72 @@ export default function LeaderboardScreen() {
         <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
       </View>
 
-      {/* Top 3 Students Section */}
-      <View style={leaderboardStyle.topThreeContainer}>
-        {
-          topThree.map((student, index) => (
-            <View key={index} style={[
-              leaderboardStyle.topThreeLayer,
-              index === 0 ? styles.gold : 
-              index === 1 ? styles.silver : 
-              index === 2 ? styles.bronze : {}
-            ]}>
-              
-              {/* Image for the top player */}
-              {/* {index === 0 && (
-                <Image  
-                  source={crownImage} 
-                  style={leaderboardStyle.crownImage} 
-                />
-              )} */}
-
-              {/* Circle position for top players */}
-              <View style={[
-                leaderboardStyle.positionCircle,
-                index === 0 ? { borderColor: 'gold' } : 
-                index === 1 ? { borderColor: 'silver' } : 
-                index === 2 ? { borderColor: '#cd7f32' } : 
-                { borderColor: '#008000' }
-              ]}>
-                <Text style={[
-                  leaderboardStyle.topThreePosition,
-                  index === 0 ? styles.goldNumber : 
-                  index === 1 ? styles.silverNumber : 
-                  index === 2 ? styles.bronzeNumber : {}
+      {
+        !students ?
+          <Image style={{height: 50, width: 50}} source={require('@/assets/images/loading.gif')} />
+        :
+        <>
+          <View style={leaderboardStyle.topThreeContainer}>
+            {
+              topThree.map((student, index) => (
+                <View key={index} style={[
+                  leaderboardStyle.topThreeLayer,
+                  index === 0 ? styles.gold : 
+                  index === 1 ? styles.silver : 
+                  index === 2 ? styles.bronze : {}
                 ]}>
-                  {index + 1}
-                </Text>
-              </View>
-              <View style={leaderboardStyle.picture}></View>
-              <Text style={leaderboardStyle.topThreeName}>{student.name}</Text>
-              <Text style={leaderboardStyle.topThreeScore}>{student.score}</Text>
-            </View>
-          ))
-        }
-      </View>
+                  
+                  {/* {index === 0 && (
+                    <Image  
+                      source={crownImage} 
+                      style={leaderboardStyle.crownImage} 
+                    />
+                  )} */}
 
-      {/* Main Leaderboard */}
-      <View>
-        {
-          others.map((student, index) => (
-            <View key={index + 3} style={leaderboardStyle.studentAlignment}>
-              <View style={leaderboardStyle.studentLayer}>
-                <View style={leaderboardStyle.positionCircle}>
-                  <Text style={leaderboardStyle.topThreePosition}>{index + 4}</Text>
+                  <View style={[
+                    leaderboardStyle.positionCircle,
+                    index === 0 ? { borderColor: 'gold' } : 
+                    index === 1 ? { borderColor: 'silver' } : 
+                    index === 2 ? { borderColor: '#cd7f32' } : 
+                    { borderColor: '#008000' }
+                  ]}>
+                    <Text style={[
+                      leaderboardStyle.topThreePosition,
+                      index === 0 ? styles.goldNumber : 
+                      index === 1 ? styles.silverNumber : 
+                      index === 2 ? styles.bronzeNumber : {}
+                    ]}>
+                      {index + 1}
+                    </Text>
+                  </View>
+                  <View style={leaderboardStyle.picture}></View>
+                  <Text style={leaderboardStyle.topThreeName}>{student.name}</Text>
+                  <Text style={leaderboardStyle.topThreeScore}>{student.score}</Text>
                 </View>
-                <View style={leaderboardStyle.picture}></View>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
-                <View style={leaderboardStyle.spacer}></View>
-                <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
-              </View>
-            </View>
-          ))
-        }
-      </View>
+              ))
+            }
+          </View>
+
+          <View>
+            {
+              others.map((student, index) => (
+                <View key={index + 3} style={leaderboardStyle.studentAlignment}>
+                  <View style={leaderboardStyle.studentLayer}>
+                    <View style={leaderboardStyle.positionCircle}>
+                      <Text style={leaderboardStyle.topThreePosition}>{index + 4}</Text>
+                    </View>
+                    <View style={leaderboardStyle.picture}></View>
+                    <View style={leaderboardStyle.spacer}></View>
+                    <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
+                    <View style={leaderboardStyle.spacer}></View>
+                    <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
+                  </View>
+                </View>
+              ))
+            }
+          </View>
+        </>
+      }
     </ScrollView>
   );
 }
