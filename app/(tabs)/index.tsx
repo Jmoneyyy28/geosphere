@@ -11,40 +11,39 @@ import {
   TouchableHighlight
 } from 'react-native';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 
-const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
-const ENDPOINTS = {
-  lessons: "lessons"
-};
-
 export default function LearnScreen() {
-
-  const [lessons, setLessons] = useState([]);
-
-  useEffect(() => {
-    getLessons();
-  }, []);
-
-  const getLessons = () => {
-    axios.get(`${BASE_URL}${ENDPOINTS.lessons}`)
-      .then(res => {
-        setLessons(res.data);
-      })
-      .catch(error => console.error("Error fetching leaderboard data:", error));
+  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+  const ENDPOINTS = {
+    topics: "topics" 
   };
-
   const router = useRouter();
 
-  const openLessons = (id) => {
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    getTopics();
+  }, []);
+
+  const getTopics = () => {
+    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+      .then(res => {
+        setTopics(res.data);
+      })
+      .catch(error => {
+        console.error("Error fetching topics:", error);
+      });
+  };
+
+  const openTopic = (id) => {
     console.log(id);
     router.push(`/topic/${id}`);
   };
-
 
   return (
     <View style={styles.mainContainer}>
@@ -52,13 +51,13 @@ export default function LearnScreen() {
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
       {
-        lessons.map((lesson) => {
+        topics.map((topic) => {
           return (
-            <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openLessons(lesson.id)} key={lesson.id}>
+            <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
               <View style={styles.test}>
                 <View style={styles.textContentContainer}>
-                  <Text style={styles.topicText}>{lesson.name}</Text>
-                  <Text style={styles.bodyText}>{lesson.description}</Text>
+                  <Text style={styles.topicText}>{topic.name}</Text>
+                  <Text style={styles.bodyText}>{topic.description}</Text>
                 </View>
               </View>
             </GeoButton>
@@ -67,7 +66,7 @@ export default function LearnScreen() {
       }
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   textContentContainer: {
