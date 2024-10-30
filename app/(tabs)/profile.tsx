@@ -6,13 +6,67 @@ import {
     ScrollView
 } from 'react-native';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 
 export default function ProfileScreen() {
+
+  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+  const ENDPOINTS = {
+    topics: "topics" 
+  };
+
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    getTopics();
+  }, []);
+
+  const getTopics = () => {
+    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+      .then(res => {
+        setTopics(res.data);
+      })
+      .catch(error => {
+        console.error("Error fetching topics:", error);
+      });
+  };
+
+  const openTopic = (id) => {
+    console.log(id);
+    router.push(`/topic/${id}`);
+  };
+
+  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+  const ENDPOINTS = {
+    badges: "badges" 
+  };
+
+  const [badges, setBadges] = useState([]);
+
+  useEffect(() => {
+    getBadges();
+  }, []);
+
+  const getBadges = () => {
+    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+      .then(res => {
+        setBadges(res.data);
+      })
+      .catch(error => {
+        console.error("Error fetching topics:", error);
+      });
+  };
+
+  const openBadges = (id) => {
+    console.log(id);
+    router.push(`/badge/${id}`);
+  };
+
     const [segmentButtons, setSegmentButtons] = useState([
         {
             name: "Lessons",
@@ -37,10 +91,6 @@ export default function ProfileScreen() {
             return badge.images.bronze
         }
     }
-    const openTopic = (id) => {
-        console.log(id);
-        router.push(`/topic/${id}`);
-      };
 
     const router = useRouter();
 
@@ -102,23 +152,6 @@ export default function ProfileScreen() {
         setSegmentButtons(updatedButtons);
     }
     
-    const topics = [
-        {
-          "id": "1",
-          "name": "Plate Boundaries",
-          "description": "Learn about the three types of plate boundaries: divergent, convergent, and transform."
-        },
-        {
-          "id": "2",
-          "name": "Internal Structures of the Earth",
-          "description": "Explore the Earth's core, mantle, and crust."
-        },
-        {
-          "id": "3",
-          "name": "Processes and Landforms",
-          "description": "Understand various geological processes and the landforms they create."
-        }
-      ];
 
     return (
         <View style={styles.container}>
