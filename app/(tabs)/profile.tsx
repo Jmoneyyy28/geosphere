@@ -17,7 +17,8 @@ export default function ProfileScreen() {
 
   const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
   const ENDPOINTS = {
-    topics: "topics" 
+    topics: "topics",
+    badges: "badges" 
   };
 
   const [topics, setTopics] = useState([]);
@@ -39,11 +40,6 @@ export default function ProfileScreen() {
   const openTopic = (id) => {
     console.log(id);
     router.push(`/topic/${id}`);
-  };
-
-  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
-  const ENDPOINTS = {
-    badges: "badges" 
   };
 
   const [badges, setBadges] = useState([]);

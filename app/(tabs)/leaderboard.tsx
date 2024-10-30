@@ -1,16 +1,15 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native';
-import crownImage from '@/assets/images/Crown.png';
+// import crownImage from '@/assets/images/Crown.png';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// API Constants
-const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
-const ENDPOINTS = {
-  leaderboards: "leaderboards"
-};
-
 export default function LeaderboardScreen() {
+  // API Constants
+  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
+  const ENDPOINTS = {
+    leaderboards: "leaderboards"
+  };
   // State for students data
   const [students, setStudents] = useState([]);
 
@@ -51,12 +50,12 @@ export default function LeaderboardScreen() {
             ]}>
               
               {/* Image for the top player */}
-              {index === 0 && (
+              {/* {index === 0 && (
                 <Image  
                   source={crownImage} 
                   style={leaderboardStyle.crownImage} 
                 />
-              )}
+              )} */}
 
               {/* Circle position for top players */}
               <View style={[
