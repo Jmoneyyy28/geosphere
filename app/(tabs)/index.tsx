@@ -1,14 +1,8 @@
 import {
   Image,
   StyleSheet,
-  TextInput,
-  Modal,
   View,
-  Pressable,
   Text,
-  ImageBackground,
-  TouchableOpacity,
-  TouchableHighlight
 } from 'react-native';
 
 import React, { useState, useEffect } from 'react';
@@ -24,24 +18,28 @@ export default function LearnScreen() {
   };
   const router = useRouter();
 
+  // State for topics and loading
   const [topics, setTopics] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getTopics();
   }, []);
 
+  // Fetch topics from API
   const getTopics = () => {
     axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
       .then(res => {
         setTopics(res.data);
+        setLoading(false); // Stop loading when data is fetched
       })
       .catch(error => {
         console.error("Error fetching topics:", error);
+        setLoading(false); // Stop loading on error
       });
   };
 
   const openTopic = (id) => {
-    console.log(id);
     router.push(`/topic/${id}`);
   };
 
@@ -50,9 +48,14 @@ export default function LearnScreen() {
       <View style={styles.topicContainer}>
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
+      
       {
-        topics.map((topic) => {
-          return (
+        !loading ? (
+          <View style={styles.loadingPosition}>
+            <Image style={{ height: 400, width: 400 }} source={require('@/assets/images/loading.gif')} />
+          </View>
+        ) : (
+          topics.map((topic) => (
             <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
               <View style={styles.test}>
                 <View style={styles.textContentContainer}>
@@ -61,21 +64,24 @@ export default function LearnScreen() {
                 </View>
               </View>
             </GeoButton>
-          )
-        })
+          ))
+        )
       }
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  loadingPosition: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   textContentContainer: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'baseline',
-    //marginLeft: 1, // Space between the image and text
-    maxWidth: '95%', 
-    zIndex: 2, // text layer
+    maxWidth: '95%',
     position: 'absolute',
     marginTop: 10
   },
@@ -83,14 +89,12 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 22,
     fontFamily: 'Roboto_500Medium',
-    zIndex: 2, // topic layer
   },
   bodyText: {
     color: '#ffffff',
     fontSize: 15, 
     fontFamily: 'Roboto_300Light',
-    zIndex: 2, // layer
-    marginTop: 5, // space of text and topic
+    marginTop: 5,
   },
   test: {
     flex: 1,
@@ -98,7 +102,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'flex-start', 
     justifyContent: 'flex-start'
-    //paddingHorizontal: 10, // Add padding on the sides
   },
   plateTectonicButton: {
     backgroundColor: '#008000',
@@ -112,7 +115,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 10,
     marginTop: 20,
-    
   },
   mainContainer: {
     flex: 1,
