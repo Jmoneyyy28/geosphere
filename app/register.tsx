@@ -10,20 +10,41 @@ import {
     TouchableHighlight
  } from 'react-native';
 import React from 'react';
-import { Link, useNavigation, useLocalSearchParams} from 'expo-router';
+import { Link, useNavigation, useLocalSearchParams, useRouter} from 'expo-router';
 import { useEffect } from 'react';
 import { GeoButton } from '@/components/GeoButton';
+import axios from 'axios'
+
 
 export default function RegisterScreen() {
+    const router = useRouter();
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
     const [idnumber, setIdnumber] = React.useState('');
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = React.useState(false);
-    const signin = () => {
-        console.log ("Invalid");
-        //setModalVisible(!modalVisible);
-    }
+    const signup = (username, password, firstName, lastName,idnumber) => {
+        axios.post(`http://localhost:3000/authentication/register`,
+            {
+                username: username,
+                password: password,
+                firstName: firstName,
+                lastName: lastName,
+                idnumber: idnumber
+            }
+        )
+        .then(res => {
+          const student = res.data[0];
+          if (student) {
+            router.replace({pathname: "/login"});
+          } else {
+            console.log("invalid")
+          }
+        })
+        
+    };
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
       }, [navigation]);
@@ -53,9 +74,22 @@ export default function RegisterScreen() {
                     placeholder="Password"
                     onChangeText={setPassword}
                     value={password}
+                    secureTextEntry={true}
                     placeholderTextColor={'#ffffff'}
                 />
-                <GeoButton name='Sign Up' theme='light' style={styles.signinButton} textStyle={styles.signupText} onPress={signin}></GeoButton>
+                <TextInput style = {styles.borderUnderline}
+                    placeholder="First Name"
+                    onChangeText={setFirstName}
+                    value={firstName}
+                    placeholderTextColor={'#ffffff'}
+                />
+                <TextInput style = {styles.borderUnderline}
+                    placeholder="Last Name"
+                    onChangeText={setLastName}
+                    value={lastName}
+                    placeholderTextColor={'#ffffff'}
+                />
+                <GeoButton name='Sign Up' theme='light' style={styles.signinButton} textStyle={styles.signupText} onPress={ () => signup(username,password,firstName,lastName,idnumber)}></GeoButton>
                 <View style = {styles.registerContainer}>
                     <Text style ={styles.accountColor}>
                         Already have an account? <Link style = {styles.registerButton} href = "/login">Log in</Link>

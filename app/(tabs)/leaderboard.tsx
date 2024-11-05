@@ -1,20 +1,20 @@
   import { Image, StyleSheet, Text, View } from 'react-native';
   import { ScrollView } from 'react-native';
   // import crownImage from '@/assets/images/Crown.png';
-  import React, { useEffect, useState } from 'react';
+  import React, { useEffect, useState} from 'react';
+  import { useRouter} from 'expo-router';
   import axios from 'axios';
 
   export default function LeaderboardScreen() {
-    // API Constants
-    const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
-    const ENDPOINTS = {
-      leaderboards: "leaderboards"
-    };
     // State for students data
     const [students, setStudents] = useState(null);
     const [topThree, setTopThree] = useState(null);
     const [others, setOthers] = useState(null);
-
+    const router = useRouter();
+    const ENDPOINTS = {
+      leaderboard: "leadaerboard"
+    };
+    
     // Fetch students data on component mount
     useEffect(() => {
       getStudents();
@@ -22,10 +22,11 @@
 
     // Function to fetch students from API
     const getStudents = () => {
-      axios.get(`${BASE_URL}${ENDPOINTS.leaderboards}`)
+      axios.get(`http://localhost:3000/${ENDPOINTS.leaderboard}`)
         .then(res => {
           const students = res.data;
           setStudents(students);
+
           // Sort students by score
           const sortedStudents = students.sort((a, b) => b.score - a.score);
           const topThree = sortedStudents.slice(0, 3);

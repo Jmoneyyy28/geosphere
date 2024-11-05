@@ -13,6 +13,7 @@ import React from 'react';
 import { Link, useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
 import { useEffect } from 'react';
 import { GeoButton } from '@/components/GeoButton';
+import axios from 'axios';
 
 
 export default function LoginScreen() {
@@ -22,12 +23,20 @@ export default function LoginScreen() {
     const navigation = useNavigation();
     const router = useRouter();
     const login = (username, password) => {
-        if (username == "admin" && password == "password") {
-            router.replace("/profile");
-        } else {
-            console.log("Invalid");
-            // setModalVisible(!modalVisible);
-        }
+        axios.post(`http://localhost:3000/authentication/login`,
+            {
+                username: username,
+                password: password
+            }
+        )
+        .then(res => {
+          const student = res.data[0];
+          if (student) {
+            router.replace({pathname: "/profile", params: student});
+          } else {
+            console.log("invalid")
+          }
+        })
         
     };
     useEffect(() => {

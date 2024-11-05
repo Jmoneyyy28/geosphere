@@ -7,13 +7,14 @@ import {
 } from 'react-native';
 
 import React, { useState, useEffect} from 'react';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 
 
 export default function ProfileScreen() {
+    const profile = useLocalSearchParams();
 
   const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
   const ENDPOINTS = {
@@ -28,7 +29,7 @@ export default function ProfileScreen() {
   }, []);
 
   const getTopics = () => {
-    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+    axios.get(`http://localhost:3000/${ENDPOINTS.topics}`)
       .then(res => {
         setTopics(res.data);
       })
@@ -155,7 +156,7 @@ export default function ProfileScreen() {
                         source={require('@/assets/images/profile-male.png')} />
 
                     <Text style={styles.name}>
-                        Welcome, {profile.name}!
+                        Welcome, {profile.first_name} {profile.last_name}!
                     </Text>
                 </View>
 
@@ -191,29 +192,34 @@ export default function ProfileScreen() {
                     segmentButtons.map((segment) => {
                         if (segment.name == "Lessons" && segment.isActive) {
                             return (
-                                <View style={styles.segmentContainer}>
-                                    {
-                                        topics.map((topic) => {
-                                            return (
-                                <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
-                                    <View style={styles.test}>
-                                        <View style={styles.textContentContainer}>
-                                            <Text style={styles.topicText}>{topic.name}</Text>
-                                            <Text style={styles.bodyText}>{topic.description}</Text>
-                                        </View>
+                                !topics ?
+                                    <View style={styles.segmentContainer}>
+                                        <Image style={{height: 400, width: 400}} source={require('@/assets/images/loading.gif')} />
                                     </View>
-                                </GeoButton>
-                                            )
-                                        })
-                                    }
-                                </View>
+                                :
+                                    <View style={styles.segmentContainer}>
+                                        {
+                                            topics.map((topic) => {
+                                                return (
+                                                    <GeoButton style={styles.plateTectonicButton} textStyle={styles.textColor} onPress={() => openTopic(topic.id)} key={topic.id}>
+                                                        <View style={styles.test}>
+                                                            <View style={styles.textContentContainer}>
+                                                                <Text style={styles.topicText}>{topic.name}</Text>
+                                                                <Text style={styles.bodyText}>{topic.description}</Text>
+                                                            </View>
+                                                        </View>
+                                                    </GeoButton>
+                                                )
+                                            })
+                                        }
+                                    </View>
                             )
                         } else if (segment.name == "Badges" && segment.isActive) {
                             return (
                                 <ScrollView>
                                     <View style={styles.segmentContainer}>
                                         {
-                                            profile.badges.map((badge) => {
+                                            profile_1.badges.map((badge) => {
                                                 return (
                                                     <View style={styles.badgeContainer}>
                                                         <Image
@@ -275,7 +281,7 @@ export default function ProfileScreen() {
 
 const locked_badge = "https://i.imgur.com/ZJS5FQJ.png";
 
-const profile = {
+const profile_1 = {
     "name": "Mastrile_3210472",
     "leaderboard_rank": 3,
     "badges": [
