@@ -1,26 +1,14 @@
-import {
-  Image,
-  StyleSheet,
-  TextInput,
-  Modal,
-  View,
-  Pressable,
-  Text,
-  ImageBackground,
-  TouchableHighlight,
-} from "react-native";
+import { Image, StyleSheet, TextInput, Modal, View, Text } from "react-native";
 import React from "react";
-import {
-  Link,
-  useRouter,
-  useNavigation,
-  useLocalSearchParams,
-} from "expo-router";
+import { Link, useRouter, useNavigation } from "expo-router";
 import { useEffect } from "react";
 import { GeoButton } from "@/components/GeoButton";
 import axios from "axios";
 
 import { StorageService } from "@/services/StorageService";
+
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+const LOGIN_ENDPOINT = "/authentication/login";
 
 export default function LoginScreen() {
   const [username, setUsername] = React.useState("");
@@ -29,20 +17,22 @@ export default function LoginScreen() {
   const navigation = useNavigation();
   const router = useRouter();
   const login = (username, password) => {
-    axios
-      .post(`http://localhost:3000/authentication/login`, {
+    axios({
+      url: LOGIN_ENDPOINT,
+      method: "post",
+      data: {
         username: username,
         password: password,
-      })
-      .then((res) => {
-        const student = res.data[0];
-        if (student) {
-          StorageService.storeData("profile", student);
-          router.replace({ pathname: "/profile" });
-        } else {
-          console.log("invalid");
-        }
-      });
+      },
+    }).then((res) => {
+      const student = res.data[0];
+      if (student) {
+        StorageService.storeData("profile", student);
+        router.replace({ pathname: "/profile" });
+      } else {
+        console.log("invalid");
+      }
+    });
   };
 
   useEffect(() => {
