@@ -5,21 +5,48 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { GeoButton } from "@/components/GeoButton";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
+import { StorageService } from "@/services/StorageService";
 
 export default function ProfileScreen() {
-  const profile = useLocalSearchParams();
+  const router = useRouter();
+  const [profile, setProfile] = useState(null);
+  const [badges, setBadges] = useState([]);
+  const [topics, setTopics] = useState([]);
+  const [segmentButtons, setSegmentButtons] = useState([
+    {
+      name: "Lessons",
+      isActive: true,
+    },
+    {
+      name: "Badges",
+      isActive: false,
+    },
+    {
+      name: "Feedback",
+      isActive: false,
+    },
+  ]);
 
-  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
   const ENDPOINTS = {
     topics: "topics",
-    badges: "badges",
+    badge: "badge",
   };
-
-  const [topics, setTopics] = useState([]);
 
   useEffect(() => {
     getTopics();
+    getProfile();
+    // getBadges();
   }, []);
+
+  const getProfile = () => {
+    StorageService.getData("profile").then((profile) => {
+      if (profile) {
+        setProfile(profile);
+      } else {
+        router.replace("/login");
+      }
+    });
+  };
 
   const getTopics = () => {
     axios
@@ -37,15 +64,9 @@ export default function ProfileScreen() {
     router.push(`/topic/${id}`);
   };
 
-  const [badges, setBadges] = useState([]);
-
-  useEffect(() => {
-    getBadges();
-  }, []);
-
   const getBadges = () => {
     axios
-      .get(`${BASE_URL}${ENDPOINTS.badges}`)
+      .get(`http://localhost:3000/${ENDPOINTS.badge}`)
       .then((res) => {
         setBadges(res.data);
       })
@@ -53,21 +74,6 @@ export default function ProfileScreen() {
         console.error("Error fetching badges:", error);
       });
   };
-
-  const [segmentButtons, setSegmentButtons] = useState([
-    {
-      name: "Lessons",
-      isActive: true,
-    },
-    {
-      name: "Badges",
-      isActive: false,
-    },
-    {
-      name: "Feedback",
-      isActive: false,
-    },
-  ]);
 
   const getBadge = (badge) => {
     if (badge.score > 75) {
@@ -79,9 +85,8 @@ export default function ProfileScreen() {
     }
   };
 
-  const router = useRouter();
-
   const signOut = () => {
+    StorageService.storeData("profile", null);
     router.replace("/login");
   };
 
@@ -149,7 +154,7 @@ export default function ProfileScreen() {
           />
 
           <Text style={styles.name}>
-            Welcome, {profile.first_name} {profile.last_name}!
+            Welcome, {profile?.first_name} {profile?.last_name}!
           </Text>
         </View>
 
@@ -198,9 +203,11 @@ export default function ProfileScreen() {
                     >
                       <View style={styles.test}>
                         <View style={styles.textContentContainer}>
-                          <Text style={styles.topicText}>{topic.name}</Text>
+                          <Text style={styles.topicText}>
+                            {topic.topic_name}
+                          </Text>
                           <Text style={styles.bodyText}>
-                            {topic.description}
+                            {topic.topic_description}
                           </Text>
                         </View>
                       </View>
@@ -222,9 +229,9 @@ export default function ProfileScreen() {
                             badge.isAcquired ? getBadge(badge) : locked_badge
                           }
                         />
-                        <Text style={styles.badgeName}>{badge.name}</Text>
+                        <Text style={styles.badgeName}>{badge.badge_name}</Text>
                         <Text style={styles.badgeDescription}>
-                          {badge.description}
+                          {badge.badge_description}
                         </Text>
                       </View>
                     );
