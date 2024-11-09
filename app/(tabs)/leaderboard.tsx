@@ -12,7 +12,7 @@
     const [others, setOthers] = useState(null);
     const router = useRouter();
     const ENDPOINTS = {
-      leaderboard: "leadaerboard"
+      leaderboard: "leaderboard"
     };
     
     // Fetch students data on component mount
@@ -25,7 +25,7 @@
       axios.get(`http://localhost:3000/${ENDPOINTS.leaderboard}`)
         .then(res => {
           const students = res.data;
-          setStudents(students);
+          setStudents(res.data);
 
           // Sort students by score
           const sortedStudents = students.sort((a, b) => b.score - a.score);

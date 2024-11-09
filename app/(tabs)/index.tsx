@@ -12,7 +12,6 @@ import { useRouter } from 'expo-router';
 import { GeoButton } from '@/components/GeoButton';
 
 export default function LearnScreen() {
-  const BASE_URL = "https://dev-p9dsmajcnao35cj.api.raw-labs.com/api/";
   const ENDPOINTS = {
     topics: "topics" 
   };
@@ -28,14 +27,12 @@ export default function LearnScreen() {
 
   // Fetch topics from API
   const getTopics = () => {
-    axios.get(`${BASE_URL}${ENDPOINTS.topics}`)
+    axios.get(`http://localhost:3000/${ENDPOINTS.topics}`)
       .then(res => {
         setTopics(res.data);
-        setLoading(false); // Stop loading when data is fetched
       })
       .catch(error => {
         console.error("Error fetching topics:", error);
-        setLoading(false); // Stop loading on error
       });
   };
 
