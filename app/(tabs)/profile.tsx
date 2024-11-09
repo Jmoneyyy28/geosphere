@@ -10,14 +10,17 @@ import { StorageService } from "@/services/StorageService";
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
   topics: "topics",
-  badge: "badge",
+  badges: "badges",
+  feedback: "feedback",
 };
+const BADGE_LOCK = "https://i.imgur.com/ZJS5FQJ.png";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
   const [badges, setBadges] = useState([]);
   const [topics, setTopics] = useState([]);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [segmentButtons, setSegmentButtons] = useState([
     {
       name: "Lessons",
@@ -34,10 +37,16 @@ export default function ProfileScreen() {
   ]);
 
   useEffect(() => {
-    getTopics();
     getProfile();
-    // getBadges();
+    getTopics();
+    getBadges();
   }, []);
+
+  useEffect(() => {
+    if (profile) {
+      getFeedbacks();
+    }
+  }, [profile]);
 
   const getProfile = () => {
     StorageService.getData("profile").then((profile) => {
@@ -63,20 +72,40 @@ export default function ProfileScreen() {
       });
   };
 
-  const openTopic = (id) => {
-    console.log(id);
-    router.push(`/topic/${id}`);
-  };
-
   const getBadges = () => {
-    axios
-      .get(`http://localhost:3000/${ENDPOINTS.badge}`)
+    axios({
+      method: "get",
+      url: ENDPOINTS.badges,
+    })
       .then((res) => {
+        console.log(res.data);
         setBadges(res.data);
       })
       .catch((error) => {
-        console.error("Error fetching badges:", error);
+        console.error("Error fetching topics:", error);
       });
+  };
+
+  const getFeedbacks = () => {
+    axios({
+      method: "get",
+      url: ENDPOINTS.feedback,
+      params: {
+        student_id: profile.id,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setFeedbacks(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching feedbacks:", error);
+      });
+  };
+
+  const openTopic = (id) => {
+    console.log(id);
+    router.push(`/topic/${id}`);
   };
 
   const getBadge = (badge) => {
@@ -107,33 +136,33 @@ export default function ProfileScreen() {
     router.push(`/feedback/${id}`);
   };
 
-  const feedbacks = [
-    {
-      id: 1,
-      name: "Plate boundaries",
-      Teacher: "Sir. 1",
-      feedback:
-        "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! ",
-    },
-    {
-      id: 2,
-      name: "Internal Structures of the Earth",
-      Teacher: "Sir. 2",
-      feedback: "Bad!",
-    },
-    {
-      id: 3,
-      name: "Processes and Landforms",
-      Teacher: "Sir. 3",
-      feedback: "Excellent",
-    },
-    {
-      id: 4,
-      name: "Internal Structures of the Earth",
-      Teacher: "Sir. 4",
-      feedback: "Bad!",
-    },
-  ];
+  // const feedbacks = [
+  //   {
+  //     id: 1,
+  //     name: "Plate boundaries",
+  //     Teacher: "Sir. 1",
+  //     feedback:
+  //       "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! ",
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Plate Boundaries",
+  //     Teacher: "Sir. 1",
+  //     feedback: "Bad!",
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Processes and Landforms",
+  //     Teacher: "Sir. 3",
+  //     feedback: "Excellent",
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Internal Structures of the Earth",
+  //     Teacher: "Sir. 4",
+  //     feedback: "Bad!",
+  //   },
+  // ];
 
   const updateView = (name) => {
     const updatedButtons = [];
@@ -224,14 +253,12 @@ export default function ProfileScreen() {
             return (
               <ScrollView>
                 <View style={styles.segmentContainer}>
-                  {profile_1.badges.map((badge) => {
+                  {badges.map((badge) => {
                     return (
                       <View style={styles.badgeContainer}>
                         <Image
                           style={styles.badgeImage}
-                          source={
-                            badge.isAcquired ? getBadge(badge) : locked_badge
-                          }
+                          source={badge.badge_gold}
                         />
                         <Text style={styles.badgeName}>{badge.badge_name}</Text>
                         <Text style={styles.badgeDescription}>
@@ -256,11 +283,13 @@ export default function ProfileScreen() {
                             source={require("@/assets/images/profile-male.png")}
                           />
                           <Text style={styles.teacherName}>
-                            {feedback.Teacher}
+                            {feedback.first_name} {feedback.last_name}
                           </Text>
                         </View>
                         <View style={styles.contentText}>
-                          <Text style={styles.topicText2}>{feedback.name}</Text>
+                          <Text style={styles.topicText2}>
+                            {feedback.quiz_title}
+                          </Text>
                           <Text style={styles.lessonText}>
                             {feedback.feedback}
                           </Text>
@@ -277,48 +306,6 @@ export default function ProfileScreen() {
     </View>
   );
 }
-
-const locked_badge = "https://i.imgur.com/ZJS5FQJ.png";
-
-const profile_1 = {
-  name: "Mastrile_3210472",
-  leaderboard_rank: 3,
-  badges: [
-    {
-      name: "Earth Structures",
-      images: {
-        bronze: "https://i.imgur.com/auHaCIs.png",
-        silver: "https://i.imgur.com/nQMeKD9.png",
-        gold: "https://i.imgur.com/Yszl4Jp.png",
-      },
-      description: "Badge acquired for completing the lesson Earth Structures",
-      isAcquired: true,
-      score: 100,
-    },
-    {
-      name: "Plate Boundaries",
-      images: {
-        bronze: "https://i.imgur.com/yzvNj2Q.png",
-        silver: "https://i.imgur.com/a8FZ3zO.png",
-        gold: "https://i.imgur.com/AOSXqWc.png",
-      },
-      description: "Badge acquired for completing the lesson Plate Boundaries",
-      isAcquired: true,
-      score: 60,
-    },
-    {
-      name: "Landform Process",
-      images: {
-        bronze: "https://i.imgur.com/ZUySv72.png",
-        silver: "https://i.imgur.com/LCq81ws.png",
-        gold: "https://i.imgur.com/IFYOtOp.png",
-      },
-      description: "Badge acquired for completing the lesson Landform Process",
-      isAcquired: true,
-      score: 50,
-    },
-  ],
-};
 
 const styles = StyleSheet.create({
   bodyText: {
