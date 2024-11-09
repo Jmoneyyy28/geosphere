@@ -136,34 +136,6 @@ export default function ProfileScreen() {
     router.push(`/feedback/${id}`);
   };
 
-  // const feedbacks = [
-  //   {
-  //     id: 1,
-  //     name: "Plate boundaries",
-  //     Teacher: "Sir. 1",
-  //     feedback:
-  //       "You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! You did well! ",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Plate Boundaries",
-  //     Teacher: "Sir. 1",
-  //     feedback: "Bad!",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Processes and Landforms",
-  //     Teacher: "Sir. 3",
-  //     feedback: "Excellent",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Internal Structures of the Earth",
-  //     Teacher: "Sir. 4",
-  //     feedback: "Bad!",
-  //   },
-  // ];
-
   const updateView = (name) => {
     const updatedButtons = [];
 

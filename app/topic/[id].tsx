@@ -17,13 +17,15 @@ import {
     useLocalSearchParams
 } from 'expo-router';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-
+import { Audio } from 'expo-av';
 
 export default function TopicScreen() {
+    const [sound, setSound] = useState();
+
     const navigation = useNavigation();
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -61,6 +63,20 @@ export default function TopicScreen() {
         router.replace("/profile");
     }
 
+    const playSound =  async () => {
+        const { sound } = await Audio.Sound.createAsync( require('@/assets/sounds/test.mp3') );
+        setSound(sound);
+
+        console.log('Playing Sound');
+        await sound.playAsync();
+
+    }
+
+    const goToQuiz = () => {
+        console.log('asd');
+        router.replace({pathname: '/quiz', params: {topic_id: id}});
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.backButtonContainer}>
@@ -75,6 +91,7 @@ export default function TopicScreen() {
             </View>
                 <Image source={{ uri: topic.picture }} style={styles.image}/>
                     <View style={styles.optionContainer}>
+                        <GeoButton name="take quiz" onPress={() => goToQuiz()} />
                         <GeoButton 
                             onPress={backTopic}
                             theme='transparent'>
@@ -84,7 +101,7 @@ export default function TopicScreen() {
                                 />
                         </GeoButton>
                         <GeoButton 
-                            onPress={backTopic}
+                            onPress={() => playSound()}
                             theme='transparent'>
                                 <Ionicons
                                     name="volume-high-outline"
