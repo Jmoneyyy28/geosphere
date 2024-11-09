@@ -7,6 +7,12 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { StorageService } from "@/services/StorageService";
 
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+const ENDPOINTS = {
+  topics: "topics",
+  badge: "badge",
+};
+
 export default function ProfileScreen() {
   const router = useRouter();
   const [profile, setProfile] = useState(null);
@@ -27,11 +33,6 @@ export default function ProfileScreen() {
     },
   ]);
 
-  const ENDPOINTS = {
-    topics: "topics",
-    badge: "badge",
-  };
-
   useEffect(() => {
     getTopics();
     getProfile();
@@ -49,9 +50,12 @@ export default function ProfileScreen() {
   };
 
   const getTopics = () => {
-    axios
-      .get(`http://localhost:3000/${ENDPOINTS.topics}`)
+    axios({
+      method: "get",
+      url: ENDPOINTS.topics,
+    })
       .then((res) => {
+        console.log(res.data);
         setTopics(res.data);
       })
       .catch((error) => {

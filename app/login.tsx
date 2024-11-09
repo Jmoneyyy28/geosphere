@@ -8,7 +8,7 @@ import axios from "axios";
 import { StorageService } from "@/services/StorageService";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
-const LOGIN_ENDPOINT = "/authentication/login";
+const LOGIN_ENDPOINT = "authentication/login";
 
 export default function LoginScreen() {
   const [username, setUsername] = React.useState("");
