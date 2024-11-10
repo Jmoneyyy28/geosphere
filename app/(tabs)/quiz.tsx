@@ -1,9 +1,7 @@
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
 import axios from "axios";
-import { ScrollView } from "react-native-gesture-handler";
-import { GeoButton } from "@/components/GeoButton";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -15,6 +13,7 @@ export default function QuizScreen() {
   const params = useLocalSearchParams();
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
+  const [selectedAnswers, setSelectedAnswers] = useState({});
 
   useEffect(() => {
     getQuiz();
@@ -30,51 +29,140 @@ export default function QuizScreen() {
     axios({
       url: ENDPOINTS.quiz,
       method: "get",
-      params: {
-        topic_id: params.topic_id,
-      },
+      params: { topic_id: params.topic_id },
     }).then((res) => {
-      console.log(res.data);
       setQuiz(res.data[0]);
     });
   };
 
   const getQuestions = () => {
-    console.log(quiz);
     axios({
       url: ENDPOINTS.questions,
       method: "get",
-      params: {
-        quiz_id: quiz.id,
-      },
+      params: { quiz_id: quiz.id },
     }).then((res) => {
-      console.log(res.data);
       setQuestions(res.data);
     });
   };
 
+  const handleSelectAnswer = (questionId, choice) => {
+    setSelectedAnswers((prev) => ({ ...prev, [questionId]: choice }));
+  };
+
+  const handleSubmit = () => {
+    console.log("Selected answers:", selectedAnswers);
+    // Add submission logic here
+  };
+
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       {quiz === null ? (
-        <Text>Loading...</Text>
+        <View style={styles.loadingContainer}>
+          <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
+        </View>
       ) : (
         <>
-          <Text>{quiz.quiz_title}</Text>
-          <View>
+          <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
+          <View style={styles.questionsContainer}>
             {questions.map((question) => (
-              <View key={question.id}>
-                <Text>{question.question}</Text>
-                <View>
-                  <GeoButton name={question.choice_a} />
-                  <GeoButton name={question.choice_b} />
-                  <GeoButton name={question.choice_c} />
-                  <GeoButton name={question.choice_d} />
+              <View key={question.id} style={styles.questionContainer}>
+                <Text style={styles.questionText}>{question.question}</Text>
+                <View style={styles.choicesContainer}>
+                  {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => (
+                    <TouchableOpacity
+                      key={choiceKey}
+                      style={[
+                        styles.choiceButton,
+                        selectedAnswers[question.id] === question[choiceKey] && styles.selectedChoice,
+                      ]}
+                      onPress={() => handleSelectAnswer(question.id, question[choiceKey])}
+                    >
+                      <Text style={styles.choiceText}>{question[choiceKey]}</Text>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
             ))}
           </View>
+          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+            <Text style={styles.submitButtonText}>Submit Answers</Text>
+          </TouchableOpacity>
         </>
       )}
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    backgroundColor: "#f0f4f8",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 50,
+  },
+  loadingImage: {
+    width: 400,
+    height: 400,
+  },
+  quizTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#333",
+  },
+  questionsContainer: {
+    marginBottom: 20,
+  },
+  questionContainer: {
+    marginBottom: 16,
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    fontFamily: "Roboto_500Medium"
+  },
+  questionText: {
+    fontSize: 18,
+    marginBottom: 12,
+    color: "#333",
+  },
+  choicesContainer: {
+    marginTop: 10,
+  },
+  choiceButton: {
+    padding: 10,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 8,
+    backgroundColor: "#f9f9f9",
+  },
+  selectedChoice: {
+    borderColor: "#4CAF50",
+    backgroundColor: "#E8F5E9",
+  },
+  choiceText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  submitButton: {
+    backgroundColor: "#4CAF50",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  submitButtonText: {
+    fontSize: 18,
+    color: "#fff",
+    fontWeight: "bold",
+  },
+});

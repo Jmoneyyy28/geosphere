@@ -45,7 +45,7 @@ export default function LearnScreen() {
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
 
-      {!loading ? (
+      {!topics ? (
         <View style={styles.loadingPosition}>
           <Image
             style={{ height: 400, width: 400 }}
