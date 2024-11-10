@@ -12,11 +12,7 @@
     const [others, setOthers] = useState(null);
     const router = useRouter();
     const ENDPOINTS = {
-<<<<<<< HEAD
-      leaderboard: "leaderboard"
-=======
       leaderboard: "students/leaderboard"
->>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
     };
     
     // Fetch students data on component mount

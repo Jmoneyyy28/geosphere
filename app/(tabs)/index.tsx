@@ -7,10 +7,7 @@ import { useRouter } from "expo-router";
 import { GeoButton } from "@/components/GeoButton";
 
 export default function LearnScreen() {
-<<<<<<< HEAD
-=======
   const BASE_URL = "http://localhost:3000/";
->>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
   const ENDPOINTS = {
     topics: "topics",
   };
@@ -26,18 +23,12 @@ export default function LearnScreen() {
 
   // Fetch topics from API
   const getTopics = () => {
-<<<<<<< HEAD
-    axios.get(`http://localhost:3000/${ENDPOINTS.topics}`)
-      .then(res => {
-        setTopics(res.data);
-=======
     axios
       .get(`${BASE_URL}${ENDPOINTS.topics}`)
       .then((res) => {
         console.log(res.data);
         setTopics(res.data);
         // setLoading(false); // Stop loading when data is fetched
->>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
       })
       .catch((error) => {
         console.error("Error fetching topics:", error);

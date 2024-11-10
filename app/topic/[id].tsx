@@ -21,10 +21,7 @@ import { useEffect, useState } from 'react';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-<<<<<<< HEAD
-=======
 import { Audio } from 'expo-av';
->>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
 
 export default function TopicScreen() {
     const [sound, setSound] = useState();
@@ -81,47 +78,18 @@ export default function TopicScreen() {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.container}>
-                <View style={styles.backButtonContainer}>
-                    <GeoButton 
-                        onPress={backTopic}
-                        theme='transparent'>
-                        <Ionicons
-                            name="arrow-back"
-                            style={styles.backIcon}
-                        />
-                    </GeoButton>
-                </View>
-                <Image source={{ uri: topic.picture }} style={styles.image}/>
-<<<<<<< HEAD
-                <View style={styles.optionContainer}>
-                    <GeoButton 
-                        onPress={backTopic}
-                        theme='transparent'>
-                            <Ionicons
-                                name="cube"
-                                style={styles.optionIcon}
-                            />
-                    </GeoButton>
-                    <GeoButton 
-                        onPress={backTopic}
-                        theme='transparent'>
-                            <Ionicons
-                                name="volume-high-outline"
-                                style={styles.optionIcon}
-                            />
-                    </GeoButton>
-                </View>
-                <View style={styles.descriptionContainer}>
-                    <Text style={styles.topicText}>{topic.name}</Text>
-                    <ScrollView style={styles.scrollView}>
-                        <Text style={styles.lessonText}>{topic.lesson}</Text>
-                    </ScrollView>
-                </View>
+        <View style={styles.container}>
+            <View style={styles.backButtonContainer}>
+                <GeoButton 
+                    onPress={backTopic}
+                    theme='transparent'>
+                    <Ionicons
+                        name="arrow-back"
+                        style={styles.backIcon}
+                    />
+                </GeoButton>
             </View>
-        </ScrollView>
-=======
+                <Image source={{ uri: topic.picture }} style={styles.image}/>
                     <View style={styles.optionContainer}>
                         <GeoButton name="take quiz" onPress={() => goToQuiz()} />
                         <GeoButton 
@@ -149,83 +117,67 @@ export default function TopicScreen() {
                             </ScrollView>
                     </View>
         </View>
->>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
     );
 }
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow: 1,
-    },
-    container: {
-        flex: 1,
-        backgroundColor: '#008000',
-        alignItems: 'center',
-        paddingTop: 40,
-    },
-    backButtonContainer: {
-        position: 'absolute',
-        top: 20,
-        left: 25,
-        zIndex: 1,
-    },
-    backIcon: {
-        fontSize: 28,
+    optionIcon: {
+        fontSize: 30,
         color: '#ffffff',
-    },
-    image: {
-        width: 200,
-        height: 200,
-        borderRadius: 15,
-        marginTop: 50,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 5,
+        margin: 5
     },
     optionContainer: {
         position: 'absolute',
-        top: 350,
-        right: 20,
-        flexDirection: 'row',
-        backgroundColor: '#ffffff',
-        borderRadius: 25,
-        padding: 8,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
+        top: 310,
+        right: 30, 
+        zIndex: 1, // top of other elements
+        display: 'flex',
+        flexDirection: 'row'
     },
-    optionIcon: {
+    backIcon: {
         fontSize: 28,
-        color: '#008000',
-        marginHorizontal: 8,
+        color: '#ffffff'
+    },
+    backButtonContainer: {
+        position: 'absolute',
+        top: 20, 
+        left: 25, 
+        zIndex: 1, // top of other elements
+    },
+    container: {
+        flex: 1,
+        backgroundColor: '#008000', 
+        justifyContent: 'flex-start', // Align items from the top of the page
+        alignItems: 'center'
+    },
+    image: {
+        width: 190, 
+        height: 190, 
+        resizeMode: 'contain', // Ensure the image maintains aspect ratio
+        marginTop: 60,
     },
     descriptionContainer: {
-        marginTop: 120,
-        width: '90%',
-        backgroundColor: '#ffffff',
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
+        marginTop: 110, 
+        width: '105%',
+        height: '75%', 
+        borderRadius: 40,
+        backgroundColor: 'white',
+        padding: 15, // Add padding to give some space inside
     },
     topicText: {
-        fontSize: 24,
-        fontWeight: '600',
-        color: '#333',
-        marginBottom: 15,
+        fontWeight: 'bold', 
+        fontSize: 20, // Increase the font size for better visibility
+        marginBottom: 10, // Add some margin below the topic text
+        marginTop: 10,
+        marginLeft: 10
     },
     scrollView: {
-        flex: 1,
-        marginTop: 5,
+        flex: 1, 
     },
     lessonText: {
-        fontSize: 16,
-        lineHeight: 24,
-        color: '#555',
+        fontSize: 15, 
         textAlign: 'justify',
-    },
+        marginLeft: 20,
+        marginRight: 20
+    }
 });
