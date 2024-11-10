@@ -17,12 +17,18 @@ import {
     useLocalSearchParams
 } from 'expo-router';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { GeoButton } from '@/components/GeoButton';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+<<<<<<< HEAD
+=======
+import { Audio } from 'expo-av';
+>>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
 
 export default function TopicScreen() {
+    const [sound, setSound] = useState();
+
     const navigation = useNavigation();
     const { id } = useLocalSearchParams<{ id: string }>();
 
@@ -60,6 +66,20 @@ export default function TopicScreen() {
         router.replace("/profile");
     }
 
+    const playSound =  async () => {
+        const { sound } = await Audio.Sound.createAsync( require('@/assets/sounds/test.mp3') );
+        setSound(sound);
+
+        console.log('Playing Sound');
+        await sound.playAsync();
+
+    }
+
+    const goToQuiz = () => {
+        console.log('asd');
+        router.replace({pathname: '/quiz', params: {topic_id: id}});
+    }
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
@@ -74,6 +94,7 @@ export default function TopicScreen() {
                     </GeoButton>
                 </View>
                 <Image source={{ uri: topic.picture }} style={styles.image}/>
+<<<<<<< HEAD
                 <View style={styles.optionContainer}>
                     <GeoButton 
                         onPress={backTopic}
@@ -100,6 +121,35 @@ export default function TopicScreen() {
                 </View>
             </View>
         </ScrollView>
+=======
+                    <View style={styles.optionContainer}>
+                        <GeoButton name="take quiz" onPress={() => goToQuiz()} />
+                        <GeoButton 
+                            onPress={backTopic}
+                            theme='transparent'>
+                                <Ionicons
+                                    name="cube"
+                                    style={styles.optionIcon}
+                                />
+                        </GeoButton>
+                        <GeoButton 
+                            onPress={() => playSound()}
+                            theme='transparent'>
+                                <Ionicons
+                                    name="volume-high-outline"
+                                    style={styles.optionIcon}
+                                />
+                        </GeoButton>
+
+                    </View>
+                    <View style={styles.descriptionContainer}>
+                        <Text style={styles.topicText}>{topic.name}</Text>
+                            <ScrollView style={styles.scrollView}>
+                                <Text style={styles.lessonText}> {topic.lesson}</Text>
+                            </ScrollView>
+                    </View>
+        </View>
+>>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
     );
 }
 

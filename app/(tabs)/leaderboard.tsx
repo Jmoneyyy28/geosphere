@@ -12,7 +12,11 @@
     const [others, setOthers] = useState(null);
     const router = useRouter();
     const ENDPOINTS = {
+<<<<<<< HEAD
       leaderboard: "leaderboard"
+=======
+      leaderboard: "students/leaderboard"
+>>>>>>> ddffe0ab24957cd102b5f6bfa2d69dec3cc17bc7
     };
     
     // Fetch students data on component mount
@@ -84,8 +88,8 @@
                       </Text>
                     </View>
                     <View style={leaderboardStyle.picture}></View>
-                    <Text style={leaderboardStyle.topThreeName}>{student.name}</Text>
-                    <Text style={leaderboardStyle.topThreeScore}>{student.score}</Text>
+                    <Text style={leaderboardStyle.topThreeName}>{student.first_name}, {student.last_name}</Text>
+                    <Text style={leaderboardStyle.topThreeScore}>{student.total_score}</Text>
                   </View>
                 ))
               }
@@ -101,9 +105,9 @@
                       </View>
                       <View style={leaderboardStyle.picture}></View>
                       <View style={leaderboardStyle.spacer}></View>
-                      <Text style={leaderboardStyle.namePosition}>{student.name}</Text>
+                      <Text style={leaderboardStyle.namePosition}>{student.first_name}, {student.last_name}</Text>
                       <View style={leaderboardStyle.spacer}></View>
-                      <Text style={leaderboardStyle.namePosition}>{student.score}</Text>
+                      <Text style={leaderboardStyle.namePosition}>{student.total_score}</Text>
                     </View>
                   </View>
                 ))

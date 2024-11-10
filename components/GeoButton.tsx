@@ -41,8 +41,6 @@ export function GeoButton({children, name, onPress, style, textStyle, isActive, 
     
     return (
         <TouchableHighlight
-            activeOpacity={0.6}
-            underlayColor="#ffffff"
             onPress={onPress}
             style={[
                 styles.container,
