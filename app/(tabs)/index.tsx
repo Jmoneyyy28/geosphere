@@ -3,10 +3,13 @@ import { Image, StyleSheet, View, Text } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { GeoButton } from "@/components/GeoButton";
 
 export default function LearnScreen() {
+
+  const params = useLocalSearchParams();
+
   const BASE_URL = "http://localhost:3000/";
   const ENDPOINTS = {
     topics: "topics",
@@ -35,8 +38,9 @@ export default function LearnScreen() {
       });
   };
 
-  const openTopic = (id) => {
-    router.push(`/topic/${id}`);
+  const openLesson = (topic_id) => {
+    router.replace({ pathname: '/topic/lesson', params: { topic_id: topic_id } });
+
   };
 
   return (
@@ -45,7 +49,7 @@ export default function LearnScreen() {
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
 
-      {!topics ? (
+      {!loading ? (
         <View style={styles.loadingPosition}>
           <Image
             style={{ height: 400, width: 400 }}
@@ -57,7 +61,7 @@ export default function LearnScreen() {
           <GeoButton
             style={styles.plateTectonicButton}
             textStyle={styles.textColor}
-            onPress={() => openTopic(topic.id)}
+            onPress={() => openLesson(topic.id)}
             key={topic.id}
           >
             <View style={styles.test}>

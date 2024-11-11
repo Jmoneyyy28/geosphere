@@ -2,6 +2,7 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
 import axios from "axios";
+import { GeoButton } from "@/components/GeoButton";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -29,7 +30,7 @@ export default function QuizScreen() {
     axios({
       url: ENDPOINTS.quiz,
       method: "get",
-      params: { topic_id: params.topic_id },
+      params: { lesson_id: params.lesson_id },
     }).then((res) => {
       setQuiz(res.data[0]);
     });
@@ -69,7 +70,7 @@ export default function QuizScreen() {
                 <Text style={styles.questionText}>{question.question}</Text>
                 <View style={styles.choicesContainer}>
                   {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => (
-                    <TouchableOpacity
+                    <GeoButton
                       key={choiceKey}
                       style={[
                         styles.choiceButton,
@@ -78,15 +79,15 @@ export default function QuizScreen() {
                       onPress={() => handleSelectAnswer(question.id, question[choiceKey])}
                     >
                       <Text style={styles.choiceText}>{question[choiceKey]}</Text>
-                    </TouchableOpacity>
+                    </GeoButton>
                   ))}
                 </View>
               </View>
             ))}
           </View>
-          <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+          <GeoButton style={styles.submitButton} onPress={handleSubmit}>
             <Text style={styles.submitButtonText}>Submit Answers</Text>
-          </TouchableOpacity>
+          </GeoButton>
         </>
       )}
     </ScrollView>
@@ -96,7 +97,7 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    backgroundColor: "#f0f4f8",
+    backgroundColor: "#008000",
   },
   loadingContainer: {
     flex: 1,
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 20,
-    color: "#333",
+    color: "#ffffff",
   },
   questionsContainer: {
     marginBottom: 20,
@@ -127,12 +128,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 4 },
-    fontFamily: "Roboto_500Medium"
   },
   questionText: {
     fontSize: 18,
     marginBottom: 12,
     color: "#333",
+    fontFamily: "Roboto_500Medium",
   },
   choicesContainer: {
     marginTop: 10,
@@ -152,9 +153,10 @@ const styles = StyleSheet.create({
   choiceText: {
     fontSize: 16,
     color: "#333",
+    fontFamily: "Roboto_300Light",
   },
   submitButton: {
-    backgroundColor: "#4CAF50",
+    backgroundColor: "#ffffff",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     fontSize: 18,
-    color: "#fff",
+    color: "#008000",
     fontWeight: "bold",
   },
 });
