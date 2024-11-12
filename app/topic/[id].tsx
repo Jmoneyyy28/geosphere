@@ -42,7 +42,7 @@ export default function TopicScreen() {
         topics: "topics",
         badges: "badges",
         feedback: "feedback",
-        lesson: "topic/lesson"
+        lesson: "topics/lesson"
     };
 
     useEffect(() => {

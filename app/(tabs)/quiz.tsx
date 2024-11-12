@@ -40,7 +40,7 @@ export default function QuizScreen() {
     axios({
       url: ENDPOINTS.questions,
       method: "get",
-      params: { quiz_id: quiz.id },
+      params: { quiz_id: params.quiz_id },
     }).then((res) => {
       setQuestions(res.data);
     });
