@@ -103,9 +103,9 @@ export default function ProfileScreen() {
       });
   };
 
-  const openTopic = (id) => {
-    console.log(id);
-    router.push(`/topic/${id}`);
+  const openLesson = (topic_id) => {
+    router.replace({ pathname: '/lesson', params: { topic_id: topic_id } });
+
   };
 
   const getBadge = (badge) => {
@@ -203,7 +203,7 @@ export default function ProfileScreen() {
                     <GeoButton
                       style={styles.plateTectonicButton}
                       textStyle={styles.textColor}
-                      onPress={() => openTopic(topic.id)}
+                      onPress={() => openLesson(topic.id)}
                       key={topic.id}
                     >
                       <View style={styles.test}>

@@ -43,7 +43,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-				name="quiz"
+				name="lesson"
+				options={{
+					href: null,
+				}}
+			/>
+      <Tabs.Screen
+        name="quiz"
 				options={{
 					href: null,
 				}}

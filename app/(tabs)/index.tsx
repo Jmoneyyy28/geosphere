@@ -39,7 +39,7 @@ export default function LearnScreen() {
   };
 
   const openLesson = (topic_id) => {
-    router.replace({ pathname: '/topics/lesson', params: { topic_id: topic_id } });
+    router.replace({ pathname: '/lesson', params: { topic_id: topic_id } });
 
   };
 

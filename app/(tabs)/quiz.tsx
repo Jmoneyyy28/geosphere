@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import axios from "axios";
 import { GeoButton } from "@/components/GeoButton";
 
@@ -15,6 +15,7 @@ export default function QuizScreen() {
   const [quiz, setQuiz] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     getQuiz();
@@ -40,21 +41,36 @@ export default function QuizScreen() {
     axios({
       url: ENDPOINTS.questions,
       method: "get",
-      params: { quiz_id: params.quiz_id },
+      params: { quiz_id: quiz.id },
     }).then((res) => {
       setQuestions(res.data);
     });
   };
-
+  const submit = () => {
+    let tempScore = 0
+    for (let [key, value] of Object.entries(selectedAnswers)) {
+      console.log(key, value);
+      for (let i = 0; i<questions.length; i++){
+        if(questions[i].id == key){
+          if(questions[i].answer == value){
+            console.log('correct');
+            tempScore += 5
+            console.log(tempScore);
+          }
+          else{
+            console.log('wrong');
+          }
+        }
+      }
+    }
+    setScore(tempScore);
+    console.log(score);
+  }
   const handleSelectAnswer = (questionId, choice) => {
     setSelectedAnswers((prev) => ({ ...prev, [questionId]: choice }));
   };
 
-  const handleSubmit = () => {
-    console.log("Selected answers:", selectedAnswers);
-    // Add submission logic here
-  };
-
+  const isCorrectChoice = (question, choice) => question.answer === choice;
   return (
     <ScrollView style={styles.container}>
       {quiz === null ? (
@@ -69,24 +85,34 @@ export default function QuizScreen() {
               <View key={question.id} style={styles.questionContainer}>
                 <Text style={styles.questionText}>{question.question}</Text>
                 <View style={styles.choicesContainer}>
-                  {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => (
-                    <GeoButton
-                      key={choiceKey}
-                      style={[
-                        styles.choiceButton,
-                        selectedAnswers[question.id] === question[choiceKey] && styles.selectedChoice,
-                      ]}
-                      onPress={() => handleSelectAnswer(question.id, question[choiceKey])}
-                    >
-                      <Text style={styles.choiceText}>{question[choiceKey]}</Text>
-                    </GeoButton>
-                  ))}
+                  {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => {
+                    const choice = question[choiceKey];
+                    const isSelected = selectedAnswers[question.id] === choice;
+                    const isCorrect = isCorrectChoice(question, choice);
+
+                    const buttonStyle = isSelected
+                      ? isCorrect
+                        ? styles.selectedCorrectChoice
+                        : styles.selectedWrongChoice
+                      : styles.choiceButton;
+
+                    return (
+                      <GeoButton
+                        key={choiceKey}
+                        style={buttonStyle}
+                        onPress={() => handleSelectAnswer(question.id, choice)}
+                      >
+                        <Text style={styles.choiceText}>{choice}</Text>
+                      </GeoButton>
+                    );
+                  })}
                 </View>
               </View>
             ))}
           </View>
-          <GeoButton style={styles.submitButton} onPress={handleSubmit}>
-            <Text style={styles.submitButtonText}>Submit Answers</Text>
+          <GeoButton style={styles.submitButton}
+            onPress={() => submit()}
+            >
           </GeoButton>
         </>
       )}
@@ -139,16 +165,38 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   choiceButton: {
-    padding: 10,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 8,
-    backgroundColor: "#f9f9f9",
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    marginBottom: 12,
   },
-  selectedChoice: {
-    borderColor: "#4CAF50",
-    backgroundColor: "#E8F5E9",
+  selectedCorrectChoice: {
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: "#d3d3d3",
+    borderColor: "#000000",
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    marginBottom: 12,
+  },
+  selectedWrongChoice: {
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: "#d3d3d3",
+    borderColor: "#000000",
+    borderWidth: 1,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+    marginBottom: 12,
   },
   choiceText: {
     fontSize: 16,

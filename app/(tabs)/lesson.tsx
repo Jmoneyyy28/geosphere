@@ -26,15 +26,13 @@ import axios from "axios";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
-const params = useLocalSearchParams();
-
 export default function TopicScreen() {
     const [lesson, setLesson] = useState(null);
     const [loading, setLoading] = useState(true); // Track loading state
     const [sound, setSound] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false); // Track play/pause state
     
-
+    const params = useLocalSearchParams();
     const navigation = useNavigation();
     const router = useRouter();
 
@@ -50,13 +48,15 @@ export default function TopicScreen() {
     }, []);
 
     const getLesson = () => {
+        console.log(params.topic_id);
         axios({
           url: ENDPOINTS.lesson,
-          method: "get",
+          method: "get", 
           params: { topic_id: params.topic_id },
         }).then((res) => {
             console.log(res.data);
           setLesson(res.data[0]);
+          setLoading(false);
         });    
       console.log(params);
       };
@@ -97,7 +97,7 @@ export default function TopicScreen() {
     }
 
     const goToQuiz = () => {
-        router.replace({ pathname: '/quiz', params: { lesson_id: params.lesson_id } });
+        router.replace({ pathname: '/quiz', params: { lesson_id: lesson.id } });
     }
 
     return (
@@ -126,7 +126,10 @@ export default function TopicScreen() {
                                 <Ionicons name="cube" style={styles.optionIcon} />
                             </GeoButton>
                             <GeoButton onPress={toggleSound} theme='transparent'>
-                                <Ionicons name="volume-high-outline" style={styles.optionIcon} />
+                                <Ionicons
+                                    name={isPlaying ? "volume-high-outline" : "volume-mute-outline"}
+                                    style={styles.optionIcon}
+                                />
                             </GeoButton>
                         </View>
                         <View style={styles.descriptionContainer}>
