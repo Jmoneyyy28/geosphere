@@ -44,8 +44,10 @@ export default function TopicScreen() {
     };
 
     useEffect(() => {
+        setLoading(true);
         getLesson();
-    }, []);
+    }, [params.topic_id]);
+
 
     const getLesson = () => {
         console.log(params.topic_id);

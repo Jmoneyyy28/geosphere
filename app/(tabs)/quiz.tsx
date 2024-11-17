@@ -3,29 +3,51 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import axios from "axios";
 import { GeoButton } from "@/components/GeoButton";
+import { StorageService } from "@/services/StorageService";
+import Modal from "react-native-modal";
+import { useRouter } from 'expo-router';
+
+
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
   quiz: "topics/quiz",
   questions: "topics/question",
+  score: "topics/quiz",
 };
 
 export default function QuizScreen() {
   const params = useLocalSearchParams();
   const [quiz, setQuiz] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  
+  const router = useRouter();
 
   useEffect(() => {
+    
+    setLoading(true);
     getQuiz();
-  }, []);
+    getProfile();
+  }, [params.lesson_id]);
 
   useEffect(() => {
     if (quiz) {
       getQuestions();
     }
   }, [quiz]);
+
+  const getProfile = () => {
+    StorageService.getData("profile").then((profile) => {
+      if (profile) {
+        setProfile(profile);
+      }
+    });
+  };
 
   const getQuiz = () => {
     axios({
@@ -38,48 +60,73 @@ export default function QuizScreen() {
   };
 
   const getQuestions = () => {
+    setLoading(true); // Start loading questions
     axios({
       url: ENDPOINTS.questions,
       method: "get",
       params: { quiz_id: quiz.id },
-    }).then((res) => {
-      setQuestions(res.data);
-    });
+    })
+      .then((res) => {
+        setQuestions(res.data);
+      })
+      .finally(() => {
+        setLoading(false); // End loading questions
+      });
   };
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
   const submit = () => {
-    let tempScore = 0
+    let tempScore = 0;
     for (let [key, value] of Object.entries(selectedAnswers)) {
-      console.log(key, value);
-      for (let i = 0; i<questions.length; i++){
-        if(questions[i].id == key){
-          if(questions[i].answer == value){
-            console.log('correct');
-            tempScore += 5
-            console.log(tempScore);
-          }
-          else{
-            console.log('wrong');
-          }
+      for (let i = 0; i < questions.length; i++) {
+        if (questions[i].id == key && questions[i].answer == value) {
+          tempScore += 5;
         }
       }
     }
     setScore(tempScore);
-    console.log(score);
+    postScore(profile.id, quiz.id, tempScore);
+  };
+  const postScore = (student_id, quiz_id, score) => {
+    axios({
+      url: ENDPOINTS.score,
+      method: "post",
+      data: {
+        student_id: student_id,
+        quiz_id: quiz_id,
+        score: score,
+      },
+    }).then((showModalSuccess));
+  };
+
+  const showModalSuccess = () => {
+    setIsModalVisible(() => !isModalVisible);
   }
+
   const handleSelectAnswer = (questionId, choice) => {
     setSelectedAnswers((prev) => ({ ...prev, [questionId]: choice }));
   };
 
   const isCorrectChoice = (question, choice) => question.answer === choice;
-  return (
-    <ScrollView style={styles.container}>
-      {quiz === null ? (
-        <View style={styles.loadingContainer}>
-          <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
-        </View>
-      ) : (
-        <>
-          <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
+
+  const learnMore = () => {
+    setIsModalVisible(false);
+    router.replace("/");
+}
+return (
+  <ScrollView style={styles.container}>
+    {quiz === null ? (
+      <View style={styles.loadingContainer}>
+        <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
+      </View>
+    ) : (
+      <>
+        <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
+          </View>
+        ) : (
           <View style={styles.questionsContainer}>
             {questions.map((question) => (
               <View key={question.id} style={styles.questionContainer}>
@@ -110,17 +157,38 @@ export default function QuizScreen() {
               </View>
             ))}
           </View>
-          <GeoButton style={styles.submitButton}
-            onPress={() => submit()}
-            >
+        )}
+        {!loading && (
+          <GeoButton style={styles.submitButton} onPress={() => submit()}>
+            <Text>SUBMIT</Text>
           </GeoButton>
-        </>
-      )}
-    </ScrollView>
-  );
+        )}
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.modalContainer}>
+            <Text>{score}</Text>
+            <GeoButton name="Learn More!" onPress={learnMore} />
+          </View>
+        </Modal>
+      </>
+    )}
+  </ScrollView>
+);
+
 }
 
 const styles = StyleSheet.create({
+  modalContainer: {
+        alignSelf: 'center',
+        width: 300,
+        height: 300,
+        backgroundColor: '#ffffff',
+        borderRadius: 20,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+  },
   container: {
     padding: 16,
     backgroundColor: "#008000",

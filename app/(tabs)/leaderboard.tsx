@@ -26,6 +26,7 @@
         .then(res => {
           const students = res.data;
           setStudents(res.data);
+          console.log(res.data);
 
           // Sort students by score
           const sortedStudents = students.sort((a, b) => b.score - a.score);
