@@ -1,4 +1,5 @@
 import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import React, { useState, useEffect } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,7 +13,39 @@ const ENDPOINTS = {
   topics: "topics",
   badges: "badges",
   feedback: "feedback",
+  studentMap: "students/studentmap",
+  saveStudentMap: "students/savestudentmap",
 };
+
+const STUDENT_SEGMENT_BUTTONS = [
+  {
+    name: "Lessons",
+    isActive: true,
+  },
+  {
+    name: "Badges",
+    isActive: false,
+  },
+  {
+    name: "Feedback",
+    isActive: false,
+  },
+];
+
+const TEACHER_SEGMENT_BUTTONS = [
+  {
+    name: "Lessons",
+    isActive: true,
+  },
+  {
+    name: "Students",
+    isActive: false,
+  },
+  {
+    name: "Feedback",
+    isActive: false,
+  },
+];
 const BADGE_LOCK = "https://i.imgur.com/ZJS5FQJ.png";
 
 export default function ProfileScreen() {
@@ -21,20 +54,22 @@ export default function ProfileScreen() {
   const [badges, setBadges] = useState([]);
   const [topics, setTopics] = useState([]);
   const [feedbacks, setFeedbacks] = useState([]);
-  const [segmentButtons, setSegmentButtons] = useState([
-    {
-      name: "Lessons",
-      isActive: true,
-    },
-    {
-      name: "Badges",
-      isActive: false,
-    },
-    {
-      name: "Feedback",
-      isActive: false,
-    },
-  ]);
+  const [segmentButtons, setSegmentButtons] = useState(null);
+  const [students, setStudents] = useState(null);
+  const [pickedStudents, setPickedStudents] = useState([]);
+
+  const save = (teacher_id, student_ids) => {
+    axios({
+      url: ENDPOINTS.saveStudentMap,
+      method: "post",
+      data: {
+        teacher_id: teacher_id,
+        student_ids: student_ids,
+      },
+    }).then((res) => {
+      console.log(res);
+    });
+  };
 
   useEffect(() => {
     getProfile();
@@ -45,6 +80,13 @@ export default function ProfileScreen() {
   useEffect(() => {
     if (profile) {
       getFeedbacks();
+      if (profile.isTeacher) {
+        setSegmentButtons(TEACHER_SEGMENT_BUTTONS);
+        getStudents();
+        setPickedStudents([]);
+      } else {
+        setSegmentButtons(STUDENT_SEGMENT_BUTTONS);
+      }
     }
   }, [profile]);
 
@@ -56,6 +98,20 @@ export default function ProfileScreen() {
         router.replace("/login");
       }
     });
+  };
+
+  const getStudents = () => {
+    axios({
+      method: "get",
+      params: {
+        teacher_id: profile.id,
+      },
+      url: ENDPOINTS.studentMap
+    }).then((res) => {
+      const students = res.data;
+      setStudents(res.data);
+      console.log(res);
+    })
   };
 
   const getTopics = () => {
@@ -104,8 +160,7 @@ export default function ProfileScreen() {
   };
 
   const openLesson = (topic_id) => {
-    router.replace({ pathname: '/lesson', params: { topic_id: topic_id } });
-
+    router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
   };
 
   const getBadge = (badge) => {
@@ -139,7 +194,7 @@ export default function ProfileScreen() {
   const updateView = (name) => {
     const updatedButtons = [];
 
-    segmentButtons.map((button) => {
+    segmentButtons?.map((button) => {
       const temp = { ...button };
       temp.isActive = temp.name == name;
 
@@ -147,6 +202,21 @@ export default function ProfileScreen() {
     });
 
     setSegmentButtons(updatedButtons);
+  };
+
+  const checkStudent = (isChecked, id) => {
+    const tempPickedStudents = structuredClone(pickedStudents);
+
+    const index = tempPickedStudents.indexOf(id);
+
+    if (index > -1 && !isChecked) {
+      tempPickedStudents.splice(index, 1);
+    } else if (index < 0 && isChecked) {
+      tempPickedStudents.push(id);
+    }
+
+    console.log(tempPickedStudents);
+    setPickedStudents(tempPickedStudents);
   };
 
   return (
@@ -174,7 +244,7 @@ export default function ProfileScreen() {
 
       <View style={styles.content}>
         <View style={styles.segmentButtons}>
-          {segmentButtons.map((button) => {
+          {segmentButtons?.map((button) => {
             return (
               <GeoButton
                 style={styles.segmentButton}
@@ -187,7 +257,7 @@ export default function ProfileScreen() {
           })}
         </View>
 
-        {segmentButtons.map((segment) => {
+        {segmentButtons?.map((segment) => {
           if (segment.name == "Lessons" && segment.isActive) {
             return !topics ? (
               <View style={styles.segmentContainer}>
@@ -242,7 +312,11 @@ export default function ProfileScreen() {
                 </View>
               </ScrollView>
             );
-          } else if (segment.name == "Feedback" && segment.isActive) {
+          } else if (
+            segment.name == "Feedback" &&
+            !profile.isTeacher &&
+            segment.isActive
+          ) {
             return (
               <ScrollView>
                 <View style={styles.segmentContainer}>
@@ -272,6 +346,37 @@ export default function ProfileScreen() {
                 </View>
               </ScrollView>
             );
+          } else if (segment.name == "Students" && segment.isActive) {
+            return (
+              <ScrollView>
+                {students?.map((student) => {
+                  return (
+                    <View>
+                      <BouncyCheckbox
+                        size={25}
+                        fillColor="#008000"
+                        unFillColor="#ffffff"
+                        text={student.last_name + ", " + student.first_name}
+                        iconStyle={{ borderColor: "red" }}
+                        innerIconStyle={{ borderWidth: 2 }}
+                        onPress={(isChecked: boolean) =>
+                          checkStudent(isChecked, student.id)
+                        }
+                      />
+                    </View>
+                  );
+                })}
+                <GeoButton onPress={() => save(profile.id, pickedStudents)}>
+                  <Text>Save</Text>
+                </GeoButton>
+              </ScrollView>
+            );
+          } else if (
+            segment.name == "Feedback" &&
+            profile.isTeacher &&
+            segment.isActive
+          ) {
+            return <ScrollView>Teacher view ng Feedback</ScrollView>;
           }
         })}
       </View>
@@ -280,6 +385,25 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  studentsButton: {
+    backgroundColor: "#4CAF50", // Distinct green color
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    borderWidth: 2,
+    borderColor: "#388E3C",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  studentsButtonText: {
+    color: "#FFFFFF", // White text
+    fontSize: 16,
+    fontWeight: "bold",
+  },
   bodyText: {
     color: "#ffffff",
     fontSize: 15,

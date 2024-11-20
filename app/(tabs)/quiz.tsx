@@ -111,7 +111,7 @@ export default function QuizScreen() {
 
   const learnMore = () => {
     setIsModalVisible(false);
-    router.replace("/");
+    router.replace("/leaderboard");
 }
 return (
   <ScrollView style={styles.container}>
@@ -165,8 +165,11 @@ return (
         )}
         <Modal isVisible={isModalVisible}>
           <View style={styles.modalContainer}>
-            <Text>{score}</Text>
-            <GeoButton name="Learn More!" onPress={learnMore} />
+            <Text style ={styles.questionText}>Score for this quiz:{score}</Text>
+            <GeoButton 
+            name="See Leaderboard!" 
+            onPress={learnMore} 
+            style={styles.learnButton}/>
           </View>
         </Modal>
       </>
@@ -177,10 +180,18 @@ return (
 }
 
 const styles = StyleSheet.create({
+  learnButton: {
+    backgroundColor: "#008000",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 20,
+
+  },
   modalContainer: {
         alignSelf: 'center',
         width: 300,
-        height: 300,
+        height: 150,
         backgroundColor: '#ffffff',
         borderRadius: 20,
         padding: 20,
