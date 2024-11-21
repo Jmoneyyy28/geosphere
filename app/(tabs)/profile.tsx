@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
+import { Image, StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import React, { useState, useEffect } from "react";
@@ -15,6 +15,8 @@ const ENDPOINTS = {
   feedback: "feedback",
   studentMap: "students/studentmap",
   saveStudentMap: "students/savestudentmap",
+  studentList: "students/studentfeedback",
+  teacherFeedback: "feedback/teacherFeedback"
 };
 
 const STUDENT_SEGMENT_BUTTONS = [
@@ -56,7 +58,13 @@ export default function ProfileScreen() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [segmentButtons, setSegmentButtons] = useState(null);
   const [students, setStudents] = useState(null);
+  const [loadingStudents, setLoadingStudents] = useState(false);
+    //teacher variables
   const [pickedStudents, setPickedStudents] = useState([]);
+  const [studentList, setStudentList] = useState([]);
+  const [feedback, setFeedback] = React.useState('');
+  //student feedback text
+  const [feedbacktext, setfeedbacktext] = React.useState({});
 
   const save = (teacher_id, student_ids) => {
     axios({
@@ -84,11 +92,44 @@ export default function ProfileScreen() {
         setSegmentButtons(TEACHER_SEGMENT_BUTTONS);
         getStudents();
         setPickedStudents([]);
+        getStudentFeedbackList(profile.id);
       } else {
         setSegmentButtons(STUDENT_SEGMENT_BUTTONS);
       }
     }
   }, [profile]);
+
+  const postFeedback = (teacher_id, student_id, feedback) => {
+    axios({
+      url: ENDPOINTS.teacherFeedback,
+      method: "post",
+      data: {
+        teacher_id: teacher_id,
+        student_id: student_id,
+        feedback: feedback
+      },
+    }).then();
+  };
+
+  const getStudentFeedbackList =  (teacher_id) => {
+    axios({
+      url: ENDPOINTS.studentList,
+      method: "get",
+      params: {
+        teacher_id: teacher_id
+      },
+    }).then((res) => {
+      const studentList = res.data;
+      setStudentList(res.data);
+      console.log(res);
+      const tempFeedbackText = structuredClone(feedbacktext);
+      res.data.map((student) => {
+        tempFeedbackText[student.id] = "";
+      });
+      setfeedbacktext(tempFeedbackText);
+      console.log(feedbacktext)
+    });
+  };
 
   const getProfile = () => {
     StorageService.getData("profile").then((profile) => {
@@ -110,8 +151,12 @@ export default function ProfileScreen() {
     }).then((res) => {
       const students = res.data;
       setStudents(res.data);
+      setLoadingStudents(false);
       console.log(res);
     })
+    .catch(() => {
+      setLoadingStudents(false);
+    });
   };
 
   const getTopics = () => {
@@ -172,6 +217,15 @@ export default function ProfileScreen() {
       return badge.images.bronze;
     }
   };
+
+  const onChangeFeedback = (student_id, feedback) => {
+    const tempFeedbackText = structuredClone(feedbacktext);
+
+    tempFeedbackText[student_id] = feedback;
+
+    setfeedbacktext(tempFeedbackText);
+    console.log(feedbacktext)
+  }
 
   const signOut = () => {
     StorageService.storeData("profile", null);
@@ -258,39 +312,37 @@ export default function ProfileScreen() {
         </View>
 
         {segmentButtons?.map((segment) => {
-          if (segment.name == "Lessons" && segment.isActive) {
-            return !topics ? (
-              <View style={styles.segmentContainer}>
-                <Image
-                  style={{ height: 400, width: 400 }}
-                  source={require("@/assets/images/loading.gif")}
-                />
-              </View>
-            ) : (
-              <View style={styles.segmentContainer}>
-                {topics.map((topic) => {
-                  return (
-                    <GeoButton
-                      style={styles.plateTectonicButton}
-                      textStyle={styles.textColor}
-                      onPress={() => openLesson(topic.id)}
-                      key={topic.id}
-                    >
-                      <View style={styles.test}>
-                        <View style={styles.textContentContainer}>
-                          <Text style={styles.topicText}>
-                            {topic.topic_name}
-                          </Text>
-                          <Text style={styles.bodyText}>
-                            {topic.topic_description}
-                          </Text>
-                        </View>
+         if (segment.name == "Lessons" && segment.isActive) {
+          return topics.length === 0 ? (
+            <View style={styles.segmentContainer}>
+              <Image
+                style={{ height: 400, width: 400 }}
+                source={require("@/assets/images/loading.gif")}
+              />
+            </View>
+          ) : (
+            <View style={styles.segmentContainer}>
+              {topics.map((topic) => {
+                return (
+                  <GeoButton
+                    style={styles.plateTectonicButton}
+                    textStyle={styles.textColor}
+                    onPress={() => openLesson(topic.id)}
+                    key={topic.id}
+                  >
+                    <View style={styles.test}>
+                      <View style={styles.textContentContainer}>
+                        <Text style={styles.topicText}>{topic.topic_name}</Text>
+                        <Text style={styles.bodyText}>
+                          {topic.topic_description}
+                        </Text>
                       </View>
-                    </GeoButton>
-                  );
-                })}
-              </View>
-            );
+                    </View>
+                  </GeoButton>
+                );
+              })}
+            </View>
+          );
           } else if (segment.name == "Badges" && segment.isActive) {
             return (
               <ScrollView>
@@ -349,34 +401,67 @@ export default function ProfileScreen() {
           } else if (segment.name == "Students" && segment.isActive) {
             return (
               <ScrollView>
-                {students?.map((student) => {
-                  return (
-                    <View>
-                      <BouncyCheckbox
-                        size={25}
-                        fillColor="#008000"
-                        unFillColor="#ffffff"
-                        text={student.last_name + ", " + student.first_name}
-                        iconStyle={{ borderColor: "red" }}
-                        innerIconStyle={{ borderWidth: 2 }}
-                        onPress={(isChecked: boolean) =>
-                          checkStudent(isChecked, student.id)
-                        }
-                      />
-                    </View>
-                  );
-                })}
-                <GeoButton onPress={() => save(profile.id, pickedStudents)}>
-                  <Text>Save</Text>
-                </GeoButton>
+                {loadingStudents ? (
+                  <View style={styles.loadingContainer}>
+                    <Image
+                      style={{ height: 400, width: 400 }}
+                      source={require("@/assets/images/loading.gif")}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.studentsSegmentContainer}>
+                    {students?.map((student) => {
+                      return (
+                        <BouncyCheckbox
+                          size={25}
+                          fillColor="#008000"
+                          unFillColor="#ffffff"
+                          text={`${student.first_name} ${student.last_name}_${student.id_number}`}
+                          iconStyle={{ borderColor: "red" }}
+                          innerIconStyle={{ borderWidth: 2 }}
+                          onPress={(isChecked) => checkStudent(isChecked, student.id)}
+                          style={styles.studentsCheckbox}
+                        />
+                      );
+                    })}
+                    <GeoButton
+                      onPress={() => save(profile.id, pickedStudents)}
+                      style={styles.saveButton}
+                    >
+                      <Text style={styles.saveButtonText}>Save</Text>
+                    </GeoButton>
+                  </View>
+                )}
               </ScrollView>
             );
-          } else if (
+
+          }else if (
             segment.name == "Feedback" &&
             profile.isTeacher &&
             segment.isActive
           ) {
-            return <ScrollView>Teacher view ng Feedback</ScrollView>;
+            return <ScrollView>
+                    <View style={styles.studentsSegmentContainer}>
+                        {studentList?.map((student) => 
+                        <Text
+                            style={styles.studentListFont}>
+                            {student.first_name + " " + student.last_name + "_" + student.id_number}
+                                <TextInput
+                                      style={styles.feedbackborderUnderline}
+                                      placeholder="feedback"
+                                      onChangeText={(text) => onChangeFeedback(student.id, text)}
+                                      value={feedbacktext[student.id]}
+                                      placeholderTextColor={"#000000"}
+                                />
+                                    <GeoButton 
+                                        style={styles.feedbackSaveButton}
+                                        onPress={ () => postFeedback(profile.id,student.id,'test')}>
+                                        <Text style={styles.saveButtonText}>Save</Text>
+                                    </GeoButton>
+                        </Text>
+                        )}
+                    </View>
+                  </ScrollView>;
           }
         })}
       </View>
@@ -385,6 +470,67 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  feedbackSaveButton: {
+    backgroundColor: "#008000",
+    borderRadius: 8,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    marginTop: 5,
+    float: 'right'
+  },
+  feedbackborderUnderline: {
+    borderWidth: 1,
+    borderColor: "#000000",
+    width: '100%',
+    height: 60,
+    margin: 5,
+    marginTop: 20,
+    borderRadius: 8,
+    backgroundColor:"#ffffff",
+
+  },
+  studentListFont: {
+    fontSize: 16,
+    fontFamily: "Roboto_400Regular",
+    marginBottom: 15
+  },
+  studentsSegmentContainer: {
+    alignSelf: 'center',
+    backgroundColor: "#f4f4f4",
+    padding: 15,
+    borderRadius: 10,
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    width: '90%',
+    flex: 1
+},
+ studentsCheckbox: {
+    marginVertical: 10,
+    fontSize: 16,
+    fontFamily: "Roboto_400Regular",
+  },
+ saveButton: {
+    backgroundColor: "#008000",
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 15,
+  },
+ saveButtonText: {
+    color: "#FFFFFF",
+    fontSize: 16
+  },
   studentsButton: {
     backgroundColor: "#4CAF50", // Distinct green color
     borderRadius: 8,
@@ -421,7 +567,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 10,
   },
-
   test: {
     flex: 1,
     width: "90%",

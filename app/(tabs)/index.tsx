@@ -26,21 +26,22 @@ export default function LearnScreen() {
 
   // Fetch topics from API
   const getTopics = () => {
+    setLoading(true); // Start loading before fetching
     axios
       .get(`${BASE_URL}${ENDPOINTS.topics}`)
       .then((res) => {
-        console.log(res.data);
         setTopics(res.data);
-        // setLoading(false); // Stop loading when data is fetched
       })
       .catch((error) => {
         console.error("Error fetching topics:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Stop loading after fetching is complete
       });
   };
 
   const openLesson = (topic_id) => {
     router.replace({ pathname: '/lesson', params: { topic_id: topic_id } });
-
   };
 
   return (
@@ -49,7 +50,7 @@ export default function LearnScreen() {
         <Text style={styles.headerText}>PLATE TECTONIC TOPICS</Text>
       </View>
 
-      {!loading ? (
+      {loading ? ( // Show loading GIF while loading
         <View style={styles.loadingPosition}>
           <Image
             style={{ height: 400, width: 400 }}

@@ -17,10 +17,7 @@ export default function LeaderboardScreen() {
 
   // Fetch students data on component mount
   useEffect(() => {
-    const intervalId = setInterval(() => {
       getStudents();
-    }, 1000000);
-
     return () => clearInterval(intervalId); // Cleanup on component unmount
   }, []);
 
