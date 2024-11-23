@@ -21,6 +21,7 @@
     "@react-native-async-storage/async-storage": "^2.0.0",
     "@react-native-community/checkbox": "^0.5.17",
     "@react-navigation/native": "^6.0.2",
+    "@reactvision/react-viro": "^2.41.6",
     "axios": "^1.7.7",
     "expo": "~51.0.28",
     "expo-app-loading": "^2.1.1",
