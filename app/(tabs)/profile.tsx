@@ -444,14 +444,16 @@ export default function ProfileScreen() {
                     <View style={styles.studentsSegmentContainer}>
                         {studentList?.map((student) => 
                         <Text
+                      
                             style={styles.studentListFont}>
                             {student.first_name + " " + student.last_name + "_" + student.id_number}
                                 <TextInput
                                       style={styles.feedbackborderUnderline}
                                       placeholder="feedback"
+                                      
                                       onChangeText={(text) => onChangeFeedback(student.id, text)}
                                       value={feedbacktext[student.id]}
-                                      placeholderTextColor={"#000000"}
+                                      placeholderTextColor={"#808080"}
                                 />
                                     <GeoButton 
                                         style={styles.feedbackSaveButton}
@@ -492,7 +494,9 @@ const styles = StyleSheet.create({
     margin: 5,
     marginTop: 20,
     borderRadius: 8,
-    backgroundColor:"#ffffff",
+    backgroundColor: "#ffffff",
+    paddingLeft: 5, // Adds margin for the placeholder
+    textAlign: 'left', // Ensures text starts at the left
 
   },
   studentListFont: {
