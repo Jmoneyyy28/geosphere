@@ -112,6 +112,10 @@ export default function TopicScreen() {
     router.replace({ pathname: "/quiz", params: { lesson_id: lesson.id } });
   };
 
+  const goToAr = () => {
+    router.replace({ pathname: "/ar"});
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -137,7 +141,7 @@ export default function TopicScreen() {
               <GeoButton onPress={goToQuiz} theme="transparent">
                 <Ionicons name="book" style={styles.optionIcon} />
               </GeoButton>
-              <GeoButton onPress={backLesson} theme="transparent">
+              <GeoButton onPress={goToAr} theme="transparent">
                 <Ionicons name="cube" style={styles.optionIcon} />
               </GeoButton>
               <GeoButton onPress={toggleSound} theme="transparent">
