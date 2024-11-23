@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
+import { Image, StyleSheet, View, Text, ScrollView, TextInput, Alert } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import React, { useState, useEffect } from "react";
@@ -61,22 +61,27 @@ export default function ProfileScreen() {
   const [loadingStudents, setLoadingStudents] = useState(false);
     //teacher variables
   const [pickedStudents, setPickedStudents] = useState([]);
-  const [studentList, setStudentList] = useState([]);
+  const [studentList, setStudentList] = useState(null);
   const [feedback, setFeedback] = React.useState('');
   //student feedback text
   const [feedbacktext, setfeedbacktext] = React.useState({});
 
   const save = (teacher_id, student_ids) => {
-    axios({
-      url: ENDPOINTS.saveStudentMap,
-      method: "post",
-      data: {
-        teacher_id: teacher_id,
-        student_ids: student_ids,
-      },
-    }).then((res) => {
-      console.log(res);
-    });
+    if (student_ids.length == 0){
+      alert('noStudentSelected')
+    }else{
+      axios({
+        url: ENDPOINTS.saveStudentMap,
+        method: "post",
+        data: {
+          teacher_id: teacher_id,
+          student_ids: student_ids,
+        },
+      }).then((res) => {
+        console.log(res);
+      });
+    }
+    
   };
 
   useEffect(() => {
@@ -93,6 +98,7 @@ export default function ProfileScreen() {
         getStudents();
         setPickedStudents([]);
         getStudentFeedbackList(profile.id);
+        
       } else {
         setSegmentButtons(STUDENT_SEGMENT_BUTTONS);
       }
@@ -401,7 +407,7 @@ export default function ProfileScreen() {
           } else if (segment.name == "Students" && segment.isActive) {
             return (
               <ScrollView>
-                {loadingStudents ? (
+                {!students ? (
                   <View style={styles.loadingContainer}>
                     <Image
                       style={{ height: 400, width: 400 }}
@@ -440,30 +446,43 @@ export default function ProfileScreen() {
             profile.isTeacher &&
             segment.isActive
           ) {
-            return <ScrollView>
-                    <View style={styles.studentsSegmentContainer}>
-                        {studentList?.map((student) => 
-                        <Text
-                      
-                            style={styles.studentListFont}>
-                            {student.first_name + " " + student.last_name + "_" + student.id_number}
-                                <TextInput
-                                      style={styles.feedbackborderUnderline}
-                                      placeholder="feedback"
-                                      
-                                      onChangeText={(text) => onChangeFeedback(student.id, text)}
-                                      value={feedbacktext[student.id]}
-                                      placeholderTextColor={"#808080"}
-                                />
-                                    <GeoButton 
-                                        style={styles.feedbackSaveButton}
-                                        onPress={ () => postFeedback(profile.id,student.id,'test')}>
-                                        <Text style={styles.saveButtonText}>Save</Text>
-                                    </GeoButton>
-                        </Text>
-                        )}
+            return (
+              <ScrollView>
+                {
+                  !studentList ? (
+                    <View style={styles.loadingContainer}>
+                      <Image
+                        style={{ height: 400, width: 400 }}
+                        source={require("@/assets/images/loading.gif")}
+                      />
                     </View>
-                  </ScrollView>;
+                  ) : (
+                    <View style={styles.studentsSegmentContainer}>
+                      {
+                        studentList?.map((student) => {
+                          return (
+                            <View style={styles.studentsSegmentContainer}>
+                              <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
+                              <TextInput
+                                style={styles.feedbackborderUnderline}
+                                placeholder="feedback"
+                                onChangeText={(text) => onChangeFeedback(student.id, text)}
+                                value={feedbacktext[student.id]}
+                                placeholderTextColor={"#808080"}
+                              />
+                              <GeoButton
+                                style={styles.feedbackSaveButton}
+                                onPress={ () => postFeedback(profile.id, student.id, feedbacktext[student.id])}>
+                                  <Text style={styles.saveButtonText}>Save</Text>
+                              </GeoButton>
+                            </View>
+                          )
+                        })
+                      }
+                    </View>
+                  )}
+              </ScrollView>
+            )
           }
         })}
       </View>

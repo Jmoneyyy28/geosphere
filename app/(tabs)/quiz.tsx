@@ -6,6 +6,7 @@ import { GeoButton } from "@/components/GeoButton";
 import { StorageService } from "@/services/StorageService";
 import Modal from "react-native-modal";
 import { useRouter } from 'expo-router';
+import { Ionicons } from "@expo/vector-icons";
 
 
 
@@ -113,6 +114,16 @@ export default function QuizScreen() {
     setIsModalVisible(false);
     router.replace("/leaderboard");
 }
+  const backToHome = () => {
+    setIsModalVisible(false);
+    router.replace("/");
+  }
+  const backQuiz = () => {
+    router.replace("/");
+  };
+
+  const totalScore = 5 * questions.length;
+
 return (
   <ScrollView style={styles.container}>
     {quiz === null ? (
@@ -121,15 +132,22 @@ return (
       </View>
     ) : (
       <>
-        <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
+       <View style={styles.backButtonContainer}>
+              <GeoButton onPress={backQuiz} theme="transparent">
+                <Ionicons name="arrow-back" style={styles.backIcon} />
+              </GeoButton>
+        </View>
+        <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>     
+        <Text style={styles.questionTitle}>{questions.length} Questions</Text>
         {loading ? (
           <View style={styles.loadingContainer}>
             <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
           </View>
         ) : (
           <View style={styles.questionsContainer}>
-            {questions.map((question) => (
+            {questions.map((question, index) => (
               <View key={question.id} style={styles.questionContainer}>
+                <Text style={styles.questionNumber}>Question: {index +1}/{questions.length}</Text>
                 <Text style={styles.questionText}>{question.question}</Text>
                 <View style={styles.choicesContainer}>
                   {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => {
@@ -160,15 +178,19 @@ return (
         )}
         {!loading && (
           <GeoButton style={styles.submitButton} onPress={() => submit()}>
-            <Text>SUBMIT</Text>
+            <Text style={styles.submitButtonText}>SUBMIT</Text>
           </GeoButton>
         )}
         <Modal isVisible={isModalVisible}>
           <View style={styles.modalContainer}>
-            <Text style ={styles.questionText}>Score for this quiz:{score}</Text>
+            <Text style ={styles.questionText}>Score for this quiz: {score} out of {totalScore}</Text>
             <GeoButton 
-            name="See Leaderboard!" 
+            name="See Leaderboard" 
             onPress={learnMore} 
+            style={styles.learnButton}/>
+             <GeoButton 
+            name="Back to Home" 
+            onPress={backToHome} 
             style={styles.learnButton}/>
           </View>
         </Modal>
@@ -180,18 +202,41 @@ return (
 }
 
 const styles = StyleSheet.create({
+  backIcon: {
+    fontSize: 25,
+    color: "#ffffff",
+  },
+  backButtonContainer: {
+    position: "absolute",
+    top: 13,
+    left: 13,
+    zIndex: 1,
+  },
+  questionNumber: {
+    color: "#008000",
+    marginBottom: 20
+  },
+  questionTitle: {
+    fontSize: 18,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#ffffff",
+  },
   learnButton: {
     backgroundColor: "#008000",
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 15,
+    height: 40,
+    width: 160,
+    alignSelf: 'center'
 
   },
   modalContainer: {
         alignSelf: 'center',
         width: 300,
-        height: 150,
+        height: 200,
         backgroundColor: '#ffffff',
         borderRadius: 20,
         padding: 20,
@@ -218,7 +263,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 1,
     color: "#ffffff",
   },
   questionsContainer: {
@@ -285,13 +330,13 @@ const styles = StyleSheet.create({
   submitButton: {
     backgroundColor: "#ffffff",
     paddingVertical: 12,
-    borderRadius: 8,
+    borderRadius: 30,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 20
   },
   submitButtonText: {
     fontSize: 18,
     color: "#008000",
-    fontWeight: "bold",
+    fontWeight: "bold"
   },
 });
