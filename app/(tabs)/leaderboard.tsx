@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import axios from "axios";
 
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+
 export default function LeaderboardScreen() {
   // State for students data
   const [students, setStudents] = useState(null);
@@ -17,14 +19,16 @@ export default function LeaderboardScreen() {
 
   // Fetch students data on component mount
   useEffect(() => {
-      getStudents();
+    getStudents();
     return () => clearInterval(intervalId); // Cleanup on component unmount
   }, []);
 
   // Function to fetch students from API
   const getStudents = () => {
-    axios
-      .get(`http://localhost:3000/${ENDPOINTS.leaderboard}`)
+    axios({
+      method: "GET",
+      url: ENDPOINTS.leaderboard,
+    })
       .then((res) => {
         const students = res.data;
         setStudents(res.data);

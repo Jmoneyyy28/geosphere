@@ -6,11 +6,10 @@ import axios from "axios";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { GeoButton } from "@/components/GeoButton";
 
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+
 export default function LearnScreen() {
-
   const params = useLocalSearchParams();
-
-  const BASE_URL = "http://localhost:3000/";
   const ENDPOINTS = {
     topics: "topics",
   };
@@ -27,8 +26,10 @@ export default function LearnScreen() {
   // Fetch topics from API
   const getTopics = () => {
     setLoading(true); // Start loading before fetching
-    axios
-      .get(`${BASE_URL}${ENDPOINTS.topics}`)
+    axios({
+      method: "GET",
+      url: ENDPOINTS.topics,
+    })
       .then((res) => {
         setTopics(res.data);
       })
@@ -41,7 +42,7 @@ export default function LearnScreen() {
   };
 
   const openLesson = (topic_id) => {
-    router.replace({ pathname: '/lesson', params: { topic_id: topic_id } });
+    router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
   };
 
   return (
