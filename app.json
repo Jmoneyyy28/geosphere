@@ -8,7 +8,7 @@
     "scheme": "geosphere",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash.gif",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptiveIcon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.teamgeo.geosphere"

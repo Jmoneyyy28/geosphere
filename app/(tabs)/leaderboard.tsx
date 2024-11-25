@@ -44,6 +44,8 @@ export default function LeaderboardScreen() {
         console.error("Error fetching leaderboard data:", error)
       );
   };
+  
+  const backgroundColor = ['#eae2e0', '#e5c8a5', '#a1d6cc', '#e3d0e0', '#8590c0', '#d9dad9', '#cfc3c3', '#a5ad9c', '#d3ddf6', '#baf9f9'];
 
   return (
     <ScrollView>
@@ -75,12 +77,6 @@ export default function LeaderboardScreen() {
                     : {},
                 ]}
               >
-                {/* {index === 0 && (
-                      <Image  
-                        source={crownImage} 
-                        style={leaderboardStyle.crownImage} 
-                      />
-                    )} */}
 
                 <View
                   style={[
@@ -109,7 +105,9 @@ export default function LeaderboardScreen() {
                     {index + 1}
                   </Text>
                 </View>
-                <View style={leaderboardStyle.picture}></View>
+                <View style={[leaderboardStyle.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                    <Text style={leaderboardStyle.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
+                </View>
                 <Text style={leaderboardStyle.topThreeName}>
                   {student.first_name}, {student.last_name}
                 </Text>
@@ -129,7 +127,9 @@ export default function LeaderboardScreen() {
                       {index + 4}
                     </Text>
                   </View>
-                  <View style={leaderboardStyle.picture}></View>
+                  <View style={[leaderboardStyle.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                    <Text style={leaderboardStyle.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
+                  </View>
                   <View style={leaderboardStyle.spacer}></View>
                   <Text style={leaderboardStyle.namePosition}>
                     {student.first_name}, {student.last_name}
@@ -149,6 +149,20 @@ export default function LeaderboardScreen() {
 }
 
 const leaderboardStyle = StyleSheet.create({
+  pictureInitial: {
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
+  picture: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    color: '#008000',
+    marginRight: 10
+  },
   topThreeContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
