@@ -6,6 +6,7 @@ import {
   ViroTrackingStateConstants,
   ViroARSceneNavigator,
   ViroTrackingReason,
+  Viro3DObject,
 } from "@viro-community/react-viro";
 
 const HelloWorldSceneAR = () => {
@@ -21,12 +22,27 @@ const HelloWorldSceneAR = () => {
   }
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
-      <ViroText
+      {/* <ViroText
         text={text}
         scale={[0.5, 0.5, 0.5]}
         position={[0, 0, -1]}
         style={styles.helloWorldTextStyle}
-      />
+      /> */}
+      <Viro3DObject
+        source={require("@/assets/3d-models/earth-core/earth_core2.obj")}
+        resources={[
+          require("@/assets/3d-models/earth-core/11415.jpg"),
+          require("@/assets/3d-models/earth-core/color_etopo1_ice_low.jpg"),
+          require("@/assets/3d-models/earth-core/generic_lava.png"),
+          require("@/assets/3d-models/earth-core/landscape_texture.jpg"),
+          require("@/assets/3d-models/earth-core/maxresdefault.jpg"),
+          require("@/assets/3d-models/earth-core/Sg3grB.jpg"),
+          require("@/assets/3d-models/earth-core/WaterPlain0012_2_download600.jpg"),
+        ]}
+        position={[0, 0, -1]}
+        scale={[0.5, 0.5, 0.5]}
+        rotation={[0, 90, 0]}
+        type="OBJ" />
     </ViroARScene>
   );
 };
