@@ -29,7 +29,8 @@
     },
     "plugins": [
       "expo-router",
-      "@viro-community/react-viro"
+      "@viro-community/react-viro",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
