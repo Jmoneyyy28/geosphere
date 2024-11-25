@@ -274,23 +274,24 @@ export default function ProfileScreen() {
     } else if (index < 0 && isChecked) {
       tempPickedStudents.push(id);
     }
-
     console.log(tempPickedStudents);
     setPickedStudents(tempPickedStudents);
   };
+
+  const backgroundColor = ['#eae2e0', '#e5c8a5', '#a1d6cc', '#e3d0e0', '#8590c0', '#d9dad9', '#cfc3c3', '#a5ad9c', '#d3ddf6', '#baf9f9'];
+
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileContainer}>
-          <Image
-            style={styles.profilePicture}
-            source={require("@/assets/images/profile-male.png")}
-          />
+              <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                    <Text style={styles.pictureInitial}>{(profile?.first_name[0].toUpperCase() + profile?.last_name[0].toUpperCase())}</Text>
+              </View>
 
-          <Text style={styles.name}>
-            Welcome, {profile?.first_name} {profile?.last_name}!
-          </Text>
+              <Text style={styles.name}>
+                  Welcome, {profile?.first_name} {profile?.last_name}!
+              </Text>
         </View>
 
         <View style={{ flex: 1 }} />
@@ -415,19 +416,29 @@ export default function ProfileScreen() {
                     />
                   </View>
                 ) : (
-                  <View style={styles.studentsSegmentContainer}>
+                    <View style={styles.studentsSegmentContainer}>
+                      <View style={styles.studentIconContainer}>
+                          <Ionicons name="people" style={styles.studentIcon} />
+                          <Text style={styles.studentListText}> List of Students: {students.length}</Text>
+                      </View>
                     {students?.map((student) => {
                       return (
-                        <BouncyCheckbox
-                          size={25}
-                          fillColor="#008000"
-                          unFillColor="#ffffff"
-                          text={`${student.first_name} ${student.last_name}_${student.id_number}`}
-                          iconStyle={{ borderColor: "red" }}
-                          innerIconStyle={{ borderWidth: 2 }}
-                          onPress={(isChecked) => checkStudent(isChecked, student.id)}
-                          style={styles.studentsCheckbox}
-                        />
+                        <View style={styles.studentsChecklistContainer}>       
+                            <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                                <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
+                            </View>
+                                <Text style={styles.studentNameText}>{`${student.first_name} ${student.last_name}_${student.id_number}`}</Text>
+                                <BouncyCheckbox
+                                  size={20}
+                                  fillColor="#008000"
+                                  unFillColor="#ffffff"
+                                  iconStyle={{ borderColor: "red" }}
+                                  innerIconStyle={{ borderWidth: 2 }}
+                                  onPress={(isChecked) => checkStudent(isChecked, student.id)}
+                                  style={styles.studentsCheckbox}
+                                />
+                        </View>
+                        
                       );
                     })}
                     <GeoButton
@@ -437,6 +448,7 @@ export default function ProfileScreen() {
                       <Text style={styles.saveButtonText}>Save</Text>
                     </GeoButton>
                   </View>
+                  
                 )}
               </ScrollView>
             );
@@ -462,7 +474,12 @@ export default function ProfileScreen() {
                         studentList?.map((student) => {
                           return (
                             <View style={styles.studentsSegmentContainer}>
-                              <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
+                              <View style={styles.studentNameFeedbackContainer}>
+                                    <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                                      <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
+                                    </View>
+                                      <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
+                              </View>
                               <TextInput
                                 style={styles.feedbackborderUnderline}
                                 placeholder="feedback"
@@ -491,6 +508,54 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  studentNameText: {
+    fontSize: 16,
+    fontFamily: "Roboto_400Regular",
+  },
+  studentNameFeedbackContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  studentListText: {
+    fontSize: 20,
+    fontFamily: 'Roboto_400Regular'
+  },
+  studentIconContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 15
+  },
+  studentIcon: {
+    fontSize: 45,
+    color: "#008000"
+  },
+  studentsChecklistContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    borderColor: '#000000',
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#ffffff',
+    borderRadius: 5
+  },
+  pictureInitial: {
+    alignContent: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
+  picture: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    color: '#008000',
+    marginRight: 10
+  },
   loadingContainer: {
     flex: 1,
     alignItems: "center",
@@ -503,7 +568,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     marginTop: 5,
-    float: 'right'
   },
   feedbackborderUnderline: {
     borderWidth: 1,
@@ -520,8 +584,7 @@ const styles = StyleSheet.create({
   },
   studentListFont: {
     fontSize: 16,
-    fontFamily: "Roboto_400Regular",
-    marginBottom: 15
+    fontFamily: "Roboto_400Regular"
   },
   studentsSegmentContainer: {
     alignSelf: 'center',
@@ -537,9 +600,9 @@ const styles = StyleSheet.create({
     flex: 1
 },
  studentsCheckbox: {
-    marginVertical: 10,
-    fontSize: 16,
-    fontFamily: "Roboto_400Regular",
+    position: 'absolute',
+    left: '90%'
+    
   },
  saveButton: {
     backgroundColor: "#008000",
