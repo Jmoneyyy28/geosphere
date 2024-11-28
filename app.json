@@ -4,6 +4,7 @@
     "slug": "geosphere",
     "version": "1.0.0",
     "orientation": "portrait",
+    "owner": "geosphere",
     "icon": "./assets/images/icon.png",
     "scheme": "geosphere",
     "userInterfaceStyle": "automatic",
@@ -38,7 +39,7 @@
     "entryPoint": "./app/login.tsx",
     "extra": {
       "eas": {
-        "projectId": "59f3ffb6-eb87-4db1-a5a0-430246ec248a"
+        "projectId": "b449643d-e87a-490f-b847-f21bcf7450c6"
       }
     }
   }
