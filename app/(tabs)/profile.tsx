@@ -7,6 +7,7 @@ import { GeoButton } from "@/components/GeoButton";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { StorageService } from "@/services/StorageService";
+import * as Progress from 'react-native-progress';
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -48,6 +49,7 @@ const TEACHER_SEGMENT_BUTTONS = [
     isActive: false,
   },
 ];
+
 const BADGE_LOCK = "https://i.imgur.com/ZJS5FQJ.png";
 
 export default function ProfileScreen() {
@@ -65,6 +67,9 @@ export default function ProfileScreen() {
   const [feedback, setFeedback] = React.useState('');
   //student feedback text
   const [feedbacktext, setfeedbacktext] = React.useState({});
+// check if profile is teacher or student
+const [profileDisplay, setProfileDisplay] = useState(null);
+
 
   const save = (teacher_id, student_ids) => {
     if (student_ids.length == 0){
@@ -280,7 +285,6 @@ export default function ProfileScreen() {
 
   const backgroundColor = ['#eae2e0', '#e5c8a5', '#a1d6cc', '#e3d0e0', '#8590c0', '#d9dad9', '#cfc3c3', '#a5ad9c', '#d3ddf6', '#baf9f9'];
 
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -302,6 +306,30 @@ export default function ProfileScreen() {
           </GeoButton>
         </View>
       </View>
+              
+          <View style={styles.progressBar}>
+                      {profile && !profile.isTeacher && (
+                        <>
+                          <Progress.Bar
+                            progress={0.7}
+                            width={300}
+                            height={25}
+                            color="#008000"
+                            borderColor="#ffffff"
+                            unfilledColor="#d3d3d3"
+                            borderRadius={25}
+                          />
+                          <Text style={styles.completedTask}>Completed Task</Text>
+                          <View style={styles.progressContainer}>
+                            <View style={styles.doneColor}></View>
+                            <Text style={styles.progressDescription}>Done</Text>
+                            <View style={styles.pendingColor}></View>
+                            <Text style={styles.progressDescription}>Pending</Text>
+                          </View>
+                        </>
+                      )}
+        </View>
+
 
       <View style={styles.content}>
         <View style={styles.segmentButtons}>
@@ -470,9 +498,16 @@ export default function ProfileScreen() {
                     </View>
                   ) : (
                     <View style={styles.studentsSegmentContainer}>
+                         <View style={styles.studentIconContainer}>
+                          <Ionicons name="chatbubbles" theme = "transparent" style={styles.studentIcon} />
+                          <Text style={styles.studentListText}> Give Feedback to {studentList.length} Students</Text>
+                      </View>
                       {
                         studentList?.map((student) => {
+                          <View style={styles.studentIconContainer}>
+                      </View>
                           return (
+                            
                             <View style={styles.studentsSegmentContainer}>
                               <View style={styles.studentNameFeedbackContainer}>
                                     <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
@@ -480,6 +515,18 @@ export default function ProfileScreen() {
                                     </View>
                                       <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
                               </View>
+                                  <View style={styles.studentProgressContainer}>
+                                          <Progress.Bar
+                                              progress={0.7}
+                                              width={200}
+                                              height={10}
+                                              color="#008000"
+                                              borderColor="#ffffff"
+                                              unfilledColor="#d3d3d3"
+                                              borderRadius={25}
+                                          />
+                                            <Text>Student Progress</Text>
+                                  </View>
                               <TextInput
                                 style={styles.feedbackborderUnderline}
                                 placeholder="feedback"
@@ -508,6 +555,50 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  studentProgressContainer: { 
+    margin: 5,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 50
+  },
+  completedTask: {
+    fontFamily: "Roboto_300Light",
+    fontSize: 13,
+    marginTop: 10,
+    color: "#636363",
+    marginBottom: 10
+  },
+  progressDescription: {
+    fontFamily: "Roboto_300Light",
+    fontSize: 13,
+  },
+  pendingColor: {
+    backgroundColor: "#d3d3d3",
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5,
+    marginLeft: 15
+  },
+  progressContainer: { 
+    margin: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  doneColor: {
+    backgroundColor: "#008000",
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 5
+  },
+  progressBar: {
+    alignItems: 'center',
+    margin: 10
+  },
   studentNameText: {
     fontSize: 16,
     fontFamily: "Roboto_400Regular",

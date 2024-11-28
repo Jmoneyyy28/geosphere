@@ -3,6 +3,7 @@ import { ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import axios from "axios";
+import * as Progress from 'react-native-progress';
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
