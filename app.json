@@ -8,7 +8,7 @@
     "scheme": "geosphere",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash.gif",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
