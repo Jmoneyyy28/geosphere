@@ -3,14 +3,13 @@ import { ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import axios from "axios";
-import * as Progress from 'react-native-progress';
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function LeaderboardScreen() {
-  const [students, setStudents] = useState(null);
-  const [topThree, setTopThree] = useState(null);
-  const [others, setOthers] = useState(null);
+  const [students, setStudents] = useState([]);
+  const [topThree, setTopThree] = useState([]);
+  const [others, setOthers] = useState([]);
   const [studentColors, setStudentColors] = useState({}); // State to store color mapping
   const router = useRouter();
 
@@ -115,7 +114,7 @@ export default function LeaderboardScreen() {
                 <View
                   style={[
                     leaderboardStyle.picture,
-                    { backgroundColor: studentColors[student.id] || "#ffffff" },
+                    { backgroundColor: "#e2e2e2e2" },
                   ]}
                 >
                   <Text style={leaderboardStyle.pictureInitial}>
@@ -144,7 +143,7 @@ export default function LeaderboardScreen() {
                   <View
                     style={[
                       leaderboardStyle.picture,
-                      { backgroundColor: studentColors[student.id] || "#ffffff" },
+                      { backgroundColor: "#e2e2e2" },
                     ]}
                   >
                     <Text style={leaderboardStyle.pictureInitial}>
@@ -163,7 +162,7 @@ export default function LeaderboardScreen() {
               </View>
             ))}
           </View>
-        </>
+        </> 
       )}
     </ScrollView>
   );
@@ -175,7 +174,7 @@ const leaderboardStyle = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    flex: 1
+    marginTop: 10
   },
   picture: {
     width: 40,
@@ -245,13 +244,6 @@ const leaderboardStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 15,
-  },
-  picture: {
-    width: 40,
-    height: 40,
-    backgroundColor: "#ffffff",
-    borderRadius: 20,
-    alignSelf: "center",
   },
   spacer: {
     flexGrow: 1,

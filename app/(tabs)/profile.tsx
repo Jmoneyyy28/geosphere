@@ -289,7 +289,7 @@ const [profileDisplay, setProfileDisplay] = useState(null);
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileContainer}>
-              <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+              <View style={[styles.picture, { backgroundColor: "#e2e2e2" },]}>
                     <Text style={styles.pictureInitial}>{(profile?.first_name[0].toUpperCase() + profile?.last_name[0].toUpperCase())}</Text>
               </View>
 
@@ -452,7 +452,7 @@ const [profileDisplay, setProfileDisplay] = useState(null);
                     {students?.map((student) => {
                       return (
                         <View style={styles.studentsChecklistContainer}>       
-                            <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                            <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
                                 <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
                             </View>
                                 <Text style={styles.studentNameText}>{`${student.first_name} ${student.last_name}_${student.id_number}`}</Text>
@@ -510,7 +510,7 @@ const [profileDisplay, setProfileDisplay] = useState(null);
                             
                             <View style={styles.studentsSegmentContainer}>
                               <View style={styles.studentNameFeedbackContainer}>
-                                    <View style={[styles.picture, {backgroundColor: backgroundColor[Math.floor(Math.random() * backgroundColor.length)]}]}>
+                                    <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
                                       <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
                                     </View>
                                       <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
@@ -637,7 +637,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
     justifyContent: 'center',
-    flex: 1
+    marginTop: 10
   },
   picture: {
     width: 40,

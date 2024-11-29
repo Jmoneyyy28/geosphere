@@ -22,6 +22,7 @@ import { Audio } from "expo-av";
 import axios from "axios";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+
 const AUDIO = {
     "topic1Voice": require("@/assets/sounds/plateBoundariesVoice.mp3"),
     "topic2Voice": require("@/assets/sounds/InternalStructureVoice.mp3"),
