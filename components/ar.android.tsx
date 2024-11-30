@@ -60,18 +60,18 @@ const HelloWorldSceneAR = () => {
 
     <Viro3DObject
         source={require("@/assets/3d-models/convergent-boundary/Moving tectonic plates.glb")}
-        // resources={[
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_0.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_1.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_1@channels=A.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_2.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_3@channels=R.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_4.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_5.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_5@channels=A.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_6.png"),
-        //   require("@/assets/3d-models/convergent-boundary/gltf_embedded_7@channels=R.png")
-        // ]}
+        resources={[
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_0.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_1.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_1@channels=A.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_2.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_3@channels=R.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_4.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_5.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_5@channels=A.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_6.png"),
+          require("@/assets/3d-models/convergent-boundary/gltf_embedded_7@channels=R.png")
+        ]}
         position={[0, 0, -1]}
         scale={[0.3, 0.3, 0.3]}
         rotation={[0, 90, 0]}

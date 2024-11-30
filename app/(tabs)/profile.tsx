@@ -17,7 +17,8 @@ const ENDPOINTS = {
   studentMap: "students/studentmap",
   saveStudentMap: "students/savestudentmap",
   studentList: "students/studentfeedback",
-  teacherFeedback: "feedback/teacherFeedback"
+  teacherFeedback: "feedback/teacherFeedback",
+  score: "topics/score"
 };
 
 const STUDENT_SEGMENT_BUTTONS = [
@@ -67,8 +68,10 @@ export default function ProfileScreen() {
   const [feedback, setFeedback] = React.useState('');
   //student feedback text
   const [feedbacktext, setfeedbacktext] = React.useState({});
-// check if profile is teacher or student
-const [profileDisplay, setProfileDisplay] = useState(null);
+  // check if profile is teacher or student
+  const [profileDisplay, setProfileDisplay] = useState(null);
+  //get score from student
+  const [scores, setScores] = useState([]);
 
 
   const save = (teacher_id, student_ids) => {
@@ -98,6 +101,7 @@ const [profileDisplay, setProfileDisplay] = useState(null);
   useEffect(() => {
     if (profile) {
       getFeedbacks();
+      getSCore();
       if (profile.isTeacher) {
         setSegmentButtons(TEACHER_SEGMENT_BUTTONS);
         getStudents();
@@ -198,6 +202,23 @@ const [profileDisplay, setProfileDisplay] = useState(null);
       });
   };
 
+  const getSCore = () => {
+    axios({
+      method: "get",
+      url: ENDPOINTS.score,
+      params:{
+        student_id: profile.id,
+      },
+    })
+      .then((res) => {
+        setScores(res.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching scores:", error);
+      });
+  };
+
   const getFeedbacks = () => {
     axios({
       method: "get",
@@ -219,7 +240,7 @@ const [profileDisplay, setProfileDisplay] = useState(null);
     router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
   };
 
-  const getBadge = (badge) => {
+  const test = (badge) => {
     if (badge.score > 75) {
       return badge.images.gold;
     } else if (badge.score > 50) {
@@ -228,6 +249,22 @@ const [profileDisplay, setProfileDisplay] = useState(null);
       return badge.images.bronze;
     }
   };
+
+  const getBadgeLevel = (badge, score) => {
+    console.log("SCORE:", score);
+
+    if (score == null) {
+      return BADGE_LOCK;
+    }
+
+    if (score > 75) {
+      return badge.badge_gold;
+    } else if (score > 50) {
+      return badge.badge_silver;
+    } else {
+      return badge.badge_bronze;
+    }
+  }
 
   const onChangeFeedback = (student_id, feedback) => {
     const tempFeedbackText = structuredClone(feedbacktext);
@@ -299,7 +336,6 @@ const [profileDisplay, setProfileDisplay] = useState(null);
         </View>
 
         <View style={{ flex: 1 }} />
-
         <View style={styles.headerButtons}>
           <GeoButton onPress={signOut} theme="transparent">
             <Ionicons name="log-out-outline" style={styles.signOutIcon} />
@@ -383,18 +419,32 @@ const [profileDisplay, setProfileDisplay] = useState(null);
               <ScrollView>
                 <View style={styles.segmentContainer}>
                   {badges.map((badge) => {
-                    return (
-                      <View style={styles.badgeContainer}>
-                        <Image
-                          style={styles.badgeImage}
-                          source={badge.badge_gold}
-                        />
-                        <Text style={styles.badgeName}>{badge.badge_name}</Text>
-                        <Text style={styles.badgeDescription}>
-                          {badge.badge_description}
-                        </Text>
-                      </View>
-                    );
+                    return scores.map((score) => {
+                      if (badge.badge_name == score.topic_name) {
+                        return (
+                          <View style={styles.badgeContainer}>
+                            <Image style={styles.badgeImage} source={getBadgeLevel(badge, score.score)}/>
+                            <Text style={styles.badgeName}>{badge.badge_name}</Text>
+                            <Text style={styles.badgeDescription}>{badge.badge_description}</Text>
+                          </View>
+                        )
+                      } else {
+                        return null;
+                      }
+                    });
+
+                    // return (
+                    //   <View style={styles.badgeContainer}>
+                    //     <Image
+                    //       style={styles.badgeImage}
+                    //       source={badge.badge_gold}
+                    //     />
+                    //     <Text style={styles.badgeName}>{badge.badge_name}</Text>
+                    //     <Text style={styles.badgeDescription}>
+                    //       {badge.badge_description}
+                    //     </Text>
+                    //   </View>
+                    // );
                   })}
                 </View>
               </ScrollView>
@@ -411,10 +461,9 @@ const [profileDisplay, setProfileDisplay] = useState(null);
                     return (
                       <View style={styles.descriptionContainer}>
                         <View style={styles.teacherName}>
-                          <Image
-                            style={styles.feedbackStyle}
-                            source={require("@/assets/images/profile-male.png")}
-                          />
+                          <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
+                                <Text style={styles.pictureInitial}>{(feedback.first_name[0] + feedback.last_name[0]).toUpperCase()}</Text>
+                            </View>
                           <Text style={styles.teacherName}>
                             {feedback.first_name} {feedback.last_name}
                           </Text>
