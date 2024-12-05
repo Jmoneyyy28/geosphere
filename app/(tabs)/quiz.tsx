@@ -15,6 +15,8 @@ const ENDPOINTS = {
   quiz: "topics/quiz",
   questions: "topics/question",
   score: "topics/quiz",
+  progress: "topics/progress"
+
 };
 
 export default function QuizScreen() {
@@ -60,6 +62,23 @@ export default function QuizScreen() {
     });
   };
 
+  const postProgress = (student_id, progressName, topic_id) => {
+    if (profile.isTeacher) {
+      return;
+    }
+    axios({
+      url: ENDPOINTS.progress,
+      method: "post",
+      data: {
+        student_id: student_id,
+        progressName: progressName,
+        topic_id: topic_id
+      },
+    }).then((res) =>
+      console.log("Progress Success")
+    );
+  };
+
   const getQuestions = () => {
     setLoading(true); // Start loading questions
     axios({
@@ -81,13 +100,15 @@ export default function QuizScreen() {
     for (let [key, value] of Object.entries(selectedAnswers)) {
       for (let i = 0; i < questions.length; i++) {
         if (questions[i].id == key && questions[i].answer == value) {
-          tempScore += 5;
+          tempScore += 10;
         }
       }
     }
     setScore(tempScore);
     postScore(profile.id, quiz.id, tempScore);
+
   };
+
   const postScore = (student_id, quiz_id, score) => {
     axios({
       url: ENDPOINTS.score,
@@ -101,6 +122,7 @@ export default function QuizScreen() {
   };
 
   const showModalSuccess = () => {
+    postProgress(profile.id, "quiz", params.topic_id);
     setIsModalVisible(() => !isModalVisible);
   }
 
@@ -122,7 +144,7 @@ export default function QuizScreen() {
     router.replace("/");
   };
 
-  const totalScore = 5 * questions.length;
+  const totalScore = 10 * questions.length;
 
 return (
   <ScrollView style={styles.container}>

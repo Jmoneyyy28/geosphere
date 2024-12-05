@@ -18,7 +18,9 @@ const ENDPOINTS = {
   saveStudentMap: "students/savestudentmap",
   studentList: "students/studentfeedback",
   teacherFeedback: "feedback/teacherFeedback",
-  score: "topics/score"
+  score: "topics/score",
+  studentProgress: "topics/studentProgress",
+  allStudentProgress: "topics/allStudentProgress"
 };
 
 const STUDENT_SEGMENT_BUTTONS = [
@@ -37,10 +39,6 @@ const STUDENT_SEGMENT_BUTTONS = [
 ];
 
 const TEACHER_SEGMENT_BUTTONS = [
-  {
-    name: "Lessons",
-    isActive: true,
-  },
   {
     name: "Students",
     isActive: false,
@@ -72,6 +70,13 @@ export default function ProfileScreen() {
   const [profileDisplay, setProfileDisplay] = useState(null);
   //get score from student
   const [scores, setScores] = useState([]);
+  //get student progress
+  const [progress, setProgress] = useState(0);
+  const [studentProgress, setStudentProgress] = useState(null);
+  const [allStudentProgress, setAllStudentProgress] = useState([]);
+  const [topicProgress, setTopicProgress] = useState({});
+
+  
 
 
   const save = (teacher_id, student_ids) => {
@@ -102,9 +107,11 @@ export default function ProfileScreen() {
     if (profile) {
       getFeedbacks();
       getSCore();
+      getStudentProgress();
       if (profile.isTeacher) {
         setSegmentButtons(TEACHER_SEGMENT_BUTTONS);
         getStudents();
+        getAllStudentProgress();
         setPickedStudents([]);
         getStudentFeedbackList(profile.id);
         
@@ -113,6 +120,10 @@ export default function ProfileScreen() {
       }
     }
   }, [profile]);
+
+  useEffect(() => {
+    computeProgress();
+  }, [studentProgress]);
 
   const postFeedback = (teacher_id, student_id, feedback) => {
     axios({
@@ -182,6 +193,11 @@ export default function ProfileScreen() {
       .then((res) => {
         console.log(res.data);
         setTopics(res.data);
+        const tempTopicProgress = {};
+        for (let i = 0; i < res.data.length; i ++) {
+          tempTopicProgress[res.data[i].topic_name] = 0;
+        }
+        setTopicProgress(tempTopicProgress);
       })
       .catch((error) => {
         console.error("Error fetching topics:", error);
@@ -236,18 +252,83 @@ export default function ProfileScreen() {
       });
   };
 
-  const openLesson = (topic_id) => {
-    router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
+  const getStudentProgress = () => {
+    axios({
+      method: "get",
+      url: ENDPOINTS.studentProgress,
+      params: {
+        student_id: profile.id,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setStudentProgress(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching progress:", error);
+      });
   };
 
-  const test = (badge) => {
-    if (badge.score > 75) {
-      return badge.images.gold;
-    } else if (badge.score > 50) {
-      return badge.images.silver;
-    } else {
-      return badge.images.bronze;
+  const getAllStudentProgress = () => {
+    axios({
+      method: "get",
+      url: ENDPOINTS.allStudentProgress,
+      params: {
+        teacher_id: profile.id,
+      },
+    })
+      .then((res) => {
+        console.log(res.data);
+        setAllStudentProgress(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching progress:", error);
+      });
+  };
+
+  const computeProgress = () => {
+    if (studentProgress != null) {
+      const totalProgress = 1;
+      const progressIncrement = totalProgress / studentProgress.length;
+      console.log("OVERALL PROGRESS INCRELEMTN", progressIncrement);
+      let currentProgress = 0;
+      const tempTopicProgress = structuredClone(topicProgress);
+      
+      for (let i = 0; i < studentProgress.length; i ++) {
+        if (studentProgress[i].progress_isDone) {
+          currentProgress += progressIncrement;
+        }
+      }
+
+      for (let key in tempTopicProgress) {
+        let currentTopicProgress = 0;
+        const temp = []
+        for (let i = 0; i < studentProgress.length; i ++) {
+          if (studentProgress[i].topic_name == key) {
+            temp.push(studentProgress[i]);
+          }
+        }
+
+        const topicProgressIncrement = totalProgress / temp.length;
+        console.log("PER TOPIC INCREMENT", topicProgressIncrement)
+
+        for (let i = 0; i < temp.length; i ++) {
+          if (temp[i].progress_isDone) {
+            currentTopicProgress += topicProgressIncrement;
+          }
+        }
+
+        tempTopicProgress[key] = currentTopicProgress;
+        
+      }
+
+      setProgress(currentProgress);
+      setTopicProgress(tempTopicProgress);
     }
+  }
+
+  const openLesson = (topic_id) => {
+    router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
   };
 
   const getBadgeLevel = (badge, score) => {
@@ -257,9 +338,9 @@ export default function ProfileScreen() {
       return BADGE_LOCK;
     }
 
-    if (score > 75) {
+    if (score > 40) {
       return badge.badge_gold;
-    } else if (score > 50) {
+    } else if (score > 30) {
       return badge.badge_silver;
     } else {
       return badge.badge_bronze;
@@ -347,7 +428,7 @@ export default function ProfileScreen() {
                       {profile && !profile.isTeacher && (
                         <>
                           <Progress.Bar
-                            progress={0.7}
+                            progress={progress}
                             width={300}
                             height={25}
                             color="#008000"
@@ -381,7 +462,6 @@ export default function ProfileScreen() {
             );
           })}
         </View>
-
         {segmentButtons?.map((segment) => {
          if (segment.name == "Lessons" && segment.isActive) {
           return topics.length === 0 ? (
@@ -392,27 +472,47 @@ export default function ProfileScreen() {
               />
             </View>
           ) : (
+            
+            <ScrollView>
             <View style={styles.segmentContainer}>
               {topics.map((topic) => {
                 return (
-                  <GeoButton
-                    style={styles.plateTectonicButton}
-                    textStyle={styles.textColor}
-                    onPress={() => openLesson(topic.id)}
-                    key={topic.id}
-                  >
-                    <View style={styles.test}>
-                      <View style={styles.textContentContainer}>
-                        <Text style={styles.topicText}>{topic.topic_name}</Text>
-                        <Text style={styles.bodyText}>
-                          {topic.topic_description}
-                        </Text>
-                      </View>
-                    </View>
-                  </GeoButton>
+                      <GeoButton
+                        style={styles.plateTectonicButton}
+                        textStyle={styles.textColor}
+                        onPress={() => openLesson(topic.id)}
+                        key={topic.id}
+                      >
+                        <View style={styles.test}>
+                          <View style={styles.textContentContainer}>
+                            <Text style={styles.topicText}>{topic.topic_name}</Text>
+                            <Text style={styles.bodyText}>
+                              {topic.topic_description}
+                            </Text>
+                            <View style={{ flex: 1, marginTop: 10}}>
+                                <Text style={{ 
+                                        alignSelf: 'center', 
+                                        color: '#ffffff', 
+                                        fontFamily: "Roboto_300Light", 
+                                        fontSize: 13,
+                                        marginBottom: 3}}>Completed Task</Text>
+                                          <Progress.Bar 
+                                          progress={topicProgress[topic.topic_name]}
+                                          width={300}
+                                          height={10}
+                                          color="#0064"
+                                          borderColor="#0000000"
+                                          borderWidth={2}
+                                          unfilledColor="#d3d3d3"
+                                          borderRadius={25}/>
+                            </View>
+                          </View>
+                        </View>
+                      </GeoButton>
                 );
               })}
             </View>
+            </ScrollView>
           );
           } else if (segment.name == "Badges" && segment.isActive) {
             return (
@@ -432,19 +532,6 @@ export default function ProfileScreen() {
                         return null;
                       }
                     });
-
-                    // return (
-                    //   <View style={styles.badgeContainer}>
-                    //     <Image
-                    //       style={styles.badgeImage}
-                    //       source={badge.badge_gold}
-                    //     />
-                    //     <Text style={styles.badgeName}>{badge.badge_name}</Text>
-                    //     <Text style={styles.badgeDescription}>
-                    //       {badge.badge_description}
-                    //     </Text>
-                    //   </View>
-                    // );
                   })}
                 </View>
               </ScrollView>
@@ -529,7 +616,6 @@ export default function ProfileScreen() {
                 )}
               </ScrollView>
             );
-
           }else if (
             segment.name == "Feedback" &&
             profile.isTeacher &&
@@ -566,7 +652,7 @@ export default function ProfileScreen() {
                               </View>
                                   <View style={styles.studentProgressContainer}>
                                           <Progress.Bar
-                                              progress={0.7}
+                                              progress={0}
                                               width={200}
                                               height={10}
                                               color="#008000"

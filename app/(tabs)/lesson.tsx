@@ -20,6 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Audio } from "expo-av";
 import axios from "axios";
+import { StorageService } from "@/services/StorageService";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -34,6 +35,8 @@ export default function TopicScreen() {
   const [loading, setLoading] = useState(true);
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState([]);
+  const [profile, setProfile] = useState({});
 
   const params = useLocalSearchParams();
   const navigation = useNavigation();
@@ -44,13 +47,31 @@ export default function TopicScreen() {
     badges: "badges",
     feedback: "feedback",
     lesson: "topics/lesson",
+    progress: "topics/progress"
   };
 
   useEffect(() => {
     setLoading(true);
     getLesson();
     setSound(null);
+    getProfile();
   }, [params.topic_id]);
+
+  useEffect(() => {
+    console.log("PROFILE", profile);
+    console.log("PARAMS", params);
+    if (profile.id && params.topic_id) {
+      postProgress(profile.id, "lesson", params.topic_id);
+    }
+  }, [profile.id, params.topic_id]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        stopSound(); // Ensure sound is stopped when leaving the page
+      };
+    }, [])
+  );
 
 
   const getLesson = () => {
@@ -65,15 +86,39 @@ export default function TopicScreen() {
     });
   };
 
-  useEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
+  const postProgress = (student_id, progressName, topic_id) => {
+    if (profile.isTeacher) {
+      return;
+    }
+    axios({
+      url: ENDPOINTS.progress,
+      method: "post",
+      data: {
+        student_id: student_id,
+        progressName: progressName,
+        topic_id: topic_id
+      },
+    }).then((res) =>
+      console.log("Progress Success")
+    );
+  };
+
+  const getProfile = () => {
+    StorageService.getData("profile").then((profile) => {
+      if (profile) {
+        setProfile(profile);
+      } else {
+        router.replace("/login");
+      }
+    });
+  };
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(AUDIO[lesson.voice]);
     setSound(sound);
     await sound.playAsync();
     setIsPlaying(true);
+    postProgress(profile.id, "voice", params.topic_id);
   };
 
   const stopSound = async () => {
@@ -97,23 +142,16 @@ export default function TopicScreen() {
     }
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        stopSound(); // Ensure sound is stopped when leaving the page
-      };
-    }, [])
-  );
-
   const backLesson = () => {
     router.replace("/profile");
   };
 
   const goToQuiz = () => {
-    router.replace({ pathname: "/quiz", params: { lesson_id: lesson.id } });
+    router.replace({ pathname: "/quiz", params: { lesson_id: lesson.id, topic_id: params.topic_id } });
   };
 
   const goToAr = () => {
+    postProgress(profile.id, "models", params.topic_id);
     router.replace({ pathname: "/ar"});
   };
 
