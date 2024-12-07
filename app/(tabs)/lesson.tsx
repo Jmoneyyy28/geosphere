@@ -152,7 +152,7 @@ export default function TopicScreen() {
 
   const goToAr = () => {
     postProgress(profile.id, "models", params.topic_id);
-    router.replace({ pathname: "/ar"});
+    router.replace({ pathname: "/ar", params: { title: lesson.lesson_title } });
   };
 
   return (
