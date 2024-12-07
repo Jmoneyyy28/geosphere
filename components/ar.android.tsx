@@ -9,14 +9,10 @@ import {
   Viro3DObject,
   ViroMaterials,
   ViroAmbientLight,
-  ViroAnimations
+  ViroAnimations,
+  ViroOmniLight,
 } from "@viro-community/react-viro";
 
-
-const AR_MODEL = {
-  "InternalStructureOfTheEarth": require("@/assets/3d-models/earth-core/earth_core2.obj"),
-  "ProcessesAndLandforms": require("@/assets/3d-models/earth-core/earth_core2.obj"),
-}
 const HelloWorldSceneAR = () => {
   const [text, setText] = useState("Initializing AR...");
 
@@ -29,41 +25,76 @@ const HelloWorldSceneAR = () => {
     }
   }
 
+  const material = ViroMaterials.createMaterials({
+    test: {
+      diffuseTexture: require("@/assets/3d-models/convergentBoundary/material_0_diffuse.png"),
+      normalTexture: require("@/assets/3d-models/convergentBoundary/material_0_normal.png"),
+    },
+  });
+
   return (
     <ViroARScene onTrackingUpdated={onInitialized}>
-         <ViroAmbientLight color="#ffffff" intensity={500}/>
+      <ViroAmbientLight color="#ffffff" intensity={500} />
       {/* <ViroText
         text={text}
         scale={[0.5, 0.5, 0.5]}
         position={[0, 0, -1]}
         style={styles.helloWorldTextStyle}
       /> */}
+      <ViroOmniLight
+        intensity={300}
+        position={[-10, 10, 10]}
+        color={"#FFFFFF"}
+        attenuationStartDistance={0}
+        attenuationEndDistance={20}
+      />
+      <ViroOmniLight
+        intensity={300}
+        position={[10, -10, 10]}
+        color={"#FFFFFF"}
+        attenuationStartDistance={0}
+        attenuationEndDistance={20}
+      />
+      <ViroOmniLight
+        intensity={300}
+        position={[10, -10, 10]}
+        color={"#FFFFFF"}
+        attenuationStartDistance={0}
+        attenuationEndDistance={20}
+      />
+      <ViroOmniLight
+        intensity={300}
+        position={[-10, -10, 10]}
+        color={"#FFFFFF"}
+        attenuationStartDistance={0}
+        attenuationEndDistance={20}
+      />
       <Viro3DObject
         source={require("@/assets/3d-models/convergentBoundary/scene.gltf")}
         resources={[
           require("@/assets/3d-models/convergentBoundary/sceneBin.bin"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_0_diffuse.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_0_normal.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_0_occlusion.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_0_specularGlossiness.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_1_diffuse.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_1_normal.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_1_occlusion.png"),
-          require("@/assets/3d-models/convergentBoundary/textures/material_1_specularGlossiness.png"),
+          require("@/assets/3d-models/convergentBoundary/material_0_diffuse.png"),
+          require("@/assets/3d-models/convergentBoundary/material_0_normal.png"),
+          require("@/assets/3d-models/convergentBoundary/material_0_occlusion.png"),
+          require("@/assets/3d-models/convergentBoundary/material_0_specularGlossiness.png"),
+          require("@/assets/3d-models/convergentBoundary/material_1_diffuse.png"),
+          require("@/assets/3d-models/convergentBoundary/material_1_normal.png"),
+          require("@/assets/3d-models/convergentBoundary/material_1_occlusion.png"),
+          require("@/assets/3d-models/convergentBoundary/material_1_specularGlossiness.png"),
         ]}
         animation={{
-          name: 'thrust',
+          name: "subducting_convergent",
           run: true,
           loop: true,
-          delay: 3000
-
         }}
+        materials={"test"}
         position={[0, 0, -1]}
-        scale={[0.3, 0.3, 0.3]}
+        scale={[2.3, 2.3, 2.3]}
         rotation={[0, 90, 0]}
-        type="GLTF" />
+        type="GLTF"
+      />
 
-    {/* <Viro3DObject
+      {/* <Viro3DObject
         source={require("@/assets/3d-models/test/dragon_animation.glb")}
         position={[0, 0, -1]}
         scale={[0.03, 0.03, 0.03]}
@@ -75,6 +106,25 @@ const HelloWorldSceneAR = () => {
         }}
         rotation={[0, 90, 0]}
         type="GLB" /> */}
+
+      {/* <Viro3DObject
+        source={require("@/assets/3d-models/test/scene.gltf")}
+        resources={[
+          require("@/assets/3d-models/test/scene1.bin"),
+          require("@/assets/3d-models/test/textures/07_-_Default_baseColor.png"),
+          require("@/assets/3d-models/test/textures/07_-_Default_metallicRoughness.png"),
+          require("@/assets/3d-models/test/textures/07_-_Default_normal.png"),
+        ]}
+        animation={{
+          name: "Take 001",
+          run: true,
+          loop: true,
+        }}
+        position={[0, 0, -1]}
+        scale={[1, 1, 1]}
+        rotation={[0, 90, 0]}
+        type="GLTF"
+      /> */}
     </ViroARScene>
   );
 };
@@ -86,10 +136,10 @@ export default function ArScreen() {
       initialScene={{
         scene: HelloWorldSceneAR,
       }}
-      style={{flex: 1}}
+      style={{ flex: 1 }}
     />
     // <View style={styles.container}>
-      
+
     // </View>
   );
 }

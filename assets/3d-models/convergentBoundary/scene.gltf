@@ -21424,28 +21424,28 @@
   ],
   "images": [
     {
-      "uri": "textures/material_0_diffuse.png"
+      "uri": "material_0_diffuse.png"
     },
     {
-      "uri": "textures/material_0_specularGlossiness.png"
+      "uri": "material_0_specularGlossiness.png"
     },
     {
-      "uri": "textures/material_0_normal.png"
+      "uri": "material_0_normal.png"
     },
     {
-      "uri": "textures/material_0_occlusion.png"
+      "uri": "material_0_occlusion.png"
     },
     {
-      "uri": "textures/material_1_diffuse.png"
+      "uri": "material_1_diffuse.png"
     },
     {
-      "uri": "textures/material_1_specularGlossiness.png"
+      "uri": "material_1_specularGlossiness.png"
     },
     {
-      "uri": "textures/material_1_normal.png"
+      "uri": "material_1_normal.png"
     },
     {
-      "uri": "textures/material_1_occlusion.png"
+      "uri": "material_1_occlusion.png"
     }
   ],
   "materials": [

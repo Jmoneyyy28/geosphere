@@ -6,15 +6,18 @@
   "build": {
     "development": {
       "android": {
-          "buildType": "apk",
-          "gradleCommand": ":app:assembleRelease"
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
       },
-			"developmentClient": true,
-			"distribution": "internal",
+      "ios": {
+        "buildConfiguration": "Debug"
+      },
+      "developmentClient": true,
+      "distribution": "internal",
       "env": {
         "EXPO_PUBLIC_API_URL": "https://geosphere-backend-fdfdcf8c36f4.herokuapp.com"
       }
-		},
+    },
     "preview": {
       "distribution": "internal"
     },
