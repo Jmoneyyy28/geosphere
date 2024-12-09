@@ -199,9 +199,11 @@ return (
           </View>
         )}
         {!loading && (
+          <View style = {{paddingBottom: 25}}>
           <GeoButton style={styles.submitButton} onPress={() => submit()}>
             <Text style={styles.submitButtonText}>SUBMIT</Text>
           </GeoButton>
+          </View>
         )}
         <Modal isVisible={isModalVisible}>
           <View style={styles.modalContainer}>
@@ -270,6 +272,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     backgroundColor: "#008000",
+    paddingTop: 25
   },
   loadingContainer: {
     flex: 1,

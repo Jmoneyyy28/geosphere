@@ -157,8 +157,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         // backgroundColor: '#84b522',
         flexDirection: 'column',
-        
-        
+        paddingTop: 25
     },
     centerContainer: {
         flex: 1,

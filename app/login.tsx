@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   mainContainer: {
+    paddingTop: 25,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",

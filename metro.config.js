@@ -9,5 +9,6 @@ config.resolver.assetExts.push("mtl")
 config.resolver.assetExts.push("glb")
 config.resolver.assetExts.push("gltf")
 config.resolver.assetExts.push("bin")
+config.resolver.assetExts.push("fbx")
 
 module.exports = config;

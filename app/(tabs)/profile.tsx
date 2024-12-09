@@ -489,22 +489,22 @@ export default function ProfileScreen() {
                             <Text style={styles.bodyText}>
                               {topic.topic_description}
                             </Text>
-                            <View style={{ flex: 1, marginTop: 10}}>
-                                <Text style={{ 
-                                        alignSelf: 'center', 
-                                        color: '#ffffff', 
-                                        fontFamily: "Roboto_300Light", 
-                                        fontSize: 13,
-                                        marginBottom: 3}}>Completed Task</Text>
+                            <View style={{alignSelf:'baseline', marginTop: 10}}>
                                           <Progress.Bar 
                                           progress={topicProgress[topic.topic_name]}
                                           width={300}
                                           height={10}
                                           color="#0064"
                                           borderColor="#0000000"
-                                          borderWidth={2}
+                                          borderWidth={1}
                                           unfilledColor="#d3d3d3"
                                           borderRadius={25}/>
+                                <Text style={{ 
+                                        alignSelf: 'center', 
+                                        color: '#ffffff', 
+                                        fontFamily: "Roboto_300Light", 
+                                        fontSize: 13,
+                                        marginBottom: 3}}>Completed Task</Text>
                             </View>
                           </View>
                         </View>
@@ -954,6 +954,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   container: {
+    paddingTop: 25,
     flex: 1,
     flexDirection: "column",
   },

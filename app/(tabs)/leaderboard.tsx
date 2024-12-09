@@ -55,7 +55,7 @@ export default function LeaderboardScreen() {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={{paddingTop:25}}>
       <View style={styles.leaderboardContainer}>
         <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
       </View>
