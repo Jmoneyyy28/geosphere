@@ -34,6 +34,7 @@ export default function ArScreen() {
   const [animationStarted, setAnimationStarted] = useState(false);
   const [scene, setScene] = useState(null);
   const [object, setObject] = useState("transform");
+  const [rotate, setRotate] = useState(false);
 
   useEffect(() => {
     setPlateBoundariesType("transform");
@@ -78,7 +79,22 @@ export default function ArScreen() {
     setAnimationStarted(true);
   };
 
-  const getEarthStructure = () => {
+  const getEarthStructure = (props) => {
+    if (!props) {
+      return;
+    }
+    console.log(props);
+    const data = props.arSceneNavigator.viroAppProps;
+
+    ViroAnimations.registerAnimations({
+      rotate: {
+        properties: {
+          rotateY: "+=10",
+        },
+        duration: 1000,
+      },
+    });
+
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
         <ViroAmbientLight color="#ffffff" intensity={1000} />
@@ -94,6 +110,10 @@ export default function ArScreen() {
           position={[0, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
           rotation={[0, 20, 0]}
+          animation={{
+            name: "rotate",
+            run: data.rotate,
+          }}
           type="OBJ"
         />
       </ViroARScene>
@@ -273,13 +293,13 @@ export default function ArScreen() {
         properties: {
           positionX: "+= 0.03", // Move to the right
         },
-        duration: 5000, // 3 seconds
+        duration: 3000, // 3 seconds
       },
       moveNegative2: {
         properties: {
           positionX: "-= 0.03", // Move to the left
         },
-        duration: 5000, // 3 seconds
+        duration: 3000, // 3 seconds
       },
       resetPosition2: {
         properties: {
@@ -289,22 +309,22 @@ export default function ArScreen() {
       },
       movePositive3: {
         properties: {
-          positionX: "+= 0.03", // Move to the right
-          positionY: "-= 0.01",
+          positionX: "+= 0.02", // Move to the right
+          positionY: "-= 0.001",
         },
-        duration: 3000, // 3 seconds
+        duration: 7000, // 3 seconds
       },
       moveNegative3: {
         properties: {
-          positionX: "-= 0.03", // Move to the left
-          positionY: "+= 0.01",
+          positionX: "-= 0.02", // Move to the left
+          positionY: "+= 0.001",
         },
-        duration: 3000, // 3 seconds
+        duration: 7000, // 3 seconds
       },
       resetPosition3: {
         properties: {
           positionX: 0,
-          positionY: 0,
+          positionY: "+= 0.001",
         },
         duration: 2000,
       },
@@ -367,85 +387,84 @@ export default function ArScreen() {
           </>
         ) : data.object === "divergent" ? (
           <>
-           <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
-          resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
-          ]}
-          position={[0.18, 0, -1]}
-          scale={[0.3, 0.3, 0.3]}
-          rotation={[0, 100, 0]}
-          type="OBJ"
-          onLoadEnd={onLoadModel}
-          animation={{
-            name: "moveLoop3",
-            run: true,
-            loop: true,
-            onFinish: plate1AnimationEnd,
-          }}
-        />
+            <Viro3DObject
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
+              resources={[
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+              ]}
+              position={[0.18, 0, -1]}
+              scale={[0.3, 0.3, 0.3]}
+              rotation={[0, 100, 0]}
+              type="OBJ"
+              onLoadEnd={onLoadModel}
+              animation={{
+                name: "moveLoop3",
+                run: true,
+                loop: true,
+                onFinish: plate1AnimationEnd,
+              }}
+            />
 
-        <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
-          resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
-          ]}
-          position={[-0.18, 0, -1]}
-          scale={[0.3, 0.3, 0.3]}
-          rotation={[0, 100, 0]}
-          type="OBJ"
-          onLoadEnd={onLoadModel}
-          animation={{
-            name: "moveLoop4",
-            run: true,
-            loop: true,
-            onFinish: plate2AnimationEnd,
-          }}
-        />
+            <Viro3DObject
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
+              resources={[
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+              ]}
+              position={[-0.18, 0, -1]}
+              scale={[0.3, 0.3, 0.3]}
+              rotation={[0, 100, 0]}
+              type="OBJ"
+              onLoadEnd={onLoadModel}
+              animation={{
+                name: "moveLoop4",
+                run: true,
+                loop: true,
+                onFinish: plate2AnimationEnd,
+              }}
+            />
           </>
         ) : (
           <>
-          <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
-          resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
-          ]}
-          position={[0.25, 0.1, -1]}
-          scale={[0.3, 0.3, 0.3]}
-          rotation={[0, 0, -10]}
-          type="OBJ"
-          onLoadEnd={onLoadModel}
-          animation={{
-            name: "moveLoop6",
-            run: true,
-            loop: true,
-            onFinish: plate1AnimationEnd,
-          }}
-        />
+            <Viro3DObject
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
+              resources={[
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+              ]}
+              position={[0.28, 0.1, -1]}
+              scale={[0.3, 0.3, 0.3]}
+              rotation={[0, 0, -10]}
+              type="OBJ"
+              onLoadEnd={onLoadModel}
+              animation={{
+                name: "moveLoop6",
+                run: true,
+                loop: true,
+                onFinish: plate1AnimationEnd,
+              }}
+            />
 
-        <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
-          resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
-          ]}
-          position={[-0.25, 0.1, -1]}
-          scale={[0.3, 0.3, 0.3]}
-          rotation={[0, 0, -10]}
-          type="OBJ"
-          onLoadEnd={onLoadModel}
-          animation={{
-            name: "moveLoop5",
-            run: true,
-            loop: true,
-            onFinish: plate2AnimationEnd,
-          }}
-        />  
+            <Viro3DObject
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
+              resources={[
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+              ]}
+              position={[-0.28, 0.1, -1]}
+              scale={[0.3, 0.3, 0.3]}
+              rotation={[0, 0, -10]}
+              type="OBJ"
+              onLoadEnd={onLoadModel}
+              animation={{
+                name: "moveLoop5",
+                run: true,
+                loop: true,
+                onFinish: plate2AnimationEnd,
+              }}
+            />
           </>
-
         )}
         {/* Plate 1 - Starting slightly left */}
         {/* <Viro3DObject
@@ -518,41 +537,72 @@ export default function ArScreen() {
     return models[title];
   };
 
-  return title ? (
-    <View style={styles.mainContainer}>
-      <ViroARSceneNavigator
-        autofocus={true}
-        initialScene={{
-          scene: title != "Plate Boundaries" ? getScene : getPlateBoundaries,
-        }}
-        style={{ flex: 1 }}
-        viroAppProps={{ object: object }}
-      />
-      <View style={styles.controlVIew}>
-        <View>
-          <Text style={styles.titleStyle}>{object} Boundaries</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <GeoButton
-            style={styles.buttonStyle}
-            onPress={() => setObject("convergent")}
-          >
-            <Text>Convergent</Text>
-          </GeoButton>
-          <GeoButton
-            style={styles.buttonStyle}
-            onPress={() => setObject("divergent")}
-          >
-            <Text>Divergent</Text>
-          </GeoButton>
+  if (!title) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>Loading</Text>
+      </View>
+    );
+  }
+
+  if (title === "Plate Boundaries") {
+    return (
+      <View style={styles.mainContainer}>
+        <ViroARSceneNavigator
+          autofocus={true}
+          initialScene={{
+            scene: getPlateBoundaries,
+          }}
+          style={{ flex: 1 }}
+          viroAppProps={{ object: object }}
+        />
+        <View style={styles.controlVIew}>
+          <View>
+            <Text style={styles.titleStyle}>{object} Boundaries</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <GeoButton
+              style={styles.buttonStyle}
+              onPress={() => setObject("convergent")}
+            >
+              <Text>Convergent</Text>
+            </GeoButton>
+            <GeoButton
+              style={styles.buttonStyle}
+              onPress={() => setObject("divergent")}
+            >
+              <Text>Divergent</Text>
+            </GeoButton>
+          </View>
         </View>
       </View>
-    </View>
-  ) : (
-    <View style={styles.container}>
-      <Text style={styles.text}>Loading</Text>
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={styles.mainContainer}>
+        <ViroARSceneNavigator
+          autofocus={true}
+          initialScene={{
+            scene: getEarthStructure,
+          }}
+          style={{ flex: 1 }}
+          viroAppProps={{ object: object, rotate: rotate }}
+        />
+        <View style={styles.controlVIew}>
+          <View>
+            <Text style={styles.titleStyle}>{title}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}></View>
+          <GeoButton
+              style={styles.buttonStyle}
+              onPress= {() => setRotate(!rotate)}
+            >
+              <Text>Rotate</Text>
+            </GeoButton>
+        </View>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -592,9 +642,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     textAlignVertical: "center",
     textAlign: "center",
-  },
-  container: {
-    flex: 1,
   },
   scrollView: {
     position: "absolute",
