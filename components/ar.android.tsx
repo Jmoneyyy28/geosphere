@@ -25,6 +25,7 @@ import {
 import { useLocalSearchParams } from "expo-router";
 import { GeoButton } from "./GeoButton";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ArScreen() {
   const params = useLocalSearchParams();
@@ -653,19 +654,22 @@ export default function ArScreen() {
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
           </View>
-          <View style={{ flexDirection: "row" }}></View>
+          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+          
           <GeoButton
-            style={styles.buttonStyle}
-            onPress={() => rotateEarthStructure("rotateRight")}
-          >
-            <Text>Right</Text>
-          </GeoButton>
-          <GeoButton
-            style={styles.buttonStyle}
             onPress={() => rotateEarthStructure("rotateLeft")}
           >
-            <Text>Left</Text>
+            <Ionicons name="chevron-back-outline"
+              style = {styles.rotateButton}/>
           </GeoButton>
+          <Text style={styles.rotateTextStyle}>Rotate the Model!</Text>
+          <GeoButton
+            onPress={() => rotateEarthStructure("rotateRight")}
+          >
+            <Ionicons name="chevron-forward-outline"
+            style = {styles.rotateButton}/>
+            </GeoButton>
+          </View>
         </View>
       </View>
     );
@@ -688,19 +692,21 @@ export default function ArScreen() {
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
           </View>
-          <View style={{ flexDirection: "row" }}></View>
+          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
           <GeoButton
-            style={styles.buttonStyle}
-            onPress={() => rotateEarthStructure("rotateRight")}
-          >
-            <Text>Right</Text>
-          </GeoButton>
-          <GeoButton
-            style={styles.buttonStyle}
             onPress={() => rotateEarthStructure("rotateLeft")}
           >
-            <Text>Left</Text>
+            <Ionicons name="chevron-back-outline"
+              style = {styles.rotateButton}/>
           </GeoButton>
+          <Text style={styles.rotateTextStyle}>Rotate the Model!</Text>
+          <GeoButton
+            onPress={() => rotateEarthStructure("rotateRight")}
+          >
+            <Ionicons name="chevron-forward-outline"
+            style = {styles.rotateButton}/>
+            </GeoButton>
+          </View>
         </View>
       </View>
     );
@@ -708,6 +714,25 @@ export default function ArScreen() {
 }
 
 const styles = StyleSheet.create({
+  rotateTextStyle: {
+    fontSize: 15,
+    color: "#ffffff",
+    fontFamily: "Roboto_300Light",
+  },
+  rotateButton: {
+    fontSize: 50,
+    color: "#ffffff",
+    margin: 10
+  },
+  earthButton: {
+    backgroundColor: "#ffffff",
+    borderRadius: 30,
+    height: 35,
+    width: 100,
+    justifyContent: "center",
+    alignContent: "center",
+    borderWidth: 1,
+  },
   titleStyle: {
     color: "white",
     fontSize: 20,
@@ -721,7 +746,6 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 35,
     width: 100,
-    alignSelf: "flex-end",
     justifyContent: "center",
     alignContent: "center",
     borderWidth: 1,
