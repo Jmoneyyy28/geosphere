@@ -27,6 +27,7 @@ import { GeoButton } from "./GeoButton";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { Ionicons } from "@expo/vector-icons";
 
+
 export default function ArScreen() {
   const params = useLocalSearchParams();
   const [title, setTitle] = useState(null);
@@ -38,6 +39,7 @@ export default function ArScreen() {
   const [object, setObject] = useState("transform");
   const [rotate, setRotate] = useState(false);
   const [rotationDirection, setRotationDirection] = useState("rotateRight");
+
 
   useEffect(() => {
     setPlateBoundariesType("transform");
@@ -56,6 +58,7 @@ export default function ArScreen() {
     console.log(type);
     setPlateBoundariesType(type);
   };
+
 
   const plate1AnimationEnd = () => {
     console.log("Plate 1 animation end");
@@ -100,13 +103,13 @@ export default function ArScreen() {
         properties: {
           rotateY: "+=20",
         },
-        duration: 1000,
+        duration: 500,
       },
       rotateLeft: {
         properties: {
           rotateY: "-=20",
         },
-        duration: 1000,
+        duration: 500,
       },
     });
 
@@ -543,13 +546,13 @@ export default function ArScreen() {
         properties: {
           rotateY: "+=20",
         },
-        duration: 1000,
+        duration: 500,
       },
       rotateLeft: {
         properties: {
           rotateY: "-=20",
         },
-        duration: 1000,
+        duration: 500,
       },
     });
 
@@ -613,7 +616,7 @@ export default function ArScreen() {
           }}
           style={{ flex: 1 }}
           viroAppProps={{ object: object }}
-        />
+        />   
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{object} Boundaries</Text>
@@ -623,13 +626,13 @@ export default function ArScreen() {
               style={styles.buttonStyle}
               onPress={() => setObject("convergent")}
             >
-              <Text>Convergent</Text>
+              <Text style={{color:"#ffffff", fontFamily: "Roboto_300Light"}}>Convergent</Text>
             </GeoButton>
             <GeoButton
               style={styles.buttonStyle}
               onPress={() => setObject("divergent")}
             >
-              <Text>Divergent</Text>
+              <Text style={{color: "#ffffff", fontFamily: "Roboto_300Light"}}>Divergent</Text>
             </GeoButton>
           </View>
         </View>
@@ -662,7 +665,7 @@ export default function ArScreen() {
             <Ionicons name="chevron-back-outline"
               style = {styles.rotateButton}/>
           </GeoButton>
-          <Text style={styles.rotateTextStyle}>Rotate the Model!</Text>
+          <Text style={styles.rotateTextStyle}> Tap to Rotate the Model!</Text>
           <GeoButton
             onPress={() => rotateEarthStructure("rotateRight")}
           >
@@ -699,7 +702,7 @@ export default function ArScreen() {
             <Ionicons name="chevron-back-outline"
               style = {styles.rotateButton}/>
           </GeoButton>
-          <Text style={styles.rotateTextStyle}>Rotate the Model!</Text>
+          <Text style={styles.rotateTextStyle}>Tap to Rotate the Model!</Text>
           <GeoButton
             onPress={() => rotateEarthStructure("rotateRight")}
           >
@@ -714,6 +717,11 @@ export default function ArScreen() {
 }
 
 const styles = StyleSheet.create({
+  optionIcon: {
+    fontSize: 28,
+    color: "#008000",
+    marginHorizontal: 8,
+  },
   rotateTextStyle: {
     fontSize: 15,
     color: "#ffffff",
@@ -725,7 +733,7 @@ const styles = StyleSheet.create({
     margin: 10
   },
   earthButton: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "green",
     borderRadius: 30,
     height: 35,
     width: 100,
@@ -741,14 +749,13 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_700Bold",
   },
   buttonStyle: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#4CBB17",
     borderRadius: 30,
     margin: 10,
     height: 35,
     width: 100,
     justifyContent: "center",
     alignContent: "center",
-    borderWidth: 1,
   },
   mainContainer: {
     flex: 1,
