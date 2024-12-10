@@ -24,6 +24,7 @@ import {
 } from "@viro-community/react-viro";
 import { useLocalSearchParams } from "expo-router";
 import { GeoButton } from "./GeoButton";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function ArScreen() {
   const params = useLocalSearchParams();
@@ -35,6 +36,7 @@ export default function ArScreen() {
   const [scene, setScene] = useState(null);
   const [object, setObject] = useState("transform");
   const [rotate, setRotate] = useState(false);
+  const [rotationDirection, setRotationDirection] = useState("rotateRight");
 
   useEffect(() => {
     setPlateBoundariesType("transform");
@@ -93,6 +95,18 @@ export default function ArScreen() {
         },
         duration: 1000,
       },
+      rotateRight: {
+        properties: {
+          rotateY: "+=20",
+        },
+        duration: 1000,
+      },
+      rotateLeft: {
+        properties: {
+          rotateY: "-=20",
+        },
+        duration: 1000,
+      },
     });
 
     return (
@@ -111,8 +125,9 @@ export default function ArScreen() {
           scale={[0.3, 0.3, 0.3]}
           rotation={[0, 20, 0]}
           animation={{
-            name: "rotate",
+            name: data.rotationDirection,
             run: data.rotate,
+            onFinish: animationEnd,
           }}
           type="OBJ"
         />
@@ -509,7 +524,34 @@ export default function ArScreen() {
     );
   };
 
-  const getLandforms = () => {
+  const getLandforms = (props) => {
+    if (!props) {
+      return;
+    }
+
+    const data = props.arSceneNavigator.viroAppProps;
+
+    ViroAnimations.registerAnimations({
+      rotate: {
+        properties: {
+          rotateY: "+=10",
+        },
+        duration: 1000,
+      },
+      rotateRight: {
+        properties: {
+          rotateY: "+=20",
+        },
+        duration: 1000,
+      },
+      rotateLeft: {
+        properties: {
+          rotateY: "-=20",
+        },
+        duration: 1000,
+      },
+    });
+
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
         <ViroAmbientLight color="#ffffff" intensity={1000} />
@@ -522,6 +564,11 @@ export default function ArScreen() {
           position={[0, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
           rotation={[0, 1, 0]}
+          animation={{
+            name: data.rotationDirection,
+            run: data.rotate,
+            onFinish: animationEnd,
+          }}
           type="OBJ"
         />
       </ViroARScene>
@@ -535,6 +582,16 @@ export default function ArScreen() {
 
   const getScene = (props) => {
     return models[title];
+  };
+
+  const animationEnd = () => {
+    setRotate(false);
+  };
+
+  const rotateEarthStructure = (direction) => {
+    console.log("Rotate", rotate);
+    setRotate(!rotate);
+    setRotationDirection(direction);
   };
 
   if (!title) {
@@ -577,7 +634,7 @@ export default function ArScreen() {
         </View>
       </View>
     );
-  } else {
+  } else if (title === "Internal Structures of the Earth") {
     return (
       <View style={styles.mainContainer}>
         <ViroARSceneNavigator
@@ -585,8 +642,12 @@ export default function ArScreen() {
           initialScene={{
             scene: getEarthStructure,
           }}
-          style={{ flex: 1 }}
-          viroAppProps={{ object: object, rotate: rotate }}
+          style={{ flex: 1}}
+          viroAppProps={{
+            object: object,
+            rotate: rotate,
+            rotationDirection: rotationDirection,
+          }}
         />
         <View style={styles.controlVIew}>
           <View>
@@ -594,11 +655,52 @@ export default function ArScreen() {
           </View>
           <View style={{ flexDirection: "row" }}></View>
           <GeoButton
-              style={styles.buttonStyle}
-              onPress= {() => setRotate(!rotate)}
-            >
-              <Text>Rotate</Text>
-            </GeoButton>
+            style={styles.buttonStyle}
+            onPress={() => rotateEarthStructure("rotateRight")}
+          >
+            <Text>Right</Text>
+          </GeoButton>
+          <GeoButton
+            style={styles.buttonStyle}
+            onPress={() => rotateEarthStructure("rotateLeft")}
+          >
+            <Text>Left</Text>
+          </GeoButton>
+        </View>
+      </View>
+    );
+  } else if (title === "Processes and Landforms") {
+    return (
+      <View style={styles.mainContainer}>
+        <ViroARSceneNavigator
+          autofocus={true}
+          initialScene={{
+            scene: getLandforms,
+          }}
+          style={{ flex: 1 }}
+          viroAppProps={{
+            object: object,
+            rotate: rotate,
+            rotationDirection: rotationDirection,
+          }}
+        />
+        <View style={styles.controlVIew}>
+          <View>
+            <Text style={styles.titleStyle}>{title}</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}></View>
+          <GeoButton
+            style={styles.buttonStyle}
+            onPress={() => rotateEarthStructure("rotateRight")}
+          >
+            <Text>Right</Text>
+          </GeoButton>
+          <GeoButton
+            style={styles.buttonStyle}
+            onPress={() => rotateEarthStructure("rotateLeft")}
+          >
+            <Text>Left</Text>
+          </GeoButton>
         </View>
       </View>
     );
