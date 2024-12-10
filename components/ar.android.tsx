@@ -268,8 +268,58 @@ export default function ArScreen() {
         },
         duration: 2000,
       },
+
+      movePositive2: {
+        properties: {
+          positionX: "+= 0.03", // Move to the right
+        },
+        duration: 5000, // 3 seconds
+      },
+      moveNegative2: {
+        properties: {
+          positionX: "-= 0.03", // Move to the left
+        },
+        duration: 5000, // 3 seconds
+      },
+      resetPosition2: {
+        properties: {
+          positionX: 0,
+        },
+        duration: 2000,
+      },
+      movePositive3: {
+        properties: {
+          positionX: "+= 0.03", // Move to the right
+          positionY: "-= 0.01",
+        },
+        duration: 3000, // 3 seconds
+      },
+      moveNegative3: {
+        properties: {
+          positionX: "-= 0.03", // Move to the left
+          positionY: "+= 0.01",
+        },
+        duration: 3000, // 3 seconds
+      },
+      resetPosition3: {
+        properties: {
+          positionX: 0,
+          positionY: 0,
+        },
+        duration: 2000,
+      },
+      resetPosition4: {
+        properties: {
+          positionX: 0,
+        },
+        duration: 2000,
+      },
       moveLoop: [["movePositive", "resetPosition"]],
       moveLoop2: [["moveNegative", "resetPosition"]],
+      moveLoop3: [["movePositive2", "resetPosition2"]],
+      moveLoop4: [["moveNegative2", "resetPosition2"]],
+      moveLoop5: [["movePositive3", "resetPosition3"]],
+      moveLoop6: [["moveNegative3", "resetPosition4"]],
     });
 
     return (
@@ -316,9 +366,86 @@ export default function ArScreen() {
             />
           </>
         ) : data.object === "divergent" ? (
-          <></>
+          <>
+           <Viro3DObject
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
+          resources={[
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+          ]}
+          position={[0.18, 0, -1]}
+          scale={[0.3, 0.3, 0.3]}
+          rotation={[0, 100, 0]}
+          type="OBJ"
+          onLoadEnd={onLoadModel}
+          animation={{
+            name: "moveLoop3",
+            run: true,
+            loop: true,
+            onFinish: plate1AnimationEnd,
+          }}
+        />
+
+        <Viro3DObject
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
+          resources={[
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+          ]}
+          position={[-0.18, 0, -1]}
+          scale={[0.3, 0.3, 0.3]}
+          rotation={[0, 100, 0]}
+          type="OBJ"
+          onLoadEnd={onLoadModel}
+          animation={{
+            name: "moveLoop4",
+            run: true,
+            loop: true,
+            onFinish: plate2AnimationEnd,
+          }}
+        />
+          </>
         ) : (
-          <></>
+          <>
+          <Viro3DObject
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
+          resources={[
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+          ]}
+          position={[0.25, 0.1, -1]}
+          scale={[0.3, 0.3, 0.3]}
+          rotation={[0, 0, -10]}
+          type="OBJ"
+          onLoadEnd={onLoadModel}
+          animation={{
+            name: "moveLoop6",
+            run: true,
+            loop: true,
+            onFinish: plate1AnimationEnd,
+          }}
+        />
+
+        <Viro3DObject
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
+          resources={[
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+          ]}
+          position={[-0.25, 0.1, -1]}
+          scale={[0.3, 0.3, 0.3]}
+          rotation={[0, 0, -10]}
+          type="OBJ"
+          onLoadEnd={onLoadModel}
+          animation={{
+            name: "moveLoop5",
+            run: true,
+            loop: true,
+            onFinish: plate2AnimationEnd,
+          }}
+        />  
+          </>
+
         )}
         {/* Plate 1 - Starting slightly left */}
         {/* <Viro3DObject
