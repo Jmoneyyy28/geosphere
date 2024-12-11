@@ -1,4 +1,13 @@
-import { Image, StyleSheet, View, Text, ScrollView, TextInput, Alert, RefreshControl } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TextInput,
+  Alert,
+  RefreshControl,
+} from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import React, { useState, useEffect } from "react";
@@ -7,7 +16,8 @@ import { GeoButton } from "@/components/GeoButton";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { StorageService } from "@/services/StorageService";
-import * as Progress from 'react-native-progress';
+import * as Progress from "react-native-progress";
+import structuredClone from '@ungap/structured-clone';
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -20,7 +30,7 @@ const ENDPOINTS = {
   teacherFeedback: "feedback/teacherFeedback",
   score: "topics/score",
   studentProgress: "topics/studentProgress",
-  allStudentProgress: "topics/allStudentProgress"
+  allStudentProgress: "topics/allStudentProgress",
 };
 
 const STUDENT_SEGMENT_BUTTONS = [
@@ -60,10 +70,10 @@ export default function ProfileScreen() {
   const [segmentButtons, setSegmentButtons] = useState(null);
   const [students, setStudents] = useState(null);
   const [loadingStudents, setLoadingStudents] = useState(false);
-    //teacher variables
+  //teacher variables
   const [pickedStudents, setPickedStudents] = useState([]);
   const [studentList, setStudentList] = useState(null);
-  const [feedback, setFeedback] = React.useState('');
+  const [feedback, setFeedback] = React.useState("");
   //student feedback text
   const [feedbacktext, setfeedbacktext] = React.useState({});
   // check if profile is teacher or student
@@ -78,11 +88,10 @@ export default function ProfileScreen() {
   // pull refresh
   const [refresh, setRefresh] = useState(false);
 
-
   const save = (teacher_id, student_ids) => {
-    if (student_ids.length == 0){
-      alert('noStudentSelected')
-    }else{
+    if (student_ids.length == 0) {
+      alert("noStudentSelected");
+    } else {
       axios({
         url: ENDPOINTS.saveStudentMap,
         method: "post",
@@ -94,7 +103,6 @@ export default function ProfileScreen() {
         console.log(res);
       });
     }
-    
   };
 
   useEffect(() => {
@@ -114,7 +122,6 @@ export default function ProfileScreen() {
         getAllStudentProgress();
         setPickedStudents([]);
         getStudentFeedbackList(profile.id);
-        
       } else {
         setSegmentButtons(STUDENT_SEGMENT_BUTTONS);
       }
@@ -132,17 +139,17 @@ export default function ProfileScreen() {
       data: {
         teacher_id: teacher_id,
         student_id: student_id,
-        feedback: feedback
+        feedback: feedback,
       },
     }).then();
   };
 
-  const getStudentFeedbackList =  (teacher_id) => {
+  const getStudentFeedbackList = (teacher_id) => {
     axios({
       url: ENDPOINTS.studentList,
       method: "get",
       params: {
-        teacher_id: teacher_id
+        teacher_id: teacher_id,
       },
     }).then((res) => {
       const studentList = res.data;
@@ -153,7 +160,7 @@ export default function ProfileScreen() {
         tempFeedbackText[student.id] = "";
       });
       setfeedbacktext(tempFeedbackText);
-      console.log(feedbacktext)
+      console.log(feedbacktext);
     });
   };
 
@@ -173,16 +180,17 @@ export default function ProfileScreen() {
       params: {
         teacher_id: profile.id,
       },
-      url: ENDPOINTS.studentMap
-    }).then((res) => {
-      const students = res.data;
-      setStudents(res.data);
-      setLoadingStudents(false);
-      console.log(res);
+      url: ENDPOINTS.studentMap,
     })
-    .catch(() => {
-      setLoadingStudents(false);
-    });
+      .then((res) => {
+        const students = res.data;
+        setStudents(res.data);
+        setLoadingStudents(false);
+        console.log(res);
+      })
+      .catch(() => {
+        setLoadingStudents(false);
+      });
   };
 
   const getTopics = () => {
@@ -194,7 +202,7 @@ export default function ProfileScreen() {
         console.log(res.data);
         setTopics(res.data);
         const tempTopicProgress = {};
-        for (let i = 0; i < res.data.length; i ++) {
+        for (let i = 0; i < res.data.length; i++) {
           tempTopicProgress[res.data[i].topic_name] = 0;
         }
         setTopicProgress(tempTopicProgress);
@@ -222,7 +230,7 @@ export default function ProfileScreen() {
     axios({
       method: "get",
       url: ENDPOINTS.score,
-      params:{
+      params: {
         student_id: profile.id,
       },
     })
@@ -293,8 +301,8 @@ export default function ProfileScreen() {
       console.log("OVERALL PROGRESS INCRELEMTN", progressIncrement);
       let currentProgress = 0;
       const tempTopicProgress = structuredClone(topicProgress);
-      
-      for (let i = 0; i < studentProgress.length; i ++) {
+
+      for (let i = 0; i < studentProgress.length; i++) {
         if (studentProgress[i].progress_isDone) {
           currentProgress += progressIncrement;
         }
@@ -302,30 +310,29 @@ export default function ProfileScreen() {
 
       for (let key in tempTopicProgress) {
         let currentTopicProgress = 0;
-        const temp = []
-        for (let i = 0; i < studentProgress.length; i ++) {
+        const temp = [];
+        for (let i = 0; i < studentProgress.length; i++) {
           if (studentProgress[i].topic_name == key) {
             temp.push(studentProgress[i]);
           }
         }
 
         const topicProgressIncrement = totalProgress / temp.length;
-        console.log("PER TOPIC INCREMENT", topicProgressIncrement)
+        console.log("PER TOPIC INCREMENT", topicProgressIncrement);
 
-        for (let i = 0; i < temp.length; i ++) {
+        for (let i = 0; i < temp.length; i++) {
           if (temp[i].progress_isDone) {
             currentTopicProgress += topicProgressIncrement;
           }
         }
 
         tempTopicProgress[key] = currentTopicProgress;
-        
       }
 
       setProgress(currentProgress);
       setTopicProgress(tempTopicProgress);
     }
-  }
+  };
 
   const openLesson = (topic_id) => {
     router.replace({ pathname: "/lesson", params: { topic_id: topic_id } });
@@ -345,24 +352,26 @@ export default function ProfileScreen() {
     } else {
       return badge.badge_bronze;
     }
-  }
+  };
 
   const pullRefresh = () => {
-    if (profile){
+    if (profile) {
       getProfile();
       getFeedbacks();
       getSCore();
       getStudentProgress();
+      getBadges();
       if (profile.isTeacher) {
         getStudents();
         getAllStudentProgress();
         setPickedStudents([]);
         getStudentFeedbackList(profile.id);
-      } 
-    setTimeout(() =>{
-      setRefresh(false)
-    }, 4000)
-  }
+      }
+      setTimeout(() => {
+        setRefresh(false);
+      }, 4000);
+    }
+  };
 
   const onChangeFeedback = (student_id, feedback) => {
     const tempFeedbackText = structuredClone(feedbacktext);
@@ -370,8 +379,8 @@ export default function ProfileScreen() {
     tempFeedbackText[student_id] = feedback;
 
     setfeedbacktext(tempFeedbackText);
-    console.log(feedbacktext)
-  }
+    console.log(feedbacktext);
+  };
 
   const signOut = () => {
     StorageService.storeData("profile", null);
@@ -418,19 +427,33 @@ export default function ProfileScreen() {
     setPickedStudents(tempPickedStudents);
   };
 
-  const backgroundColor = ['#eae2e0', '#e5c8a5', '#a1d6cc', '#e3d0e0', '#8590c0', '#d9dad9', '#cfc3c3', '#a5ad9c', '#d3ddf6', '#baf9f9'];
+  const backgroundColor = [
+    "#eae2e0",
+    "#e5c8a5",
+    "#a1d6cc",
+    "#e3d0e0",
+    "#8590c0",
+    "#d9dad9",
+    "#cfc3c3",
+    "#a5ad9c",
+    "#d3ddf6",
+    "#baf9f9",
+  ];
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.profileContainer}>
-              <View style={[styles.picture, { backgroundColor: "#e2e2e2" },]}>
-                    <Text style={styles.pictureInitial}>{(profile?.first_name[0].toUpperCase() + profile?.last_name[0].toUpperCase())}</Text>
-              </View>
+          <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
+            <Text style={styles.pictureInitial}>
+              {profile?.first_name[0].toUpperCase() +
+                profile?.last_name[0].toUpperCase()}
+            </Text>
+          </View>
 
-              <Text style={styles.name}>
-                  Welcome, {profile?.first_name} {profile?.last_name}!
-              </Text>
+          <Text style={styles.name}>
+            Welcome, {profile?.first_name} {profile?.last_name}!
+          </Text>
         </View>
 
         <View style={{ flex: 1 }} />
@@ -440,30 +463,29 @@ export default function ProfileScreen() {
           </GeoButton>
         </View>
       </View>
-              
-          <View style={styles.progressBar}>
-                      {profile && !profile.isTeacher && (
-                        <>
-                          <Progress.Bar
-                            progress={progress}
-                            width={300}
-                            height={25}
-                            color="#008000"
-                            borderColor="#ffffff"
-                            unfilledColor="#d3d3d3"
-                            borderRadius={25}
-                          />
-                          <Text style={styles.completedTask}>Completed Task</Text>
-                          <View style={styles.progressContainer}>
-                            <View style={styles.doneColor}></View>
-                            <Text style={styles.progressDescription}>Done</Text>
-                            <View style={styles.pendingColor}></View>
-                            <Text style={styles.progressDescription}>Pending</Text>
-                          </View>
-                        </>
-                      )}
-        </View>
 
+      <View style={styles.progressBar}>
+        {profile && !profile.isTeacher && (
+          <>
+            <Progress.Bar
+              progress={progress}
+              width={300}
+              height={25}
+              color="#008000"
+              borderColor="#ffffff"
+              unfilledColor="#d3d3d3"
+              borderRadius={25}
+            />
+            <Text style={styles.completedTask}>Completed Task</Text>
+            <View style={styles.progressContainer}>
+              <View style={styles.doneColor}></View>
+              <Text style={styles.progressDescription}>Done</Text>
+              <View style={styles.pendingColor}></View>
+              <Text style={styles.progressDescription}>Pending</Text>
+            </View>
+          </>
+        )}
+      </View>
 
       <View style={styles.content}>
         <View style={styles.segmentButtons}>
@@ -480,26 +502,26 @@ export default function ProfileScreen() {
           })}
         </View>
         {segmentButtons?.map((segment) => {
-         if (segment.name == "Lessons" && segment.isActive) {
-          return topics.length === 0 ? (
-            <View style={styles.segmentContainer}>
-              <Image
-                style={{ height: 400, width: 400 }}
-                source={require("@/assets/images/loading.gif")}
-              />
-            </View>
-          ) : (
-            
-            <ScrollView 
-            refreshControl = {
-              <RefreshControl
-                refreshing = {refresh}
-                onRefresh={() => pullRefresh()}
-              />
-            }>
-            <View style={styles.segmentContainer}>
-              {topics.map((topic) => {
-                return (
+          if (segment.name == "Lessons" && segment.isActive) {
+            return topics.length === 0 ? (
+              <View style={styles.segmentContainer}>
+                <Image
+                  style={{ height: 400, width: 400 }}
+                  source={require("@/assets/images/loading.gif")}
+                />
+              </View>
+            ) : (
+              <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
+                <View style={styles.segmentContainer}>
+                  {topics.map((topic) => {
+                    return (
                       <GeoButton
                         style={styles.plateTectonicButton}
                         textStyle={styles.textColor}
@@ -508,55 +530,73 @@ export default function ProfileScreen() {
                       >
                         <View style={styles.test}>
                           <View style={styles.textContentContainer}>
-                            <Text style={styles.topicText}>{topic.topic_name}</Text>
+                            <Text style={styles.topicText}>
+                              {topic.topic_name}
+                            </Text>
                             <Text style={styles.bodyText}>
                               {topic.topic_description}
                             </Text>
-                            <View style={{alignSelf:'baseline', marginTop: 10}}>
-                                          <Progress.Bar 
-                                          progress={topicProgress[topic.topic_name]}
-                                          width={300}
-                                          height={10}
-                                          color="#0064"
-                                          borderColor="#0000000"
-                                          borderWidth={1}
-                                          unfilledColor="#d3d3d3"
-                                          borderRadius={25}/>
-                                <Text style={{ 
-                                        alignSelf: 'center', 
-                                        color: '#ffffff', 
-                                        fontFamily: "Roboto_300Light", 
-                                        fontSize: 13,
-                                        marginBottom: 3}}>Completed Task</Text>
+                            <View
+                              style={{ alignSelf: "baseline", marginTop: 10 }}
+                            >
+                              <Progress.Bar
+                                progress={topicProgress[topic.topic_name]}
+                                width={300}
+                                height={10}
+                                color="#0064"
+                                borderColor="#0000000"
+                                borderWidth={1}
+                                unfilledColor="#d3d3d3"
+                                borderRadius={25}
+                              />
+                              <Text
+                                style={{
+                                  alignSelf: "center",
+                                  color: "#ffffff",
+                                  fontFamily: "Roboto_300Light",
+                                  fontSize: 13,
+                                  marginBottom: 3,
+                                }}
+                              >
+                                Completed Task
+                              </Text>
                             </View>
                           </View>
                         </View>
                       </GeoButton>
-                );
-              })}
-            </View>
-            </ScrollView>
-          );
+                    );
+                  })}
+                </View>
+              </ScrollView>
+            );
           } else if (segment.name == "Badges" && segment.isActive) {
             return (
               <ScrollView
-              refreshControl = {
-                <RefreshControl
-                  refreshing = {refresh}
-                  onRefresh={() => pullRefresh()}
-                />
-              }>
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
                 <View style={styles.segmentContainer}>
                   {badges.map((badge) => {
                     return scores.map((score) => {
                       if (badge.badge_name == score.topic_name) {
                         return (
                           <View style={styles.badgeContainer}>
-                            <Image style={styles.badgeImage} source={getBadgeLevel(badge, score.score)}/>
-                            <Text style={styles.badgeName}>{badge.badge_name}</Text>
-                            <Text style={styles.badgeDescription}>{badge.badge_description}</Text>
+                            <Image
+                              style={styles.badgeImage}
+                              source={{ uri: getBadgeLevel(badge, score.score)}}
+                            />
+                            <Text style={styles.badgeName}>
+                              {badge.badge_name}
+                            </Text>
+                            <Text style={styles.badgeDescription}>
+                              {badge.badge_description}
+                            </Text>
                           </View>
-                        )
+                        );
                       } else {
                         return null;
                       }
@@ -572,20 +612,30 @@ export default function ProfileScreen() {
           ) {
             return (
               <ScrollView
-              refreshControl = {
-                <RefreshControl
-                  refreshing = {refresh}
-                  onRefresh={() => pullRefresh()}
-                />
-              }>
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
                 <View style={styles.segmentContainer}>
                   {feedbacks.map((feedback) => {
                     return (
                       <View style={styles.descriptionContainer}>
                         <View style={styles.teacherName}>
-                          <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
-                                <Text style={styles.pictureInitial}>{(feedback.first_name[0] + feedback.last_name[0]).toUpperCase()}</Text>
-                            </View>
+                          <View
+                            style={[
+                              styles.picture,
+                              { backgroundColor: "#e2e2e2" },
+                            ]}
+                          >
+                            <Text style={styles.pictureInitial}>
+                              {(
+                                feedback.first_name[0] + feedback.last_name[0]
+                              ).toUpperCase()}
+                            </Text>
+                          </View>
                           <Text style={styles.teacherName}>
                             {feedback.first_name} {feedback.last_name}
                           </Text>
@@ -607,12 +657,13 @@ export default function ProfileScreen() {
           } else if (segment.name == "Students" && segment.isActive) {
             return (
               <ScrollView
-              refreshControl = {
-                <RefreshControl
-                  refreshing = {refresh}
-                  onRefresh={() => pullRefresh()}
-                />
-              }>
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
                 {!students ? (
                   <View style={styles.loadingContainer}>
                     <Image
@@ -621,29 +672,44 @@ export default function ProfileScreen() {
                     />
                   </View>
                 ) : (
-                    <View style={styles.studentsSegmentContainer}>
-                      <View style={styles.studentIconContainer}>
-                          <Ionicons name="people" style={styles.studentIcon} />
-                          <Text style={styles.studentListText}> List of Students: {students.length}</Text>
-                      </View>
+                  <View style={styles.studentsSegmentContainer}>
+                    <View style={styles.studentIconContainer}>
+                      <Ionicons name="people" style={styles.studentIcon} />
+                      <Text style={styles.studentListText}>
+                        {" "}
+                        List of Students: {students.length}
+                      </Text>
+                    </View>
                     {students?.map((student) => {
                       return (
-                        <View style={styles.studentsChecklistContainer}>       
-                            <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
-                                <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
-                            </View>
-                                <Text style={styles.studentNameText}>{`${student.first_name} ${student.last_name}_${student.id_number}`}</Text>
-                                <BouncyCheckbox
-                                  size={20}
-                                  fillColor="#008000"
-                                  unFillColor="#ffffff"
-                                  iconStyle={{ borderColor: "red" }}
-                                  innerIconStyle={{ borderWidth: 2 }}
-                                  onPress={(isChecked) => checkStudent(isChecked, student.id)}
-                                  style={styles.studentsCheckbox}
-                                />
+                        <View style={styles.studentsChecklistContainer}>
+                          <View
+                            style={[
+                              styles.picture,
+                              { backgroundColor: "#e2e2e2" },
+                            ]}
+                          >
+                            <Text style={styles.pictureInitial}>
+                              {(
+                                student.first_name[0] + student.last_name[0]
+                              ).toUpperCase()}
+                            </Text>
+                          </View>
+                          <Text
+                            style={styles.studentNameText}
+                          >{`${student.first_name} ${student.last_name}_${student.id_number}`}</Text>
+                          <BouncyCheckbox
+                            size={20}
+                            fillColor="#008000"
+                            unFillColor="#ffffff"
+                            iconStyle={{ borderColor: "red" }}
+                            innerIconStyle={{ borderWidth: 2 }}
+                            onPress={(isChecked) =>
+                              checkStudent(isChecked, student.id)
+                            }
+                            style={styles.studentsCheckbox}
+                          />
                         </View>
-                        
                       );
                     })}
                     <GeoButton
@@ -653,82 +719,108 @@ export default function ProfileScreen() {
                       <Text style={styles.saveButtonText}>Save</Text>
                     </GeoButton>
                   </View>
-                  
                 )}
               </ScrollView>
             );
-          }else if (
+          } else if (
             segment.name == "Feedback" &&
             profile.isTeacher &&
             segment.isActive
           ) {
             return (
               <ScrollView
-              refreshControl = {
-                <RefreshControl
-                  refreshing = {refresh}
-                  onRefresh={() => pullRefresh()}
-                />
-              }>
-                {
-                  !studentList ? (
-                    <View style={styles.loadingContainer}>
-                      <Image
-                        style={{ height: 400, width: 400 }}
-                        source={require("@/assets/images/loading.gif")}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
+                {!studentList ? (
+                  <View style={styles.loadingContainer}>
+                    <Image
+                      style={{ height: 400, width: 400 }}
+                      source={require("@/assets/images/loading.gif")}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.studentsSegmentContainer}>
+                    <View style={styles.studentIconContainer}>
+                      <Ionicons
+                        name="chatbubbles"
+                        theme="transparent"
+                        style={styles.studentIcon}
                       />
+                      <Text style={styles.studentListText}>
+                        {" "}
+                        Give Feedback to {studentList.length} Students
+                      </Text>
                     </View>
-                  ) : (
-                    <View style={styles.studentsSegmentContainer}>
-                         <View style={styles.studentIconContainer}>
-                          <Ionicons name="chatbubbles" theme = "transparent" style={styles.studentIcon} />
-                          <Text style={styles.studentListText}> Give Feedback to {studentList.length} Students</Text>
-                      </View>
-                      {
-                        studentList?.map((student) => {
-                          <View style={styles.studentIconContainer}>
-                      </View>
-                          return (
-                            
-                            <View style={styles.studentsSegmentContainer}>
-                              <View style={styles.studentNameFeedbackContainer}>
-                                    <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
-                                      <Text style={styles.pictureInitial}>{(student.first_name[0] + student.last_name[0]).toUpperCase()}</Text>
-                                    </View>
-                                      <Text style={styles.studentListFont}>{student.first_name + " " + student.last_name + "_" + student.id_number}</Text>
-                              </View>
-                                  <View style={styles.studentProgressContainer}>
-                                          <Progress.Bar
-                                              progress={0}
-                                              width={200}
-                                              height={10}
-                                              color="#008000"
-                                              borderColor="#ffffff"
-                                              unfilledColor="#d3d3d3"
-                                              borderRadius={25}
-                                          />
-                                            <Text>Student Progress</Text>
-                                  </View>
-                              <TextInput
-                                style={styles.feedbackborderUnderline}
-                                placeholder="feedback"
-                                onChangeText={(text) => onChangeFeedback(student.id, text)}
-                                value={feedbacktext[student.id]}
-                                placeholderTextColor={"#808080"}
-                              />
-                              <GeoButton
-                                style={styles.feedbackSaveButton}
-                                onPress={ () => postFeedback(profile.id, student.id, feedbacktext[student.id])}>
-                                  <Text style={styles.saveButtonText}>Save</Text>
-                              </GeoButton>
+                    {studentList?.map((student) => {
+                      <View style={styles.studentIconContainer}></View>;
+                      return (
+                        <View style={styles.studentsSegmentContainer}>
+                          <View style={styles.studentNameFeedbackContainer}>
+                            <View
+                              style={[
+                                styles.picture,
+                                { backgroundColor: "#e2e2e2" },
+                              ]}
+                            >
+                              <Text style={styles.pictureInitial}>
+                                {(
+                                  student.first_name[0] + student.last_name[0]
+                                ).toUpperCase()}
+                              </Text>
                             </View>
-                          )
-                        })
-                      }
-                    </View>
-                  )}
+                            <Text style={styles.studentListFont}>
+                              {student.first_name +
+                                " " +
+                                student.last_name +
+                                "_" +
+                                student.id_number}
+                            </Text>
+                          </View>
+                          <View style={styles.studentProgressContainer}>
+                            <Progress.Bar
+                              progress={0}
+                              width={200}
+                              height={10}
+                              color="#008000"
+                              borderColor="#ffffff"
+                              unfilledColor="#d3d3d3"
+                              borderRadius={25}
+                            />
+                            <Text>Student Progress</Text>
+                          </View>
+                          <TextInput
+                            style={styles.feedbackborderUnderline}
+                            placeholder="feedback"
+                            onChangeText={(text) =>
+                              onChangeFeedback(student.id, text)
+                            }
+                            value={feedbacktext[student.id]}
+                            placeholderTextColor={"#808080"}
+                          />
+                          <GeoButton
+                            style={styles.feedbackSaveButton}
+                            onPress={() =>
+                              postFeedback(
+                                profile.id,
+                                student.id,
+                                feedbacktext[student.id]
+                              )
+                            }
+                          >
+                            <Text style={styles.saveButtonText}>Save</Text>
+                          </GeoButton>
+                        </View>
+                      );
+                    })}
+                  </View>
+                )}
               </ScrollView>
-            )
+            );
           }
         })}
       </View>
@@ -737,20 +829,20 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  studentProgressContainer: { 
+  studentProgressContainer: {
     margin: 5,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 50
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 50,
   },
   completedTask: {
     fontFamily: "Roboto_300Light",
     fontSize: 13,
     marginTop: 10,
     color: "#636363",
-    marginBottom: 10
+    marginBottom: 10,
   },
   progressDescription: {
     fontFamily: "Roboto_300Light",
@@ -762,24 +854,24 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
     marginRight: 5,
-    marginLeft: 15
+    marginLeft: 15,
   },
-  progressContainer: { 
+  progressContainer: {
     margin: 5,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   doneColor: {
     backgroundColor: "#008000",
     width: 10,
     height: 10,
     borderRadius: 5,
-    marginRight: 5
+    marginRight: 5,
   },
   progressBar: {
-    alignItems: 'center',
-    margin: 10
+    alignItems: "center",
+    margin: 10,
   },
   studentNameText: {
     fontSize: 16,
@@ -788,46 +880,46 @@ const styles = StyleSheet.create({
   studentNameFeedbackContainer: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   studentListText: {
     fontSize: 20,
-    fontFamily: 'Roboto_400Regular'
+    fontFamily: "Roboto_400Regular",
   },
   studentIconContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 15
+    marginBottom: 15,
   },
   studentIcon: {
     fontSize: 45,
-    color: "#008000"
+    color: "#008000",
   },
   studentsChecklistContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    borderColor: '#000000',
+    borderColor: "#000000",
     marginBottom: 10,
     padding: 10,
-    backgroundColor: '#ffffff',
-    borderRadius: 5
+    backgroundColor: "#ffffff",
+    borderRadius: 5,
   },
   pictureInitial: {
-    alignContent: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    marginTop: 10
+    alignContent: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    marginTop: 10,
   },
   picture: {
     width: 40,
     height: 40,
     backgroundColor: "#ffffff",
     borderRadius: 20,
-    color: '#008000',
-    marginRight: 10
+    color: "#008000",
+    marginRight: 10,
   },
   loadingContainer: {
     flex: 1,
@@ -845,22 +937,21 @@ const styles = StyleSheet.create({
   feedbackborderUnderline: {
     borderWidth: 1,
     borderColor: "#000000",
-    width: '100%',
+    width: "100%",
     height: 60,
     margin: 5,
     marginTop: 20,
     borderRadius: 8,
     backgroundColor: "#ffffff",
     paddingLeft: 5, // Adds margin for the placeholder
-    textAlign: 'left', // Ensures text starts at the left
-
+    textAlign: "left", // Ensures text starts at the left
   },
   studentListFont: {
     fontSize: 16,
-    fontFamily: "Roboto_400Regular"
+    fontFamily: "Roboto_400Regular",
   },
   studentsSegmentContainer: {
-    alignSelf: 'center',
+    alignSelf: "center",
     backgroundColor: "#f4f4f4",
     padding: 15,
     borderRadius: 10,
@@ -869,15 +960,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
-    width: '90%',
-    flex: 1
-},
- studentsCheckbox: {
-    position: 'absolute',
-    left: '90%'
-    
+    width: "90%",
+    flex: 1,
   },
- saveButton: {
+  studentsCheckbox: {
+    position: "absolute",
+    left: "90%",
+  },
+  saveButton: {
     backgroundColor: "#008000",
     borderRadius: 8,
     paddingVertical: 10,
@@ -886,9 +976,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 15,
   },
- saveButtonText: {
+  saveButtonText: {
     color: "#FFFFFF",
-    fontSize: 16
+    fontSize: 16,
   },
   studentsButton: {
     backgroundColor: "#4CAF50", // Distinct green color

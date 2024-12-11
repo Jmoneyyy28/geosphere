@@ -147,7 +147,7 @@ export default function LeaderboardScreen() {
             ))}
           </View>
 
-          <View>
+          <View style={{ marginBottom: '5%'}}>
             {others.map((student, index) => (
               <View key={index + 3} style={leaderboardStyle.studentAlignment}>
                 <View style={leaderboardStyle.studentLayer}>
@@ -260,6 +260,7 @@ const leaderboardStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 15,
+    
   },
   spacer: {
     flexGrow: 1,
@@ -273,6 +274,7 @@ const leaderboardStyle = StyleSheet.create({
   studentAlignment: {
     alignItems: "center",
     backgroundColor: "transparent",
+    padding: 5
   },
   crownImage: {
     position: "absolute",

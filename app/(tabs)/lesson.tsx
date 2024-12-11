@@ -12,7 +12,11 @@ import {
   ScrollView,
 } from "react-native";
 
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  CommonActions,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 
 import { useEffect, useState, useCallback } from "react";
 import { GeoButton } from "@/components/GeoButton";
@@ -25,10 +29,10 @@ import { StorageService } from "@/services/StorageService";
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 const AUDIO = {
-    "topic1Voice": require("@/assets/sounds/plateBoundariesVoice.mp3"),
-    "topic2Voice": require("@/assets/sounds/InternalStructureVoice.mp3"),
-    "topic3Voice": require("@/assets/sounds/processesAndLandformVoice.mp3")
-}
+  topic1Voice: require("@/assets/sounds/plateBoundariesVoice.mp3"),
+  topic2Voice: require("@/assets/sounds/InternalStructureVoice.mp3"),
+  topic3Voice: require("@/assets/sounds/processesAndLandformVoice.mp3"),
+};
 
 export default function TopicScreen() {
   const [lesson, setLesson] = useState(null);
@@ -47,7 +51,7 @@ export default function TopicScreen() {
     badges: "badges",
     feedback: "feedback",
     lesson: "topics/lesson",
-    progress: "topics/progress"
+    progress: "topics/progress",
   };
 
   useEffect(() => {
@@ -73,7 +77,6 @@ export default function TopicScreen() {
     }, [])
   );
 
-
   const getLesson = () => {
     axios({
       url: ENDPOINTS.lesson,
@@ -96,11 +99,9 @@ export default function TopicScreen() {
       data: {
         student_id: student_id,
         progressName: progressName,
-        topic_id: topic_id
+        topic_id: topic_id,
       },
-    }).then((res) =>
-      console.log("Progress Success")
-    );
+    }).then((res) => console.log("Progress Success"));
   };
 
   const getProfile = () => {
@@ -147,12 +148,29 @@ export default function TopicScreen() {
   };
 
   const goToQuiz = () => {
-    router.replace({ pathname: "/quiz", params: { lesson_id: lesson.id, topic_id: params.topic_id } });
+    router.replace({
+      pathname: "/quiz",
+      params: { lesson_id: lesson.id, topic_id: params.topic_id },
+    });
   };
 
   const goToAr = () => {
     postProgress(profile.id, "models", params.topic_id);
-    router.replace({ pathname: "/ar", params: { title: lesson.lesson_title } });
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "(tabs)",
+            params: {
+              screen: "ar",
+              params: { title: lesson.lesson_title },
+            },
+          },
+        ],
+      })
+    );
   };
 
   return (

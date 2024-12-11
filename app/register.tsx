@@ -3,6 +3,7 @@ import {
     StyleSheet,
     TextInput,
     Modal,
+    ScrollView,
     View,
     Pressable,
     Text,
@@ -16,6 +17,7 @@ import { useEffect } from 'react';
 import { GeoButton } from '@/components/GeoButton';
 import axios from 'axios'
 
+axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function RegisterScreen() {
     const router = useRouter();
@@ -26,33 +28,57 @@ export default function RegisterScreen() {
     const [idnumber, setIdnumber] = React.useState('');
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = React.useState(false);
-    const signup = (username, password, firstName, lastName,idnumber) => {
-        axios.post(`http://localhost:3000/authentication/register`,
-            {
+    // const signup = (username, password, firstName, lastName,idnumber) => {
+    //     axios.post(`http://localhost:3000/authentication/register`,
+    //         {
+    //             username: username,
+    //             password: password,
+    //             firstName: firstName,
+    //             lastName: lastName,
+    //             idnumber: idnumber
+    //         }
+    //     )
+    //     .then(res => {
+    //       const student = res.data[0];
+    //       if (student) {
+    //         router.replace({pathname: "/login"});
+    //       } else {
+    //         console.log("invalid")
+    //       }
+    //     })
+        
+    // };
+
+    const signup = (username, password, firstName, lastName, idnumber) => {
+        axios({
+            url: "authentication/register",
+            method: "post",
+            data: {
                 username: username,
                 password: password,
                 firstName: firstName,
                 lastName: lastName,
                 idnumber: idnumber
             }
-        )
-        .then(res => {
-          const student = res.data[0];
-          if (student) {
+        }
+    )
+    .then((res) => {
+        const student = res.data[0];
+        if (student) {
             router.replace({pathname: "/login"});
-          } else {
+        } else {
             console.log("invalid")
-          }
-        })
-        
+        }
+    } )
     };
+    
     useEffect(() => {
         navigation.setOptions({ headerShown: false });
       }, [navigation]);
     return (
-        <KeyboardAvoidingView 
-        behavior="padding"
-        style={styles.mainContainer}>
+        <KeyboardAvoidingView
+            behavior='padding'
+            style={styles.mainContainer}>
             <View style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
@@ -156,24 +182,25 @@ const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         display: 'flex',
         // backgroundColor: '#84b522',
         flexDirection: 'column',
-        paddingTop: 25
+        padding: 25
+
     },
     centerContainer: {
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: 200,
-        margin: 10
+        height: 1,
+        
     },
     signinButton: {
         borderRadius: 50,
         width: 250,
-        height: 45,
+        height: 40,
         marginTop: 5
     },
     registerContainer: {
@@ -204,8 +231,9 @@ const styles = StyleSheet.create({
         borderRightWidth: 0,
         borderTopWidth: 0,
         borderColor: '#ffffff',
-        margin: 15,
+        margin: 8,
         fontFamily: 'sans-serif'
+
     },
     registerColor: {
         color: '#ffffff',

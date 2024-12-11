@@ -22,7 +22,7 @@ import {
   ViroARPlaneSelector,
   ViroARPlane,
 } from "@viro-community/react-viro";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { GeoButton } from "./GeoButton";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { Ionicons } from "@expo/vector-icons";

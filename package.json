@@ -25,6 +25,8 @@
     "@react-native-community/checkbox": "^0.5.17",
     "@react-navigation/native": "^6.0.2",
     "@reactvision/react-viro": "^2.41.6",
+    "@types/ungap__structured-clone": "^1.2.0",
+    "@ungap/structured-clone": "^1.2.1",
     "@viro-community/react-viro": "^2.41.1",
     "axios": "^1.7.7",
     "expo": "~51.0.28",
