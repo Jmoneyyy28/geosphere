@@ -634,6 +634,12 @@ export default function ArScreen() {
             >
               <Text style={{color: "#ffffff", fontFamily: "Roboto_300Light"}}>Divergent</Text>
             </GeoButton>
+            <GeoButton
+              style={styles.buttonStyle}
+              onPress={() => setObject("transform")}
+            >
+              <Text style={{color:"#ffffff", fontFamily: "Roboto_300Light"}}>Transform</Text>
+            </GeoButton>
           </View>
         </View>
       </View>
