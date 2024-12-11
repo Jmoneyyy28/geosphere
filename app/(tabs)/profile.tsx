@@ -1,4 +1,4 @@
-import { Image, StyleSheet, View, Text, ScrollView, TextInput, Alert } from "react-native";
+import { Image, StyleSheet, View, Text, ScrollView, TextInput, Alert, RefreshControl } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 import React, { useState, useEffect } from "react";
@@ -75,8 +75,8 @@ export default function ProfileScreen() {
   const [studentProgress, setStudentProgress] = useState(null);
   const [allStudentProgress, setAllStudentProgress] = useState([]);
   const [topicProgress, setTopicProgress] = useState({});
-
-  
+  // pull refresh
+  const [refresh, setRefresh] = useState(false);
 
 
   const save = (teacher_id, student_ids) => {
@@ -347,6 +347,23 @@ export default function ProfileScreen() {
     }
   }
 
+  const pullRefresh = () => {
+    if (profile){
+      getProfile();
+      getFeedbacks();
+      getSCore();
+      getStudentProgress();
+      if (profile.isTeacher) {
+        getStudents();
+        getAllStudentProgress();
+        setPickedStudents([]);
+        getStudentFeedbackList(profile.id);
+      } 
+    setTimeout(() =>{
+      setRefresh(false)
+    }, 4000)
+  }
+
   const onChangeFeedback = (student_id, feedback) => {
     const tempFeedbackText = structuredClone(feedbacktext);
 
@@ -473,7 +490,13 @@ export default function ProfileScreen() {
             </View>
           ) : (
             
-            <ScrollView>
+            <ScrollView 
+            refreshControl = {
+              <RefreshControl
+                refreshing = {refresh}
+                onRefresh={() => pullRefresh()}
+              />
+            }>
             <View style={styles.segmentContainer}>
               {topics.map((topic) => {
                 return (
@@ -516,7 +539,13 @@ export default function ProfileScreen() {
           );
           } else if (segment.name == "Badges" && segment.isActive) {
             return (
-              <ScrollView>
+              <ScrollView
+              refreshControl = {
+                <RefreshControl
+                  refreshing = {refresh}
+                  onRefresh={() => pullRefresh()}
+                />
+              }>
                 <View style={styles.segmentContainer}>
                   {badges.map((badge) => {
                     return scores.map((score) => {
@@ -542,7 +571,13 @@ export default function ProfileScreen() {
             segment.isActive
           ) {
             return (
-              <ScrollView>
+              <ScrollView
+              refreshControl = {
+                <RefreshControl
+                  refreshing = {refresh}
+                  onRefresh={() => pullRefresh()}
+                />
+              }>
                 <View style={styles.segmentContainer}>
                   {feedbacks.map((feedback) => {
                     return (
@@ -571,7 +606,13 @@ export default function ProfileScreen() {
             );
           } else if (segment.name == "Students" && segment.isActive) {
             return (
-              <ScrollView>
+              <ScrollView
+              refreshControl = {
+                <RefreshControl
+                  refreshing = {refresh}
+                  onRefresh={() => pullRefresh()}
+                />
+              }>
                 {!students ? (
                   <View style={styles.loadingContainer}>
                     <Image
@@ -622,7 +663,13 @@ export default function ProfileScreen() {
             segment.isActive
           ) {
             return (
-              <ScrollView>
+              <ScrollView
+              refreshControl = {
+                <RefreshControl
+                  refreshing = {refresh}
+                  onRefresh={() => pullRefresh()}
+                />
+              }>
                 {
                   !studentList ? (
                     <View style={styles.loadingContainer}>

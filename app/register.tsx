@@ -7,7 +7,8 @@ import {
     Pressable,
     Text,
     ImageBackground,
-    TouchableHighlight
+    TouchableHighlight,
+    KeyboardAvoidingView
  } from 'react-native';
 import React from 'react';
 import { Link, useNavigation, useLocalSearchParams, useRouter} from 'expo-router';
@@ -49,7 +50,9 @@ export default function RegisterScreen() {
         navigation.setOptions({ headerShown: false });
       }, [navigation]);
     return (
-        <View style={styles.mainContainer}>
+        <KeyboardAvoidingView 
+        behavior="padding"
+        style={styles.mainContainer}>
             <View style={styles.backgroundImage}/>
             {/* PAGEVIEW */}
             <Image style = {styles.logo} source={require('@/assets/images/geosphere.png')} />
@@ -121,7 +124,7 @@ export default function RegisterScreen() {
                 </View>
             </Modal>
             {/* END OF MODAL */}
-        </View>
+        </KeyboardAvoidingView>
     )
 };
 

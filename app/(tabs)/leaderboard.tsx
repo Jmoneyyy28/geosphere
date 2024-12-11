@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View, RefreshControl } from "react-native";
 import { ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
@@ -12,6 +12,7 @@ export default function LeaderboardScreen() {
   const [others, setOthers] = useState([]);
   const [studentColors, setStudentColors] = useState({}); // State to store color mapping
   const router = useRouter();
+  const [refresh, setRefresh] = useState(false);
 
   const ENDPOINTS = {
     leaderboard: "students/leaderboard",
@@ -21,6 +22,14 @@ export default function LeaderboardScreen() {
     "#eae2e0", "#e5c8a5", "#a1d6cc", "#e3d0e0", "#8590c0",
     "#d9dad9", "#cfc3c3", "#a5ad9c", "#d3ddf6", "#baf9f9",
   ];
+
+  const pullRefresh = () => {
+    getStudents();
+
+    setTimeout(() =>{
+      setRefresh(false)
+    }, 4000)
+  }
 
   useEffect(() => {
     getStudents();
@@ -55,7 +64,14 @@ export default function LeaderboardScreen() {
   };
 
   return (
-    <ScrollView style={{paddingTop:25}}>
+    <ScrollView style={{paddingTop:25}}
+        refreshControl = {
+          <RefreshControl
+            refreshing = {refresh}
+            onRefresh={() => pullRefresh()}
+          />
+        }>
+      
       <View style={styles.leaderboardContainer}>
         <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
       </View>

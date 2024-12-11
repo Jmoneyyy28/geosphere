@@ -1,4 +1,4 @@
-import { Image, StyleSheet, TextInput, Modal, View, Text } from "react-native";
+import { Image, StyleSheet, TextInput, Modal, View, Text, KeyboardAvoidingView } from "react-native";
 import React from "react";
 import { Link, useRouter, useNavigation } from "expo-router";
 import { useEffect } from "react";
@@ -40,7 +40,9 @@ export default function LoginScreen() {
   }, [navigation]);
 
   return (
-    <View style={styles.mainContainer}>
+    <KeyboardAvoidingView 
+    behavior="padding"
+      style={styles.mainContainer}>
       <View style={styles.backgroundImage} />
       {/* PAGEVIEW */}
       <Image
@@ -100,7 +102,7 @@ export default function LoginScreen() {
         </View>
       </Modal>
       {/* END OF MODAL */}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
