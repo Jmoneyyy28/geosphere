@@ -12,6 +12,7 @@ web-build/
 .env
 ios/
 android/
+*.apk
 
 # macOS
 .DS_Store

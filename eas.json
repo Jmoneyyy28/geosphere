@@ -22,7 +22,14 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://geosphere-backend-fdfdcf8c36f4.herokuapp.com"
+      }
     }
   },
   "submit": {

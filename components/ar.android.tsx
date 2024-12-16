@@ -169,8 +169,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png.png"),
           ]}
           position={[0.18, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -188,8 +188,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png.png"),
           ]}
           position={[-0.18, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -246,8 +246,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png.png"),
           ]}
           position={[0.25, 0.1, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -265,8 +265,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png.png"),
           ]}
           position={[-0.25, 0.1, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -369,8 +369,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png.png"),
               ]}
               position={[0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -388,8 +388,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png.png"),
               ]}
               position={[-0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -409,8 +409,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png.png"),
               ]}
               position={[0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -428,8 +428,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png.png"),
               ]}
               position={[-0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -449,8 +449,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png.png"),
               ]}
               position={[0.28, 0.1, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -468,8 +468,8 @@ export default function ArScreen() {
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png.png"),
               ]}
               position={[-0.28, 0.1, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -562,8 +562,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture.obj")}
           resources={[
-            require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture.mtl"),
-            require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture.png"),
+            require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture_mtl.mtl"),
+            require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture_png.png"),
           ]}
           position={[0, 0, -1]}
           scale={[0.3, 0.3, 0.3]}

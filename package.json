@@ -12,7 +12,7 @@
     "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
-    "build-local": "npx expo run:android --no-build-cache --device"
+    "build-local": "npx expo run:android --no-build-cache"
   },
   "jest": {
     "preset": "jest-expo"
