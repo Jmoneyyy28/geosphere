@@ -21,6 +21,7 @@ import {
   ViroARTrackingTargets,
   ViroARPlaneSelector,
   ViroARPlane,
+  ViroNode
 } from "@viro-community/react-viro";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { GeoButton } from "./GeoButton";
@@ -116,6 +117,8 @@ export default function ArScreen() {
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
         <ViroAmbientLight color="#ffffff" intensity={1000} />
+        <ViroNode onClick={(position, source) => console.log('Click', position, source)}>
+          
         <Viro3DObject
           source={require("@/assets/3d-models/earthlayers/earth-layers.obj")}
           resources={[
@@ -135,6 +138,7 @@ export default function ArScreen() {
           }}
           type="OBJ"
         />
+        </ViroNode>
       </ViroARScene>
     );
   };

@@ -16,15 +16,17 @@ import {
   CommonActions,
   useFocusEffect,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback} from "react";
 import { GeoButton } from "@/components/GeoButton";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { Audio } from "expo-av";
 import axios from "axios";
 import { StorageService } from "@/services/StorageService";
+
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -45,6 +47,7 @@ export default function TopicScreen() {
   const params = useLocalSearchParams();
   const navigation = useNavigation();
   const router = useRouter();
+  const route = useRoute();
 
   const ENDPOINTS = {
     topics: "topics",
@@ -59,6 +62,7 @@ export default function TopicScreen() {
     getLesson();
     setSound(null);
     getProfile();
+    console.log ("this is name", route.name);
   }, [params.topic_id]);
 
   useEffect(() => {
@@ -74,9 +78,10 @@ export default function TopicScreen() {
       return () => {
         stopSound(); // Ensure sound is stopped when leaving the page
       };
-    }, [])
+    }, [sound])
   );
 
+  
   const getLesson = () => {
     axios({
       url: ENDPOINTS.lesson,
