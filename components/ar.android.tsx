@@ -86,6 +86,10 @@ export default function ArScreen() {
     setAnimationStarted(true);
   };
 
+  const onClickModal = () => {
+    console.log("Hello World");
+  };
+
   const getEarthStructure = (props) => {
     if (!props) {
       return;
@@ -116,9 +120,7 @@ export default function ArScreen() {
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
-        <ViroAmbientLight color="#ffffff" intensity={1000} />
-        <ViroNode onClick={(position, source) => console.log('Click', position, source)}>
-          
+        <ViroAmbientLight color="#ffffff" intensity={1000} />    
         <Viro3DObject
           source={require("@/assets/3d-models/earthlayers/earth-layers.obj")}
           resources={[
@@ -137,8 +139,8 @@ export default function ArScreen() {
             onFinish: animationEnd,
           }}
           type="OBJ"
+          onClick={onClickModal}
         />
-        </ViroNode>
       </ViroARScene>
     );
   };
