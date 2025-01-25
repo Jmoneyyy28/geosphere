@@ -5,7 +5,7 @@ import axios from "axios";
 import { GeoButton } from "@/components/GeoButton";
 import { StorageService } from "@/services/StorageService";
 import Modal from "react-native-modal";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import structuredClone from "@ungap/structured-clone";
 import {
@@ -17,14 +17,12 @@ import {
 
 const quizTime = 120;
 
-
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
   quiz: "topics/quiz",
   questions: "topics/question",
   score: "topics/quiz",
-  progress: "topics/progress"
-
+  progress: "topics/progress",
 };
 
 export default function QuizScreen() {
@@ -46,7 +44,7 @@ export default function QuizScreen() {
   const [isScoreModalVisible, setIsScoreModalVisible] = React.useState(false);
 
   // useEffect(() => {
-    
+
   // }, [questions]);
 
   // useEffect(() => {
@@ -66,7 +64,6 @@ export default function QuizScreen() {
   //   return () => clearInterval(timer);
   // }, [isTimerRunning]);
 
-
   useEffect(() => {
     setLoading(true);
     getQuiz();
@@ -80,13 +77,13 @@ export default function QuizScreen() {
     }
   }, [quiz]);
 
-   useFocusEffect(
-      useCallback(() => {
-        return () => {  
-    // setRemainingTime(quizTime);
-        };
-      }, [])
-    );
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // setRemainingTime(quizTime);
+      };
+    }, [])
+  );
 
   const getProfile = () => {
     StorageService.getData("profile").then((profile) => {
@@ -102,6 +99,7 @@ export default function QuizScreen() {
       method: "get",
       params: { lesson_id: params.lesson_id },
     }).then((res) => {
+      console.log(res.data);
       setQuiz(res.data[0]);
     });
   };
@@ -110,7 +108,7 @@ export default function QuizScreen() {
   //   const test = setInterval(() => {
   //     setRemainingTime((previousTimer) => previousTimer - 1);
   //   }, 1000);
-    
+
   //   // return () => clearInterval(test);
   // }
 
@@ -118,7 +116,7 @@ export default function QuizScreen() {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}m ${remainingSeconds}s`;
-  }
+  };
 
   const postProgress = (student_id, progressName, topic_id) => {
     if (profile.isTeacher) {
@@ -130,11 +128,9 @@ export default function QuizScreen() {
       data: {
         student_id: student_id,
         progressName: progressName,
-        topic_id: topic_id
+        topic_id: topic_id,
       },
-    }).then((res) =>
-      console.log("Progress Success")
-    );
+    }).then((res) => console.log("Progress Success"));
   };
 
   const getQuestions = () => {
@@ -154,7 +150,6 @@ export default function QuizScreen() {
   };
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
 
-
   const submit = () => {
     let tempScore = 0;
     for (let [key, value] of Object.entries(selectedAnswers)) {
@@ -171,7 +166,7 @@ export default function QuizScreen() {
     postScore(profile.id, quiz.id, totalScore);
     setIsScoreModalVisible(true); // Show the score modal
     // console.log(tempScore + remainingTime / 2)
-    console.log(tempScore)
+    console.log(tempScore);
   };
 
   const postScore = (student_id, quiz_id, score) => {
@@ -183,7 +178,7 @@ export default function QuizScreen() {
         quiz_id: quiz_id,
         score: score,
       },
-    }).then((showModalSuccess));
+    }).then(showModalSuccess);
   };
 
   const showModalSuccess = () => {
@@ -197,12 +192,11 @@ export default function QuizScreen() {
 
   const isCorrectChoice = (question, choice) => question.answer === choice;
 
-
   const startQuiz = () => {
     setIsStartModalVisible(false); // Hide the start modal
     setIsTimerRunning(true); // Start the timer
   };
-  
+
   const learnMore = () => {
     setIsModalVisible(false);
     router.replace("/leaderboard");
@@ -213,30 +207,30 @@ export default function QuizScreen() {
           {
             name: "(tabs)",
             params: {
-              screen: "leaderboard"
+              screen: "leaderboard",
             },
           },
         ],
       })
-    )
-}
+    );
+  };
   const backToHome = () => {
     setIsModalVisible(false);
     router.replace("/");
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [
-            {
-              name: "(tabs)",
-              params: {
-                screen: ""
-              },
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "(tabs)",
+            params: {
+              screen: "",
             },
-          ],
-        })
-      )
-  }
+          },
+        ],
+      })
+    );
+  };
   const backQuiz = () => {
     router.replace("/");
     navigation.dispatch(
@@ -246,162 +240,189 @@ export default function QuizScreen() {
           {
             name: "(tabs)",
             params: {
-              screen: ""
+              screen: "",
             },
           },
         ],
       })
-    )
+    );
   };
 
   //const totalScore = 10 * questions.length;
 
-return (
-  <ScrollView style={styles.container}>
-    {quiz === null ? (
-      <View style={styles.loadingContainer}>
-        <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
-      </View>
-    ) : (
-      <>
-       <View style={styles.backButtonContainer}>
-              <GeoButton onPress={backQuiz} theme="transparent">
-                <Ionicons name="arrow-back" style={styles.backIcon} />
-              </GeoButton>
+  return (
+    <ScrollView style={styles.container}>
+      {quiz === null ? (
+        <View style={styles.loadingContainer}>
+          <Image
+            source={require("@/assets/images/loading.gif")}
+            style={styles.loadingImage}
+          />
         </View>
-        <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
-        <Text style={styles.questionTitle}>{questions.length} Questions</Text>
+      ) : (
+        <>
+          <View style={styles.backButtonContainer}>
+            <GeoButton onPress={backQuiz} theme="transparent">
+              <Ionicons name="arrow-back" style={styles.backIcon} />
+            </GeoButton>
+          </View>
+          <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
+          <Text style={styles.questionTitle}>{questions.length} Questions</Text>
           {/* <View style={styles.timerContainer}>
             <Ionicons name="timer-outline" style ={styles.timerStyle} /> 
             <Text style={styles.timerText}>{formatTimer(remainingTime)}</Text>
           </View> */}
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
-          </View>
-        ) : (
-          <View style={styles.questionsContainer}>
-            {questions.map((question, index) => (
-              <View key={question.id} style={styles.questionContainer}>
-                <Text style={styles.questionNumber}>Question: {index +1}/{questions.length}</Text>
-                <Text style={styles.questionText}>{question.question}</Text>
-                <View style={styles.choicesContainer}>
-                  {["choice_a", "choice_b", "choice_c", "choice_d"].map((choiceKey) => {
-                    const choice = question[choiceKey];
-                    const isSelected = selectedAnswers[question.id] === choice;
-                    const isCorrect = isCorrectChoice(question, choice);
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <Image
+                source={require("@/assets/images/loading.gif")}
+                style={styles.loadingImage}
+              />
+            </View>
+          ) : (
+            <View style={styles.questionsContainer}>
+              {questions.map((question, index) => (
+                <View key={question.id} style={styles.questionContainer}>
+                  <Text style={styles.questionNumber}>
+                    Question: {index + 1}/{questions.length}
+                  </Text>
+                  <Text style={styles.questionText}>{question.question}</Text>
+                  <View style={styles.choicesContainer}>
+                    {["choice_a", "choice_b", "choice_c", "choice_d"].map(
+                      (choiceKey) => {
+                        const choice = question[choiceKey];
+                        const isSelected =
+                          selectedAnswers[question.id] === choice;
+                        const isCorrect = isCorrectChoice(question, choice);
 
-                    const buttonStyle = isSelected
-                      ? isCorrect
-                        ? styles.selectedCorrectChoice
-                        : styles.selectedWrongChoice
-                      : styles.choiceButton;
+                        const buttonStyle = isSelected
+                          ? isCorrect
+                            ? styles.selectedCorrectChoice
+                            : styles.selectedWrongChoice
+                          : styles.choiceButton;
 
-                    return (
-                      <GeoButton
-                        key={choiceKey}
-                        style={buttonStyle}
-                        onPress={() => handleSelectAnswer(question.id, choice)}
-                      >
-                        <Text style={styles.choiceText}>{choice}</Text>
-                      </GeoButton>
-                    );
-                  })}
+                        return (
+                          <GeoButton
+                            key={choiceKey}
+                            style={buttonStyle}
+                            onPress={() =>
+                              handleSelectAnswer(question.id, choice)
+                            }
+                          >
+                            <Text style={styles.choiceText}>{choice}</Text>
+                          </GeoButton>
+                        );
+                      }
+                    )}
+                  </View>
                 </View>
-              </View>
-            ))}
-          </View>
-        )}
-        {!loading && (
-          <View style = {{paddingBottom: 25}}>
-          <GeoButton style={styles.submitButton} onPress={() => submit()}>
-            <Text style={styles.submitButtonText}>SUBMIT</Text>
-          </GeoButton>
-          </View>
-        )}
-        <Modal isVisible={isScoreModalVisible}>
-  <View style={styles.modalContainer}>
-    <Text style={styles.startboldText}>
-      Final Score: {Math.round(score)} <br/>
-      Question Score: {questionScore} <br/>
-      {/* Time: {formatTimer(finalRemainingTime)} */}
-    </Text>
-    <GeoButton name="See Leaderboard" onPress={learnMore} style={styles.learnButton} />
-    <GeoButton name="Back to Home" onPress={backToHome} style={styles.learnButton} />
-  </View>
-</Modal>
+              ))}
+            </View>
+          )}
+          {!loading && (
+            <View style={{ paddingBottom: 25 }}>
+              <GeoButton style={styles.submitButton} onPress={() => submit()}>
+                <Text style={styles.submitButtonText}>SUBMIT</Text>
+              </GeoButton>
+            </View>
+          )}
+          <Modal isVisible={isScoreModalVisible}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.startboldText}>
+                Final Score: {Math.round(score)} {"\n"}
+                Question Score: {questionScore} {"\n"}
+                Time: {formatTimer(finalRemainingTime)}
+              </Text>
+              <GeoButton
+                name="See Leaderboard"
+                onPress={learnMore}
+                style={styles.learnButton}
+              />
+              <GeoButton
+                name="Back to Home"
+                onPress={backToHome}
+                style={styles.learnButton}
+              />
+            </View>
+          </Modal>
+          <Modal isVisible={isStartModalVisible}>
+            <View style={styles.startModal}>
+              <Text style={styles.startboldText}>
+                Welcome to the Ultimate Plate Tectonics Quiz Challenge! 🌍✨
+              </Text>
+              <Text style={styles.startText}>Here's how the game works:</Text>
+              <Text style={styles.startboldText}>
+                🕹️ Game Rules & Scoring System{" "}
+              </Text>
+              <Text style={styles.startText}>
+                5 Questions, multiple choices (10 points each). {"\n"}
+                2-minute timer: Finish early and get a bonus! (Your remaining
+                time divided by 2 is added to your score). Final Score: Correct
+                answers (up to 50 points) {"\n"}
+                Time bonus (based on how quickly you finish).
+              </Text>
+              <Text style={styles.startboldText}>
+                🏆 Pro Tip for High Scores
+              </Text>
+              <Text style={styles.startText}>
+                Answer fast and accurately to boost your score! Ready? Let’s go!
+                🚀
+              </Text>
 
-
-<Modal isVisible={isStartModalVisible}>
-  <View style={styles.startModal}>
-    <Text style={styles.startboldText}>
-      Welcome to the Ultimate Plate Tectonics Quiz Challenge! 🌍✨
-    </Text>
-    <Text style={styles.startText}>
-      Here's how the game works:
-    </Text>
-    <Text style={styles.startboldText}>🕹️ Game Rules & Scoring System </Text>
-    <Text style={styles.startText}>
-      5 Questions, multiple choices (10 points each). <br />
-      2-minute timer: Finish early and get a bonus! (Your remaining time divided by 2 is added to your score). Final Score: Correct answers (up to 50 points) <br/> 
-      Time bonus (based on how quickly you finish).
-    </Text>
-    <Text style={styles.startboldText}>🏆 Pro Tip for High Scores</Text>
-    <Text style={styles.startText}>
-      Answer fast and accurately to boost your score! Ready? Let’s go! 🚀
-    </Text>
-
-    <GeoButton name="Start" onPress={() => startQuiz()} style={styles.learnButton} />
-  </View>
-</Modal>;
-      </>
-    )}
-  </ScrollView>
-);
-
+              <GeoButton
+                name="Start"
+                onPress={() => startQuiz()}
+                style={styles.learnButton}
+              />
+            </View>
+          </Modal>
+        </>
+      )}
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
   startboldText: {
-    fontFamily: 'Roboto_700Bold',
+    fontFamily: "Roboto_700Bold",
     marginBottom: 5,
-    fontSize: 18
+    fontSize: 18,
   },
   startText: {
-    fontFamily: 'Roboto_500Medium',
-    marginBottom: 5
+    fontFamily: "Roboto_500Medium",
+    marginBottom: 5,
   },
   startModal: {
-    alignSelf: 'center',
-        backgroundColor: '#ffffff',
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
+    alignSelf: "center",
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
   },
   timerText: {
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   timerStyle: {
     fontSize: 35,
-    color: "#008000"
+    color: "#008000",
   },
   timerContainer: {
     backgroundColor: "#ffffff",
-    width: '25%',
+    width: "25%",
     borderRadius: 20,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderWidth: 2,
     borderColor: "#008000",
-    flexDirection: 'row',
-    alignContent: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignContent: "center",
+    justifyContent: "center",
     marginBottom: 10,
     position: "sticky",
     top: 0,
-    zIndex: 1
+    zIndex: 1,
   },
   backIcon: {
     fontSize: 25,
@@ -415,7 +436,7 @@ const styles = StyleSheet.create({
   },
   questionNumber: {
     color: "#008000",
-    marginBottom: 20
+    marginBottom: 20,
   },
   questionTitle: {
     fontSize: 18,
@@ -431,25 +452,24 @@ const styles = StyleSheet.create({
     marginTop: 15,
     height: 40,
     width: 160,
-    alignSelf: 'center'
-
+    alignSelf: "center",
   },
   modalContainer: {
-        alignSelf: 'center',
-        // width: 300,
-        // height: 200,
-        backgroundColor: '#ffffff',
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
+    alignSelf: "center",
+    // width: 300,
+    // height: 200,
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
   },
   container: {
     padding: 16,
     backgroundColor: "#008000",
-    paddingTop: 25
+    paddingTop: 25,
   },
   loadingContainer: {
     flex: 1,
@@ -534,11 +554,11 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 30,
     alignItems: "center",
-    marginTop: 20
+    marginTop: 20,
   },
   submitButtonText: {
     fontSize: 18,
     color: "#008000",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
 });
