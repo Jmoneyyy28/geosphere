@@ -168,9 +168,9 @@ const ENDPOINTS = {
             search={false}
             save="value"
             placeholder="Choose your section"
-            boxStyles={{borderColor:"#ffffff", borderWidth: 2, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
-            inputStyles={{color: "#ffffff"}}
-            dropdownStyles={{backgroundColor: "#ffffff"}}
+            boxStyles={{borderColor:"#ffffff", borderWidth: 1, width: '80%', marginBottom: 3, borderRadius: 5, height: 35, alignSelf: 'center'}}
+            inputStyles={{color: "#ffffff", alignSelf: 'center'}}
+            dropdownStyles={{backgroundColor: "#ffffff", width: '80%', alignSelf: 'center'}}
            />
           <GeoButton
             name="Sign Up"

@@ -13,7 +13,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import React, { useState, useEffect } from "react";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { GeoButton } from "@/components/GeoButton";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { StorageService } from "@/services/StorageService";
 import * as Progress from "react-native-progress";
@@ -51,13 +51,9 @@ const STUDENT_SEGMENT_BUTTONS = [
 
 const TEACHER_SEGMENT_BUTTONS = [
   {
-    name: "Students",
-    isActive: false,
-  },
-  {
     name: "Feedback",
     isActive: false,
-  },
+  }
 ];
 
 const BADGE_LOCK = "https://i.imgur.com/ZJS5FQJ.png";
@@ -265,10 +261,9 @@ export default function ProfileScreen() {
   };
   
   const data = [
-    {key: '0', value: 'All'},
+    {key: '0', value: 'All Students'},
     {key:'1', value:'heisenberg'},
-    {key:'2', value:'section2'},
-    {key:'3', value:'section3'}
+    {key:'2', value:'ampere'}
   ]
   const getStudentProgress = () => {
     axios({
@@ -439,7 +434,7 @@ export default function ProfileScreen() {
 
   const getFilteredStudents = () => {
     if (students) {
-      if (!selectedSection || selectedSection == "All") {
+      if (!selectedSection || selectedSection == "All Students") {
         return students;
       }
 
@@ -689,85 +684,6 @@ export default function ProfileScreen() {
                 </View>
               </ScrollView>
             );
-          } else if (segment.name == "Students" && segment.isActive) {
-            return (
-              <ScrollView
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refresh}
-                    onRefresh={() => pullRefresh()}
-                  />
-                }
-              >
-                {!getFilteredStudents() ? (
-                  <View style={styles.loadingContainer}>
-                    <Image
-                      style={{ height: 400, width: 400 }}
-                      source={require("@/assets/images/loading.gif")}
-                    />
-                  </View>
-                ) : (
-                  <View style={styles.studentsSegmentContainer}>
-                    <View style={styles.studentIconContainer}>
-                      <Ionicons name="people" style={styles.studentIcon} />
-                      <Text style={styles.studentListText}>
-                        {" "}
-                        List of Section: 2
-                      </Text>
-                    </View>
-                    <SelectList 
-                             setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
-                             data={data}
-                              search={false}
-                              save="value"
-                              placeholder="Choose your section"
-                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
-                              inputStyles={{color: "#000000"}}
-                              dropdownStyles={{backgroundColor: "#ffffff"}}
-                            />
-                    {getFilteredStudents()?.map((student) => {
-                      console.log(student);
-                      return (
-                        <View style={styles.studentsChecklistContainer}>
-                          <View
-                            style={[
-                              styles.picture,
-                              { backgroundColor: "#e2e2e2" },
-                            ]}
-                          >
-                            <Text style={styles.pictureInitial}>
-                              {(
-                                student.first_name[0] + student.last_name[0]
-                              ).toUpperCase()}
-                            </Text>
-                          </View>
-                          <Text
-                            style={styles.studentNameText}
-                          >{`${student.first_name} ${student.last_name}_${student.id_number}`}</Text>
-                          <BouncyCheckbox
-                            size={20}
-                            fillColor="#008000"
-                            unFillColor="#ffffff"
-                            iconStyle={{ borderColor: "red" }}
-                            innerIconStyle={{ borderWidth: 2 }}
-                            onPress={(isChecked) =>
-                              checkStudent(isChecked, student.id)
-                            }
-                            style={styles.studentsCheckbox}
-                          />
-                        </View>
-                      );
-                    })}
-                    <GeoButton
-                      onPress={() => save(profile.id, pickedStudents)}
-                      style={styles.saveButton}
-                    >
-                      <Text style={styles.saveButtonText}>Save</Text>
-                    </GeoButton>
-                  </View>
-                )}
-              </ScrollView>
-            );
           } else if (
             segment.name == "Feedback" &&
             profile.isTeacher &&
@@ -797,9 +713,9 @@ export default function ProfileScreen() {
                               search={false}
                               save="value"
                               placeholder="Choose your section"
-                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
-                              inputStyles={{color: "#000000"}}
-                              dropdownStyles={{backgroundColor: "#ffffff"}}
+                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 5, borderRadius: 5, height: 30, alignSelf: 'center'}}
+                              inputStyles={{color: "#000000", alignSelf: 'center'}}
+                              dropdownStyles={{backgroundColor: "#ffffff", width: '80%', alignSelf: 'center'}}
                             />
                     <View style={styles.studentIconContainer}>
                       <Ionicons
