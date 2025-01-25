@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: "white",
     flexDirection: "column",
-    paddingTop: 25
+    paddingTop: 10
   },
   textColor: {
     color: "#ffffff",

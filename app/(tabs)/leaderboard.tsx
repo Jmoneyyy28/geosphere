@@ -64,14 +64,13 @@ export default function LeaderboardScreen() {
   };
 
   return (
-    <ScrollView style={{paddingTop:15}}
+    <ScrollView style={{paddingTop:10}}
         refreshControl = {
           <RefreshControl
             refreshing = {refresh}
             onRefresh={() => pullRefresh()}
           />
         }>
-      
       <View style={styles.leaderboardContainer}>
         <Text style={styles.LeaderboardColor}>LEADERBOARD</Text>
       </View>
@@ -112,6 +111,7 @@ export default function LeaderboardScreen() {
                       : { borderColor: "#008000" },
                   ]}
                 >
+                
                   <Text
                     style={[
                       leaderboardStyle.topThreePosition,
