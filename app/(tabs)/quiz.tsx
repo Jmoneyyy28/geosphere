@@ -49,29 +49,29 @@ export default function QuizScreen() {
     
   // }, [questions]);
 
-  useEffect(() => {
-    let timer;
-    if (isTimerRunning) {
-      timer = setInterval(() => {
-        setRemainingTime((previousTimer) => {
-          if (previousTimer <= 1) {
-            clearInterval(timer);
-            return 0;
-          }
-          return previousTimer - 1;
-        });
-      }, 1000);
-    }
+  // useEffect(() => {
+  //   let timer;
+  //   if (isTimerRunning) {
+  //     timer = setInterval(() => {
+  //       setRemainingTime((previousTimer) => {
+  //         if (previousTimer <= 1) {
+  //           clearInterval(timer);
+  //           return 0;
+  //         }
+  //         return previousTimer - 1;
+  //       });
+  //     }, 1000);
+  //   }
 
-    return () => clearInterval(timer);
-  }, [isTimerRunning]);
+  //   return () => clearInterval(timer);
+  // }, [isTimerRunning]);
 
 
   useEffect(() => {
     setLoading(true);
     getQuiz();
     getProfile();
-    setRemainingTime(quizTime);
+    // setRemainingTime(quizTime);
   }, [params.lesson_id]);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function QuizScreen() {
    useFocusEffect(
       useCallback(() => {
         return () => {  
-    setRemainingTime(quizTime);
+    // setRemainingTime(quizTime);
         };
       }, [])
     );
@@ -164,13 +164,13 @@ export default function QuizScreen() {
         }
       }
     }
-    const totalScore = tempScore + remainingTime / 2;
-    setFinalRemainingTime(quizTime - remainingTime);
+    const totalScore = tempScore; //+ remainingTime / 2;
+    // setFinalRemainingTime(quizTime - remainingTime);
     setquestionScore(tempScore);
     setScore(totalScore);
     postScore(profile.id, quiz.id, totalScore);
     setIsScoreModalVisible(true); // Show the score modal
-    console.log(tempScore + remainingTime / 2)
+    // console.log(tempScore + remainingTime / 2)
     console.log(tempScore)
   };
 
@@ -271,10 +271,10 @@ return (
         </View>
         <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
         <Text style={styles.questionTitle}>{questions.length} Questions</Text>
-          <View style={styles.timerContainer}>
+          {/* <View style={styles.timerContainer}>
             <Ionicons name="timer-outline" style ={styles.timerStyle} /> 
             <Text style={styles.timerText}>{formatTimer(remainingTime)}</Text>
-          </View>
+          </View> */}
         {loading ? (
           <View style={styles.loadingContainer}>
             <Image source={require('@/assets/images/loading.gif')} style={styles.loadingImage} />
@@ -324,7 +324,7 @@ return (
     <Text style={styles.startboldText}>
       Final Score: {Math.round(score)} <br/>
       Question Score: {questionScore} <br/>
-      Time: {formatTimer(finalRemainingTime)}
+      {/* Time: {formatTimer(finalRemainingTime)} */}
     </Text>
     <GeoButton name="See Leaderboard" onPress={learnMore} style={styles.learnButton} />
     <GeoButton name="Back to Home" onPress={backToHome} style={styles.learnButton} />
