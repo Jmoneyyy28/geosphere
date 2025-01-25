@@ -28,6 +28,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native-keyboard-controller";
 
+import { SelectList } from 'react-native-dropdown-select-list';
+
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 
 export default function RegisterScreen() {
@@ -39,8 +41,15 @@ export default function RegisterScreen() {
   const [idnumber, setIdnumber] = React.useState("");
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [section, setSection] = React.useState([]);
+  const [selectedSection, setSelectedSection] = React.useState("");
 
-  const signup = (username, password, firstName, lastName, idnumber) => {
+  axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
+const ENDPOINTS = {
+  section: "section",
+};
+
+  const signup = (username, password, firstName, lastName, idnumber, section) => {
     axios({
       url: "authentication/register",
       method: "post",
@@ -50,6 +59,7 @@ export default function RegisterScreen() {
         firstName: firstName,
         lastName: lastName,
         idnumber: idnumber,
+        section: section
       },
     }).then((res) => {
       const student = res.data[0];
@@ -61,9 +71,48 @@ export default function RegisterScreen() {
     });
   };
 
+
+  const getSection = () => {
+    axios({
+      method: "get",
+      url: ENDPOINTS.section,
+    })
+      .then((res) => {
+        console.log(res.data);
+        setSection(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching sections:", error);
+      });
+  };
+
+  const formatSection = (sections) => {
+    const tempSection = [];
+    sections.map((section) => {
+      tempSection.push({
+        key: section.id,
+        value: section.section_name
+      })
+    });
+
+    return tempSection;
+  }
+
+  const data = [
+    {key:'1', value:'section1'},
+    {key:'2', value:'section2'},
+    {key:'3', value:'section3'},
+    {key:'4', value:'section4'},
+    {key:'5', value:'section5'},
+    {key:'6', value:'section6'},
+    {key:'7', value:'section7'},
+]
+
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
+    getSection();
   }, [navigation]);
+
   return (
     <KeyboardProvider>
       <KeyboardAvoidingView behavior={"padding"} style={styles.mainContainer}>
@@ -113,13 +162,23 @@ export default function RegisterScreen() {
             value={lastName}
             placeholderTextColor={"#ffffff"}
           />
+          <SelectList 
+            setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
+            data={formatSection(section)}
+            search={false}
+            save="value"
+            placeholder="Choose your section"
+            boxStyles={{borderColor:"#ffffff", borderWidth: 2, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
+            inputStyles={{color: "#ffffff"}}
+            dropdownStyles={{backgroundColor: "#ffffff"}}
+           />
           <GeoButton
             name="Sign Up"
             theme="light"
             style={styles.signinButton}
             textStyle={styles.signupText}
             onPress={() =>
-              signup(username, password, firstName, lastName, idnumber)
+              signup(username, password, firstName, lastName, idnumber, selectedSection)
             }
           ></GeoButton>
           {/* </View> */}

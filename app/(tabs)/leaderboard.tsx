@@ -64,7 +64,10 @@ export default function LeaderboardScreen() {
   };
 
   return (
-    <ScrollView style={{paddingTop:10}}
+    <ScrollView 
+    stickyHeaderIndices={[0]}
+    showsHorizontalScrollIndicator={false}
+    style={{paddingTop:10}}
         refreshControl = {
           <RefreshControl
             refreshing = {refresh}
@@ -305,8 +308,8 @@ const styles = StyleSheet.create({
     height: 80,
     backgroundColor: "#008000",
     justifyContent: "center",
-    position: "sticky",
-    top: 0,
+    // position: 'sticky',
+    // top: 0,
     zIndex: 1,
     borderBottomWidth: 1,
     borderBottomColor: "#e0e0e0",

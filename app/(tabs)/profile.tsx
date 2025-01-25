@@ -18,6 +18,7 @@ import axios from "axios";
 import { StorageService } from "@/services/StorageService";
 import * as Progress from "react-native-progress";
 import structuredClone from '@ungap/structured-clone';
+import { SelectList } from 'react-native-dropdown-select-list';
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -87,6 +88,9 @@ export default function ProfileScreen() {
   const [topicProgress, setTopicProgress] = useState({});
   // pull refresh
   const [refresh, setRefresh] = useState(false);
+  // example sa section
+  const [selected, setSelected] = useState("");
+  const [selectedSection, setSelectedSection] = useState("");
 
   const save = (teacher_id, student_ids) => {
     if (student_ids.length == 0) {
@@ -259,7 +263,13 @@ export default function ProfileScreen() {
         console.error("Error fetching feedbacks:", error);
       });
   };
-
+  
+  const data = [
+    {key: '0', value: 'All'},
+    {key:'1', value:'heisenberg'},
+    {key:'2', value:'section2'},
+    {key:'3', value:'section3'}
+  ]
   const getStudentProgress = () => {
     axios({
       method: "get",
@@ -425,6 +435,31 @@ export default function ProfileScreen() {
     }
     console.log(tempPickedStudents);
     setPickedStudents(tempPickedStudents);
+  };
+
+  const getFilteredStudents = () => {
+    if (students) {
+      if (!selectedSection || selectedSection == "All") {
+        return students;
+      }
+
+      const tempStudents = students.filter((student) => {
+        if (!student.section_name) {
+          return null;
+        }
+        if (student.section_name.toLowerCase() == selectedSection.toLowerCase()) {
+          return student;
+        }
+      })
+
+      console.log(tempStudents);
+
+      if (tempStudents) {
+        return tempStudents;
+      } else {
+        return [];
+      }
+    }
   };
 
   const backgroundColor = [
@@ -664,7 +699,7 @@ export default function ProfileScreen() {
                   />
                 }
               >
-                {!students ? (
+                {!getFilteredStudents() ? (
                   <View style={styles.loadingContainer}>
                     <Image
                       style={{ height: 400, width: 400 }}
@@ -677,10 +712,21 @@ export default function ProfileScreen() {
                       <Ionicons name="people" style={styles.studentIcon} />
                       <Text style={styles.studentListText}>
                         {" "}
-                        List of Students: {students.length}
+                        List of Section: 2
                       </Text>
                     </View>
-                    {students?.map((student) => {
+                    <SelectList 
+                             setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
+                             data={data}
+                              search={false}
+                              save="value"
+                              placeholder="Choose your section"
+                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
+                              inputStyles={{color: "#000000"}}
+                              dropdownStyles={{backgroundColor: "#ffffff"}}
+                            />
+                    {getFilteredStudents()?.map((student) => {
+                      console.log(student);
                       return (
                         <View style={styles.studentsChecklistContainer}>
                           <View
@@ -736,7 +782,7 @@ export default function ProfileScreen() {
                   />
                 }
               >
-                {!studentList ? (
+                {!getFilteredStudents() ? (
                   <View style={styles.loadingContainer}>
                     <Image
                       style={{ height: 400, width: 400 }}
@@ -745,6 +791,16 @@ export default function ProfileScreen() {
                   </View>
                 ) : (
                   <View style={styles.studentsSegmentContainer}>
+                    <SelectList 
+                             setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
+                             data={data}
+                              search={false}
+                              save="value"
+                              placeholder="Choose your section"
+                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 8, borderRadius: 5, height: 45, alignSelf: 'center'}}
+                              inputStyles={{color: "#000000"}}
+                              dropdownStyles={{backgroundColor: "#ffffff"}}
+                            />
                     <View style={styles.studentIconContainer}>
                       <Ionicons
                         name="chatbubbles"
@@ -753,10 +809,10 @@ export default function ProfileScreen() {
                       />
                       <Text style={styles.studentListText}>
                         {" "}
-                        Give Feedback to {studentList.length} Students
+                        Give Feedback to {getFilteredStudents().length} Students
                       </Text>
                     </View>
-                    {studentList?.map((student) => {
+                    {getFilteredStudents()?.map((student) => {
                       <View style={styles.studentIconContainer}></View>;
                       return (
                         <View style={styles.studentsSegmentContainer}>
@@ -783,7 +839,7 @@ export default function ProfileScreen() {
                           </View>
                           <View style={styles.studentProgressContainer}>
                             <Progress.Bar
-                              progress={0}
+                              progress={progress}
                               width={200}
                               height={10}
                               color="#008000"
