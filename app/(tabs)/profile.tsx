@@ -345,9 +345,9 @@ export default function ProfileScreen() {
       return BADGE_LOCK;
     }
 
-    if (score > 40) {
+    if (score > 88) {
       return badge.badge_gold;
-    } else if (score > 30) {
+    } else if (score > 66) {
       return badge.badge_silver;
     } else {
       return badge.badge_bronze;
@@ -1091,7 +1091,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   container: {
-    paddingTop: 25,
+    paddingTop: 10,
     flex: 1,
     flexDirection: "column",
   },
