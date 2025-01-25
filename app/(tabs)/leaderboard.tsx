@@ -64,7 +64,7 @@ export default function LeaderboardScreen() {
   };
 
   return (
-    <ScrollView style={{paddingTop:25}}
+    <ScrollView style={{paddingTop:15}}
         refreshControl = {
           <RefreshControl
             refreshing = {refresh}

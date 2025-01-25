@@ -1,4 +1,12 @@
-import { Image, StyleSheet, TextInput, Modal, View, Text, KeyboardAvoidingView } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TextInput,
+  Modal,
+  View,
+  Text,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import { Link, useRouter, useNavigation } from "expo-router";
 import { useEffect } from "react";
@@ -6,6 +14,11 @@ import { GeoButton } from "@/components/GeoButton";
 import axios from "axios";
 
 import { StorageService } from "@/services/StorageService";
+import {
+  KeyboardAvoidingView,
+  KeyboardAwareScrollView,
+  KeyboardProvider,
+} from "react-native-keyboard-controller";
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const LOGIN_ENDPOINT = "authentication/login";
@@ -16,6 +29,7 @@ export default function LoginScreen() {
   const [modalVisible, setModalVisible] = React.useState(false);
   const navigation = useNavigation();
   const router = useRouter();
+
   const login = (username, password) => {
     axios({
       url: LOGIN_ENDPOINT,
@@ -40,69 +54,76 @@ export default function LoginScreen() {
   }, [navigation]);
 
   return (
-    <KeyboardAvoidingView 
-    behavior="padding"
-      style={styles.mainContainer}>
-      <View style={styles.backgroundImage} />
-      {/* PAGEVIEW */}
-      <Image
-        style={styles.logo}
-        source={require("@/assets/images/geosphere.png")}
-      />
-      <View style={styles.centerContainer}>
-        <Text style={styles.welcomeColor}>Welcome!</Text>
-        <TextInput
-          style={styles.borderUnderline}
-          placeholder="Username"
-          onChangeText={setUsername}
-          value={username}
-          placeholderTextColor={"#ffffff"}
+    // Wrap everything in KeyboardAvoidingView for keyboard handling
+    <KeyboardProvider>
+      <KeyboardAvoidingView keyboardVerticalOffset={600} behavior={"padding"} style={styles.mainContainer}>
+      {/* <KeyboardAwareScrollView 
+        ScrollViewComponent={ScrollView}
+        contentContainerStyle={styles.mainContainer}
+      > */}
+        <View style={styles.backgroundImage} />
+        {/* PAGEVIEW */}
+        <Image
+          style={styles.logo}
+          source={require("@/assets/images/geosphere.png")}
         />
-        <TextInput
-          style={styles.borderUnderline}
-          placeholder="Password"
-          onChangeText={setPassword}
-          value={password}
-          secureTextEntry={true}
-          placeholderTextColor={"#ffffff"}
-        />
-        <GeoButton
-          name="Log In"
-          theme="light"
-          style={styles.loginButton}
-          textStyle={styles.loginText}
-          onPress={() => login(username, password)}
-        ></GeoButton>
-
-        <View style={styles.registerContainer}>
-          <Text style={styles.accountColor}>
-            Don't have an Account?{" "}
-            <Link style={styles.registerButton} href="/register">
-              Register
-            </Link>
-          </Text>
+        <View style={styles.centerContainer}>
+          <Text style={styles.welcomeColor}>Welcome!</Text>
         </View>
-      </View>
-      {/* END OF PAGEVIEW */}
+        <View>
+          <TextInput
+            style={styles.borderUnderline}
+            placeholder="Username"
+            onChangeText={setUsername}
+            value={username}
+            placeholderTextColor={"#ffffff"}
+          />
+          <TextInput
+            style={styles.borderUnderline}
+            placeholder="Password"
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry={true}
+            placeholderTextColor={"#ffffff"}
+          />
 
-      {/* MODAL */}
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text>Invalid username/password!</Text>
+          <GeoButton
+            name="Log In"
+            theme="light"
+            style={styles.loginButton}
+            textStyle={styles.loginText}
+            onPress={() => login(username, password)}
+          />
+          <View style={styles.registerContainer}>
+            <Text style={styles.accountColor}>
+              Don't have an Account?{" "}
+              <Link style={styles.registerButton} href="/register">
+                Register
+              </Link>
+            </Text>
           </View>
         </View>
-      </Modal>
-      {/* END OF MODAL */}
-    </KeyboardAvoidingView>
+        {/* END OF PAGEVIEW */}
+
+        {/* MODAL */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>Invalid username/password!</Text>
+            </View>
+          </View>
+        </Modal>
+        {/* END OF MODAL */}
+      {/* </KeyboardAwareScrollView> */}
+      </KeyboardAvoidingView>
+    </KeyboardProvider>
   );
 }
 
@@ -136,21 +157,17 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   mainContainer: {
-    paddingTop: 25,
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    display: "flex",
-    // backgroundColor: '#84b522',
+    // display: "flex",
     flexDirection: "column",
+    paddingTop: 25,
+    backgroundColor: "#008000",
   },
   centerContainer: {
-    flex: 1,
-    display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    height: 50,
-    margin: 10,
   },
   loginButton: {
     borderRadius: 50,
@@ -178,6 +195,7 @@ const styles = StyleSheet.create({
     width: 1300,
     borderRadius: 3500,
     zIndex: -1000,
+    borderColor: "#000000",
   },
   borderUnderline: {
     borderWidth: 1,

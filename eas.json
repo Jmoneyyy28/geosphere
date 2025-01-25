@@ -15,7 +15,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://geosphere-backend-fdfdcf8c36f4.herokuapp.com"
+        "EXPO_PUBLIC_API_URL": "https://geosphere-backend-2-7482a619bef8.herokuapp.com"
       }
     },
     "preview": {
@@ -28,7 +28,7 @@
         "gradleCommand": ":app:assembleRelease"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://geosphere-backend-fdfdcf8c36f4.herokuapp.com"
+        "EXPO_PUBLIC_API_URL": "https://geosphere-backend-2-7482a619bef8.herokuapp.com"
       }
     }
   },

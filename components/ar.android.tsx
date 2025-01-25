@@ -21,12 +21,16 @@ import {
   ViroARTrackingTargets,
   ViroARPlaneSelector,
   ViroARPlane,
-  ViroNode
+  ViroNode,
+  ViroImage
 } from "@viro-community/react-viro";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { GeoButton } from "./GeoButton";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
+import React from "react";
+
 
 
 export default function ArScreen() {
@@ -40,6 +44,8 @@ export default function ArScreen() {
   const [object, setObject] = useState("transform");
   const [rotate, setRotate] = useState(false);
   const [rotationDirection, setRotationDirection] = useState("rotateRight");
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+
 
 
   useEffect(() => {
@@ -85,9 +91,13 @@ export default function ArScreen() {
     console.log("Model loaded");
     setAnimationStarted(true);
   };
+  const exitModal = () => {
+    setIsModalVisible(false);
+  };
 
   const onClickModal = () => {
-    console.log("Hello World");
+    console.log("Clicked");
+    setIsModalVisible(true);
   };
 
   const getEarthStructure = (props) => {
@@ -120,7 +130,15 @@ export default function ArScreen() {
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
-        <ViroAmbientLight color="#ffffff" intensity={1000} />    
+        <ViroText 
+        text= "Click me!"
+        position={[0, 0, -1]}
+        style={{ fontSize: 8, color: "#ffffff", fontFamily: 'Arial', fontWeight:'bold'}}
+        outerStroke={{type:"Outline", width:1, color:'#000000'}}/>
+
+
+      <ViroAmbientLight color="#ffffff" intensity={5000} />
+
         <Viro3DObject
           source={require("@/assets/3d-models/earthlayers/earth-layers.obj")}
           resources={[
@@ -175,8 +193,8 @@ export default function ArScreen() {
         <Viro3DObject
           source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png1.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_png1.png"),
           ]}
           position={[0.18, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -192,10 +210,10 @@ export default function ArScreen() {
         />
 
         <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture2.obj")}
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png2.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_png2.png"),
           ]}
           position={[-0.18, 0, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -250,10 +268,10 @@ export default function ArScreen() {
       <ViroARScene>
         <ViroAmbientLight color="#ffffff" intensity={1000} />
         <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture1.obj")}
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png1.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_png1.png"),
           ]}
           position={[0.25, 0.1, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -269,10 +287,10 @@ export default function ArScreen() {
         />
 
         <Viro3DObject
-          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture2.obj")}
+          source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
           resources={[
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
-            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png2.png"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
+            require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_png2.png"),
           ]}
           position={[-0.25, 0.1, -1]}
           scale={[0.3, 0.3, 0.3]}
@@ -373,10 +391,10 @@ export default function ArScreen() {
         {data.object === "transform" ? (
           <>
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture1.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png1.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_png1.png"),
               ]}
               position={[0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -392,10 +410,10 @@ export default function ArScreen() {
             />
 
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture2.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png2.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_png2.png"),
               ]}
               position={[-0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -413,10 +431,10 @@ export default function ArScreen() {
         ) : data.object === "divergent" ? (
           <>
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture1.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png1.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_png1.png"),
               ]}
               position={[0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -432,10 +450,10 @@ export default function ArScreen() {
             />
 
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture2.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mt2.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png2.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_png2.png"),
               ]}
               position={[-0.18, 0, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -453,10 +471,10 @@ export default function ArScreen() {
         ) : (
           <>
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture1.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj/Coastal_Cross_Section_1208065716_texture_png1.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_mtl1.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture_png1.png"),
               ]}
               position={[0.28, 0.1, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -472,10 +490,10 @@ export default function ArScreen() {
             />
 
             <Viro3DObject
-              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture2.obj")}
+              source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
               resources={[
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
-                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj/Coastal_Cross_Section_1208065723_texture_png2.png"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_mtl2.mtl"),
+                require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture_png2.png"),
               ]}
               position={[-0.28, 0.1, -1]}
               scale={[0.3, 0.3, 0.3]}
@@ -564,7 +582,14 @@ export default function ArScreen() {
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
+        <ViroText 
+        text= "Click me!"
+        position={[0, 0, -1]}
+        style={{ fontSize: 7, color: "#ffffff", fontFamily: 'Arial', fontWeight:'bold'}}
+        outerStroke={{type:"Outline", width:1, color:'#000000'}}/>
+
         <ViroAmbientLight color="#ffffff" intensity={1000} />
+
         <Viro3DObject
           source={require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture.obj")}
           resources={[
@@ -580,6 +605,7 @@ export default function ArScreen() {
             onFinish: animationEnd,
           }}
           type="OBJ"
+          onClick={onClickModal}
         />
       </ViroARScene>
     );
@@ -665,6 +691,20 @@ export default function ArScreen() {
             rotationDirection: rotationDirection,
           }}
         />
+       <Modal isVisible={isModalVisible}>
+          <View style={styles.modalContainer}>
+            <GeoButton
+              onPress={exitModal}
+              theme="transparent">
+              <Ionicons name="arrow-back" style={styles.backIcon}/>
+              </GeoButton>
+            <Text style ={styles.headerText}>Did you know?</Text>
+            <Text style ={styles.questionText}>
+              Earth's tectonic plates float on molten rock, moving as fast as your nails grow! This slow movement creates 
+              mountains, volcanoes, and earthquakes.
+            </Text>
+          </View>
+        </Modal>
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
@@ -703,6 +743,20 @@ export default function ArScreen() {
             rotationDirection: rotationDirection,
           }}
         />
+        <Modal isVisible={isModalVisible}>
+          <View style={styles.modalContainer}>
+            <GeoButton
+              onPress={exitModal}
+              theme="transparent">
+              <Ionicons name="arrow-back" style={styles.backIcon}/>
+              </GeoButton>
+            <Text style ={styles.headerText}>Did you know?</Text>
+            <Text style ={styles.questionText}>
+              Volcanoes form when magma escapes Earth's crust, while valleys are carved by rivers  over time. These Processes
+              shape the land around us!
+            </Text>
+          </View>
+        </Modal>
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
@@ -729,6 +783,42 @@ export default function ArScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerText: {
+    fontSize: 15,
+    color: "#333",
+    fontFamily: "Roboto_900Black",
+    alignSelf: 'center'
+  },
+  backIcon: {
+    fontSize: 25,
+    color: "#000000",
+    alignSelf: 'baseline'
+  },
+  learnButton: {
+    backgroundColor: "#008000",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 15,
+    height: 40,
+    width: 160,
+    alignSelf: 'center'
+
+  },
+  questionText: {
+    fontSize: 15,
+    marginTop: 10,
+    color: "#333",
+    fontFamily: "Roboto_400Regular",
+  },
+  modalContainer: {
+    alignSelf: 'center',
+    width: 300,
+    height: 200,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 15,
+},
   optionIcon: {
     fontSize: 28,
     color: "#008000",
