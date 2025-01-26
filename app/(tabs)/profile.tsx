@@ -52,7 +52,7 @@ const STUDENT_SEGMENT_BUTTONS = [
 const TEACHER_SEGMENT_BUTTONS = [
   {
     name: "Feedback",
-    isActive: false,
+    isActive: true,
   }
 ];
 
@@ -713,7 +713,7 @@ export default function ProfileScreen() {
                               search={false}
                               save="value"
                               placeholder="Choose your section"
-                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 5, borderRadius: 5, height: 30, alignSelf: 'center'}}
+                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 5, borderRadius: 5, height: 40, alignSelf: 'center'}}
                               inputStyles={{color: "#000000", alignSelf: 'center'}}
                               dropdownStyles={{backgroundColor: "#ffffff", width: '80%', alignSelf: 'center'}}
                             />
