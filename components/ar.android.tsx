@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback} from "react";
 import {
   StyleSheet,
   Text,
@@ -22,7 +22,9 @@ import {
   ViroARPlaneSelector,
   ViroARPlane,
   ViroNode,
-  ViroImage
+  ViroImage,
+  ViroPolyline,
+  ViroOrbitCamera,
 } from "@viro-community/react-viro";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { GeoButton } from "./GeoButton";
@@ -30,8 +32,8 @@ import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import React from "react";
-
-
+import { Audio } from "expo-av";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function ArScreen() {
   const params = useLocalSearchParams();
@@ -45,13 +47,33 @@ export default function ArScreen() {
   const [rotate, setRotate] = useState(false);
   const [rotationDirection, setRotationDirection] = useState("rotateRight");
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-
-
+  const [innerModalVisible, setInnerModalVisible] = useState(false);
+  const [outerModalVisible, setOuterModalVisible] = useState(false);
+  const [mantleModalVisible, setMantleModalVisible] = useState(false);
+  const [crustModalVisible, setCrustModalVisible] = useState(false);
+  const [sound, setSound] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     setPlateBoundariesType("transform");
     setTitle(params.title);
   }, [params.title]);
+
+    useFocusEffect(
+      useCallback(() => {
+        return () => {
+          stopSound(); // Ensure sound is stopped when leaving the page
+        };
+      }, [sound])
+    );
+
+    const AUDIO = {
+      transformVoice: require("@/assets/sounds/transformAugmentedSound.mp3"),
+      convergentVoice: require("@/assets/sounds/convergentAugmentedSound.mp3"),
+      divergentVoice: require("@/assets/sounds/divergentAugmentedSound.mp3"),
+      topic2Voice: require("@/assets/sounds/InternalAugmentedSound.mp3"),
+      topic3Voice: require("@/assets/sounds/LandformAugmentedSound.mp3"),
+    };
 
   const onInitialized = (state, reason) => {
     if (state === ViroTrackingStateConstants.TRACKING_NORMAL) {
@@ -61,11 +83,54 @@ export default function ArScreen() {
     }
   };
 
+  const playingSound = () => {
+    if (title === "Processes and Landforms") {
+      return AUDIO.topic3Voice;
+    } else if (title === "Internal Structures of the Earth") {
+      return AUDIO.topic2Voice;
+    } else if (title === "Plate Boundaries") {
+      if (object === "transform") {
+        return AUDIO.transformVoice;
+      } else if (object === "divergent") {
+        return AUDIO.divergentVoice;
+      } else if (object === "convergent") {
+        return AUDIO.convergentVoice;
+      }
+    }
+  };
+
+   const playSound = async () => {
+      const { sound } = await Audio.Sound.createAsync(playingSound());
+      setSound(sound);
+      await sound.playAsync();
+      setIsPlaying(true);
+    };
+
+    const stopSound = async () => {
+      if (sound) {
+        await sound.stopAsync();
+        await sound.unloadAsync();
+        setSound(null);
+        setIsPlaying(false);
+      }
+    };
+
+  const toggleSound = async () => {
+    if (sound && isPlaying) {
+      await sound.pauseAsync();
+      setIsPlaying(false);
+    } else if (sound) {
+      await sound.playAsync();
+      setIsPlaying(true);
+    } else {
+      playSound();
+    }
+  };
+
   const changeScene = (type) => {
     console.log(type);
     setPlateBoundariesType(type);
   };
-
 
   const plate1AnimationEnd = () => {
     console.log("Plate 1 animation end");
@@ -93,11 +158,30 @@ export default function ArScreen() {
   };
   const exitModal = () => {
     setIsModalVisible(false);
+    setInnerModalVisible(false);
   };
 
   const onClickModal = () => {
     console.log("Clicked");
     setIsModalVisible(true);
+  };
+
+  const onClickInnerModal = () => {
+    console.log("Clicked Inner");
+    setInnerModalVisible(true);
+  };
+
+  const onClickOuterModal = () => {
+    console.log("Clicked Outer");
+    setOuterModalVisible(true);
+  };
+  const onClickMantleModal = () => {
+    console.log("Clicked Mantle");
+    setMantleModalVisible(true);
+  };
+  const onClickCrustModal = () => {
+    console.log("Clicked Crust");
+    setCrustModalVisible(true);
   };
 
   const getEarthStructure = (props) => {
@@ -126,39 +210,124 @@ export default function ArScreen() {
         },
         duration: 500,
       },
+      rotateRight2: {
+        properties: {
+          rotateY: "+=10",
+          rotateZ: "+=10",
+        },
+        duration: 500,
+      },
     });
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
-        <ViroText 
-        text= "Click me!"
-        position={[0, 0, -1]}
-        style={{ fontSize: 8, color: "#ffffff", fontFamily: 'Arial', fontWeight:'bold'}}
-        outerStroke={{type:"Outline", width:1, color:'#000000'}}/>
-
-
-      <ViroAmbientLight color="#ffffff" intensity={5000} />
-
-        <Viro3DObject
-          source={require("@/assets/3d-models/earthlayers/earth-layers.obj")}
-          resources={[
-            require("@/assets/3d-models/earthlayers/earth-layersMaterials.mtl"),
-            require("@/assets/3d-models/earthlayers/Tex_1.jpg"),
-            require("@/assets/3d-models/earthlayers/Tex_2.png"),
-            require("@/assets/3d-models/earthlayers/Tex_3.jpg"),
-            require("@/assets/3d-models/earthlayers/Tex_4.jpg"),
-          ]}
+        <ViroNode
           position={[0, 0, -1]}
-          scale={[0.3, 0.3, 0.3]}
-          rotation={[0, 20, 0]}
           animation={{
             name: data.rotationDirection,
             run: data.rotate,
             onFinish: animationEnd,
           }}
-          type="OBJ"
-          onClick={onClickModal}
-        />
+        >
+          <ViroImage
+            scale={[0.28, 0.28, 0.28]}
+            source={require("@/assets/3d-models/label/InnerCore.png")}
+            position={[-0.63, .65, .1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickInnerModal}
+          />
+          <ViroImage
+            scale={[0.28, 0.28, 0.28]}
+            source={require("@/assets/3d-models/label/OuterCore.png")}
+            position={[-0.35, 0.65, .1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickOuterModal}
+          />
+          <ViroImage
+            scale={[0.28, 0.28, 0.28]}
+            source={require("@/assets/3d-models/label/Mantle.png")}
+            position={[0, 0.67, .1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickMantleModal}
+            
+          />
+          <ViroImage
+            scale={[0.28, 0.28, 0.28]}
+            source={require("@/assets/3d-models/label/Crust.png")}
+            position={[0.22, 0.76, .1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickCrustModal}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [-0.60, 0.59, 0.1], //taas na line
+              [-0.3, 0.1, 0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [-0.35, 0.6, 0.1], // taas na line
+              [-0.15, 0.18, 0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+            // animation={{
+            //   name: data.rotationDirection,
+            //   run: data.rotate,
+            //   onFinish: animationEnd,
+            // }}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [0, 0.6, 0.1], // taas na line
+              [0, 0.3, 0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+            // animation={{
+            //   name: data.rotationDirection,
+            //   run: data.rotate,
+            //   onFinish: animationEnd,
+            // }}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [0.21, 0.68, 0.1], // taas na line
+              [0.15, 0.3, 0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+            // animation={{
+            //   name: data.rotationDirection,
+            //   run: data.rotate,
+            //   onFinish: animationEnd,
+            // }}
+          />
+          <ViroAmbientLight color="#ffffff" intensity={5000} />
+
+          <Viro3DObject
+            source={require("@/assets/3d-models/earthlayers/earth-layers.obj")}
+            resources={[
+              require("@/assets/3d-models/earthlayers/earth-layersMaterials.mtl"),
+              require("@/assets/3d-models/earthlayers/Tex_1.jpg"),
+              require("@/assets/3d-models/earthlayers/Tex_2.png"),
+              require("@/assets/3d-models/earthlayers/Tex_3.jpg"),
+              require("@/assets/3d-models/earthlayers/Tex_4.jpg"),
+            ]}
+            position={[0, 0, 0]}
+            scale={[0.3, 0.3, 0.3]}
+            rotation={[0, 20, 0]}
+            // animation={{
+            //   name: data.rotationDirection,
+            //   run: data.rotate,
+            //   onFinish: animationEnd,
+            // }}
+            type="OBJ"
+            onClick={onClickModal}
+          />
+        </ViroNode>
       </ViroARScene>
     );
   };
@@ -582,12 +751,6 @@ export default function ArScreen() {
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
-        <ViroText 
-        text= "Click me!"
-        position={[0, 0, -1]}
-        style={{ fontSize: 7, color: "#ffffff", fontFamily: 'Arial', fontWeight:'bold'}}
-        outerStroke={{type:"Outline", width:1, color:'#000000'}}/>
-
         <ViroAmbientLight color="#ffffff" intensity={1000} />
 
         <Viro3DObject
@@ -648,7 +811,15 @@ export default function ArScreen() {
           }}
           style={{ flex: 1 }}
           viroAppProps={{ object: object }}
-        />   
+        />
+        <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
+              <Ionicons
+                name={
+                isPlaying ? "volume-high-outline" : "volume-mute-outline"
+                }
+                style={styles.rotateButton}
+              />
+            </GeoButton>
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{object} Boundaries</Text>
@@ -656,21 +827,27 @@ export default function ArScreen() {
           <View style={{ flexDirection: "row" }}>
             <GeoButton
               style={styles.buttonStyle}
-              onPress={() => setObject("convergent")}
+              onPress={() => {setObject("convergent"); stopSound();}}
             >
-              <Text style={{color:"#ffffff", fontFamily: "Roboto_300Light"}}>Convergent</Text>
+              <Text style={{ color: "#ffffff", fontFamily: "Roboto_300Light" }}>
+                Convergent
+              </Text>
             </GeoButton>
             <GeoButton
               style={styles.buttonStyle}
-              onPress={() => setObject("divergent")}
+              onPress={() => {setObject("divergent"); stopSound();}}
             >
-              <Text style={{color: "#ffffff", fontFamily: "Roboto_300Light"}}>Divergent</Text>
+              <Text style={{ color: "#ffffff", fontFamily: "Roboto_300Light" }}>
+                Divergent
+              </Text>
             </GeoButton>
             <GeoButton
               style={styles.buttonStyle}
-              onPress={() => setObject("transform")}
+              onPress={() => {setObject("transform"); stopSound();}}
             >
-              <Text style={{color:"#ffffff", fontFamily: "Roboto_300Light"}}>Transform</Text>
+              <Text style={{ color: "#ffffff", fontFamily: "Roboto_300Light" }}>
+                Transform
+              </Text>
             </GeoButton>
           </View>
         </View>
@@ -684,45 +861,103 @@ export default function ArScreen() {
           initialScene={{
             scene: getEarthStructure,
           }}
-          style={{ flex: 1}}
+          style={{ flex: 1 }}
           viroAppProps={{
             object: object,
             rotate: rotate,
             rotationDirection: rotationDirection,
           }}
         />
-       <Modal isVisible={isModalVisible}>
-          <View style={styles.modalContainer}>
-            <GeoButton
-              onPress={exitModal}
-              theme="transparent">
-              <Ionicons name="arrow-back" style={styles.backIcon}/>
-              </GeoButton>
-            <Text style ={styles.headerText}>Did you know?</Text>
-            <Text style ={styles.questionText}>
-              Earth's tectonic plates float on molten rock, moving as fast as your nails grow! This slow movement creates 
-              mountains, volcanoes, and earthquakes.
+        <Modal 
+        isVisible={isModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setIsModalVisible(false)}
+        backdropOpacity={0}>
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>
+              Earth's tectonic plates float on molten rock, moving as fast as
+              your nails grow! This slow movement creates mountains, volcanoes,
+              and earthquakes.
             </Text>
           </View>
         </Modal>
+        <Modal isVisible={innerModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setInnerModalVisible(false)}
+        backdropOpacity={0}>
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>The Earth’s innermost layer, a dense, solid sphere composed primarily of iron and nickel, subjected to immense heat and pressure.</Text>
+          </View>
+        </Modal>
+        <Modal 
+        isVisible={outerModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setOuterModalVisible(false)}
+        backdropOpacity={0}>
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>A hot, liquid layer of molten iron and nickel that surrounds the inner core and generates Earth’s magnetic field.</Text>
+          </View>
+        </Modal>
+        <Modal 
+        isVisible={mantleModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setMantleModalVisible(false)}
+        backdropOpacity={0}>
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>The thickest layer beneath the crust, made of semi-solid silicate rocks, where convection currents cause the movement of tectonic plates.</Text>
+          </View>
+        </Modal>
+        <Modal 
+        isVisible={crustModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setCrustModalVisible(false)}
+        backdropOpacity={0}
+        >
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>The Earth’s outermost and thinnest layer, composed of solid rocks and minerals, forms the continents and ocean floors, supporting all life.</Text>
+          </View>
+        </Modal>
+        <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
+              <Ionicons
+                name={
+                isPlaying ? "volume-high-outline" : "volume-mute-outline"
+                }
+                style={styles.rotateButton}
+              />
+            </GeoButton>
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-          
-          <GeoButton
-            onPress={() => rotateEarthStructure("rotateLeft")}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <Ionicons name="chevron-back-outline"
-              style = {styles.rotateButton}/>
-          </GeoButton>
-          <Text style={styles.rotateTextStyle}> Tap to Rotate the Model!</Text>
-          <GeoButton
-            onPress={() => rotateEarthStructure("rotateRight")}
-          >
-            <Ionicons name="chevron-forward-outline"
-            style = {styles.rotateButton}/>
+            <GeoButton onPress={() => rotateEarthStructure("rotateLeft")}>
+              <Ionicons
+                name="chevron-back-outline"
+                style={styles.rotateButton}
+              />
+            </GeoButton>
+            <Text style={styles.rotateTextStyle}>Tap to Rotate the Model!</Text>
+            <GeoButton onPress={() => rotateEarthStructure("rotateRight")}>
+              <Ionicons
+                name="chevron-forward-outline"
+                style={styles.rotateButton}
+              />
             </GeoButton>
           </View>
         </View>
@@ -743,37 +978,52 @@ export default function ArScreen() {
             rotationDirection: rotationDirection,
           }}
         />
-        <Modal isVisible={isModalVisible}>
-          <View style={styles.modalContainer}>
-            <GeoButton
-              onPress={exitModal}
-              theme="transparent">
-              <Ionicons name="arrow-back" style={styles.backIcon}/>
-              </GeoButton>
-            <Text style ={styles.headerText}>Did you know?</Text>
-            <Text style ={styles.questionText}>
-              Volcanoes form when magma escapes Earth's crust, while valleys are carved by rivers  over time. These Processes
-              shape the land around us!
+        <Modal 
+        isVisible={isModalVisible}
+        style={{justifyContent: 'flex-end', marginBottom: 180}}
+        animationIn={'tada'}
+        onBackdropPress={() => setIsModalVisible(false)}
+        backdropOpacity={0}>
+          <View style={styles.labelModalContainer}>
+            <Text style={styles.headerText}>Did you know?</Text>
+            <Text style={styles.questionText}>
+              Volcanoes form when magma escapes Earth's crust, while valleys are
+              carved by rivers over time. These Processes shape the land around
+              us!
             </Text>
           </View>
         </Modal>
+        <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
+              <Ionicons
+                name={
+                isPlaying ? "volume-high-outline" : "volume-mute-outline"
+                }
+                style={styles.rotateButton}
+              />
+            </GeoButton>
         <View style={styles.controlVIew}>
           <View>
             <Text style={styles.titleStyle}>{title}</Text>
           </View>
-          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-          <GeoButton
-            onPress={() => rotateEarthStructure("rotateLeft")}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <Ionicons name="chevron-back-outline"
-              style = {styles.rotateButton}/>
-          </GeoButton>
-          <Text style={styles.rotateTextStyle}>Tap to Rotate the Model!</Text>
-          <GeoButton
-            onPress={() => rotateEarthStructure("rotateRight")}
-          >
-            <Ionicons name="chevron-forward-outline"
-            style = {styles.rotateButton}/>
+            <GeoButton onPress={() => rotateEarthStructure("rotateLeft")}>
+              <Ionicons
+                name="chevron-back-outline"
+                style={styles.rotateButton}
+              />
+            </GeoButton>
+            <Text style={styles.rotateTextStyle}>Tap to Rotate the Model!</Text>
+            <GeoButton onPress={() => rotateEarthStructure("rotateRight")}>
+              <Ionicons
+                name="chevron-forward-outline"
+                style={styles.rotateButton}
+              />
             </GeoButton>
           </View>
         </View>
@@ -787,12 +1037,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: "#333",
     fontFamily: "Roboto_900Black",
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   backIcon: {
     fontSize: 25,
     color: "#000000",
-    alignSelf: 'baseline'
+    alignSelf: "baseline",
   },
   learnButton: {
     backgroundColor: "#008000",
@@ -802,8 +1052,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     height: 40,
     width: 160,
-    alignSelf: 'center'
-
+    alignSelf: "center",
   },
   questionText: {
     fontSize: 15,
@@ -811,14 +1060,23 @@ const styles = StyleSheet.create({
     color: "#333",
     fontFamily: "Roboto_400Regular",
   },
-  modalContainer: {
-    alignSelf: 'center',
-    width: 300,
-    height: 200,
-    backgroundColor: '#ffffff',
+  labelModalContainer: {
+    alignSelf: "flex-end",
+    width: '100%',
+    height: '25%',
+    backgroundColor: "#ffffff",
     borderRadius: 20,
     padding: 15,
-},
+  },
+  modalContainer: {
+    alignSelf: "center",
+    position: "absolute",
+    width: 300,
+    height: 200,
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 15,
+  },
   optionIcon: {
     fontSize: 28,
     color: "#008000",
@@ -832,7 +1090,7 @@ const styles = StyleSheet.create({
   rotateButton: {
     fontSize: 50,
     color: "#ffffff",
-    margin: 10
+    margin: 10,
   },
   earthButton: {
     backgroundColor: "green",
