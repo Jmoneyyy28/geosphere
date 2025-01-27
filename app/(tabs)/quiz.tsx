@@ -12,7 +12,6 @@ import {
   CommonActions,
   useFocusEffect,
   useNavigation,
-  useRoute,
 } from "@react-navigation/native";
 
 const quizTime = 120;
@@ -31,21 +30,18 @@ export default function QuizScreen() {
   const [profile, setProfile] = useState(null);
   const [questions, setQuestions] = useState([]);
   const [selectedAnswers, setSelectedAnswers] = useState({});
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isStartModalVisible, setIsStartModalVisible] = React.useState(false);
+  const [isScoreModalVisible, setIsScoreModalVisible] = React.useState(false);
   const [remainingTime, setRemainingTime] = useState(quizTime);
   const [questionScore, setquestionScore] = useState(0);
   const [finalRemainingTime, setFinalRemainingTime] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const router = useRouter();
   const navigation = useNavigation();
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [isStartModalVisible, setIsStartModalVisible] = React.useState(false);
-  const [isScoreModalVisible, setIsScoreModalVisible] = React.useState(false);
-
-  // useEffect(() => {
-
-  // }, [questions]);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
 
   useEffect(() => {
     let timer;
@@ -60,7 +56,6 @@ export default function QuizScreen() {
         });
       }, 1000);
     }
-
     return () => clearInterval(timer);
   }, [isTimerRunning]);
 
@@ -77,14 +72,6 @@ export default function QuizScreen() {
     }
   }, [quiz]);
 
-  useFocusEffect(
-    useCallback(() => {
-      return () => {
-        setRemainingTime(quizTime);
-      };
-    }, [])
-  );
-
   const getProfile = () => {
     StorageService.getData("profile").then((profile) => {
       if (profile) {
@@ -99,25 +86,34 @@ export default function QuizScreen() {
       method: "get",
       params: { lesson_id: params.lesson_id },
     }).then((res) => {
-      console.log(res.data);
       setQuiz(res.data[0]);
     });
   };
 
-  const startTimer = () => {
-    const test = setInterval(() => {
-      setRemainingTime((previousTimer) => previousTimer - 1);
-    }, 1000);
-
-    // return () => clearInterval(test);
-  }
-
-  const formatTimer = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
+  const getQuestions = () => {
+    setLoading(true);
+    axios({
+      url: ENDPOINTS.questions,
+      method: "get",
+      params: { quiz_id: quiz.id },
+    })
+      .then((res) => {
+        setQuestions(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+        setIsStartModalVisible(true);
+      });
   };
 
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
+  const formatTimer = (totalSeconds) => {
+    const minutes = Math.floor(totalSeconds / 60);
+    const remainingSeconds = Math.floor(totalSeconds % 60);
+    return `${minutes}m ${remainingSeconds}s`;
+  };
+  
   const postProgress = (student_id, progressName, topic_id) => {
     if (profile.isTeacher) {
       return;
@@ -133,22 +129,21 @@ export default function QuizScreen() {
     }).then((res) => console.log("Progress Success"));
   };
 
-  const getQuestions = () => {
-    setLoading(true); // Start loading questions
-    axios({
-      url: ENDPOINTS.questions,
-      method: "get",
-      params: { quiz_id: quiz.id },
-    })
-      .then((res) => {
-        setQuestions(res.data);
-      })
-      .finally(() => {
-        setLoading(false); // End loading questions
-        setIsStartModalVisible(true);
-      });
+  const handleSelectAnswer = (questionId, choice) => {
+    setSelectedAnswers((prev) => ({ ...prev, [questionId]: choice }));
   };
-  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+
+  const goToNextQuestion = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+    }
+  };
+
+  const goToPreviousQuestion = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+    }
+  };
 
   const submit = () => {
     let tempScore = 0;
@@ -161,12 +156,10 @@ export default function QuizScreen() {
     }
     const totalScore = tempScore + remainingTime / 2;
     setFinalRemainingTime(quizTime - remainingTime);
+    postScore(profile.id,quiz.id, totalScore);
     setquestionScore(tempScore);
     setScore(totalScore);
-    postScore(profile.id, quiz.id, totalScore);
-    setIsScoreModalVisible(true); // Show the score modal
-    console.log(tempScore + remainingTime / 2)
-    console.log(tempScore);
+    setIsScoreModalVisible(true);
   };
 
   const postScore = (student_id, quiz_id, score) => {
@@ -186,17 +179,11 @@ export default function QuizScreen() {
     setIsScoreModalVisible(true); // Show the score modal
   };
 
-  const handleSelectAnswer = (questionId, choice) => {
-    setSelectedAnswers((prev) => ({ ...prev, [questionId]: choice }));
-  };
-
-  const isCorrectChoice = (question, choice) => question.answer === choice;
 
   const startQuiz = () => {
-    setIsStartModalVisible(false); // Hide the start modal
-    setIsTimerRunning(true); // Start the timer
+    setIsStartModalVisible(false);
+    setIsTimerRunning(true);
   };
-
   const learnMore = () => {
     setIsModalVisible(false);
     router.replace("/leaderboard");
@@ -231,24 +218,6 @@ export default function QuizScreen() {
       })
     );
   };
-  const backQuiz = () => {
-    router.replace("/");
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          {
-            name: "(tabs)",
-            params: {
-              screen: "",
-            },
-          },
-        ],
-      })
-    );
-  };
-
-  //const totalScore = 10 * questions.length;
 
   return (
     <ScrollView style={styles.container}>
@@ -262,14 +231,14 @@ export default function QuizScreen() {
       ) : (
         <>
           <View style={styles.backButtonContainer}>
-            <GeoButton onPress={backQuiz} theme="transparent">
+            <GeoButton onPress={() => router.back()} theme="transparent">
               <Ionicons name="arrow-back" style={styles.backIcon} />
             </GeoButton>
           </View>
           <Text style={styles.quizTitle}>{quiz.quiz_title}</Text>
           <Text style={styles.questionTitle}>{questions.length} Questions</Text>
           <View style={styles.timerContainer}>
-            <Ionicons name="timer-outline" style ={styles.timerStyle} /> 
+            <Ionicons name="timer-outline" style={styles.timerStyle} />
             <Text style={styles.timerText}>{formatTimer(remainingTime)}</Text>
           </View>
           {loading ? (
@@ -281,32 +250,37 @@ export default function QuizScreen() {
             </View>
           ) : (
             <View style={styles.questionsContainer}>
-              {questions.map((question, index) => (
-                <View key={question.id} style={styles.questionContainer}>
+              {questions.length > 0 && (
+                <View style={styles.questionContainer}>
                   <Text style={styles.questionNumber}>
-                    Question: {index + 1}/{questions.length}
+                    Question: {currentQuestionIndex + 1}/{questions.length}
                   </Text>
-                  <Text style={styles.questionText}>{question.question}</Text>
+                  <Text style={styles.questionText}>
+                    {questions[currentQuestionIndex].question}
+                  </Text>
                   <View style={styles.choicesContainer}>
                     {["choice_a", "choice_b", "choice_c", "choice_d"].map(
                       (choiceKey) => {
-                        const choice = question[choiceKey];
+                        const choice =
+                          questions[currentQuestionIndex][choiceKey];
                         const isSelected =
-                          selectedAnswers[question.id] === choice;
-                        const isCorrect = isCorrectChoice(question, choice);
-
-                        const buttonStyle = isSelected
-                          ? isCorrect
-                            ? styles.selectedCorrectChoice
-                            : styles.selectedWrongChoice
-                          : styles.choiceButton;
+                          selectedAnswers[
+                            questions[currentQuestionIndex].id
+                          ] === choice;
 
                         return (
                           <GeoButton
                             key={choiceKey}
-                            style={buttonStyle}
+                            style={
+                              isSelected
+                                ? styles.selectedCorrectChoice
+                                : styles.choiceButton
+                            }
                             onPress={() =>
-                              handleSelectAnswer(question.id, choice)
+                              handleSelectAnswer(
+                                questions[currentQuestionIndex].id,
+                                choice
+                              )
                             }
                           >
                             <Text style={styles.choiceText}>{choice}</Text>
@@ -316,38 +290,44 @@ export default function QuizScreen() {
                     )}
                   </View>
                 </View>
-              ))}
+              )}
+              <View style={styles.navigationContainer}>
+                <GeoButton
+                  style={[
+                    styles.nextButton,
+                    currentQuestionIndex === 0 && styles.disabled,
+                  ]}
+                  onPress={goToPreviousQuestion}
+                  disabled={currentQuestionIndex === 0}
+                >
+                  <Text style={styles.navigationText}>Previous</Text>
+                </GeoButton>
+                <GeoButton
+                  style={[
+                    styles.nextButton,
+                    currentQuestionIndex === questions.length - 1 &&
+                      styles.disabled,
+                  ]}
+                  onPress={goToNextQuestion}
+                  disabled={currentQuestionIndex === questions.length - 1}
+                >
+                  <Text style={styles.navigationText}>Next</Text>
+                </GeoButton>
+              </View>
+              {currentQuestionIndex === questions.length - 1 && (
+                <GeoButton
+                  style={styles.submitButton}
+                  onPress={() => submit()}
+                >
+                  <Text style={styles.submitButtonText}>SUBMIT</Text>
+                </GeoButton>
+              )}
             </View>
           )}
-          {!loading && (
-            <View style={{ paddingBottom: 25 }}>
-              <GeoButton style={styles.submitButton} onPress={() => submit()}>
-                <Text style={styles.submitButtonText}>SUBMIT</Text>
-              </GeoButton>
-            </View>
-          )}
-          <Modal isVisible={isScoreModalVisible}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.startboldText}>
-                Final Score: {Math.round(score)} {"\n"}
-                Question Score: {questionScore} {"\n"}
-                Time: {formatTimer(finalRemainingTime)}
-              </Text>
-              <GeoButton
-                name="See Leaderboard"
-                onPress={learnMore}
-                style={styles.learnButton}
-              />
-              <GeoButton
-                name="Back to Home"
-                onPress={backToHome}
-                style={styles.learnButton}
-              />
-            </View>
-          </Modal>
+          {/* Start Modal */}
           <Modal isVisible={isStartModalVisible}>
-            <View style={styles.startModal}>
-              <Text style={styles.startboldText}>
+            <View style={styles.modalContainer}>
+            <Text style={styles.startboldText}>
                 Welcome to the Ultimate Plate Tectonics Quiz Challenge! 🌍✨
               </Text>
               <Text style={styles.startText}>Here's how the game works:</Text>
@@ -368,10 +348,31 @@ export default function QuizScreen() {
                 Answer fast and accurately to boost your score! Ready? Let’s go!
                 🚀
               </Text>
-
               <GeoButton
-                name="Start"
+                style={styles.learnButton}
                 onPress={() => startQuiz()}
+              >
+                <Text style={styles.startQuizText}>Start Quiz</Text>
+              </GeoButton>
+            </View>
+          </Modal>
+
+          {/* Score Modal */}
+          <Modal isVisible={isScoreModalVisible}>
+          <View style={styles.modalContainer}>
+              <Text style={styles.startboldText}>
+                Final Score: {Math.round(score)} {"\n"}
+                Question Score: {questionScore} {"\n"}
+                Time: {formatTimer(finalRemainingTime)}
+              </Text>
+              <GeoButton
+                name="See Leaderboard"
+                onPress={learnMore}
+                style={styles.learnButton}
+              />
+              <GeoButton
+                name="Back to Home"
+                onPress={backToHome}
                 style={styles.learnButton}
               />
             </View>
@@ -383,6 +384,22 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
+  navigationText: {
+      fontFamily: 'Roboto_500Medium',
+      fontSize: 15
+  },
+  navigationContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-between'
+  },
+  nextButton: {
+    backgroundColor: "#ffffff",
+    width: "28%",
+    borderRadius: 20,
+    alignContent: "center",
+    justifyContent: "center",
+    height: 25,
+  },
   startboldText: {
     fontFamily: "Roboto_700Bold",
     marginBottom: 5,
@@ -423,6 +440,7 @@ const styles = StyleSheet.create({
     position: 'sticky',
     top: 1,
     zIndex: 1,
+    marginTop: 5
   },
   backIcon: {
     fontSize: 25,
@@ -430,7 +448,7 @@ const styles = StyleSheet.create({
   },
   backButtonContainer: {
     position: "absolute",
-    top: 13,
+    top: '1%',
     left: 13,
     zIndex: 1,
   },
@@ -558,7 +576,12 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     fontSize: 18,
-    color: "#008000",
+    color: "#000000",
     fontWeight: "bold",
   },
+  startQuizText: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold"
+  }
 });
