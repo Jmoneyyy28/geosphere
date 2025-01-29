@@ -13,6 +13,7 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
+import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors";
 
 const quizTime = 120;
 
@@ -42,6 +43,8 @@ export default function QuizScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isHintModalVisible, setIsHintModalVisible] = useState(false);
+
 
   useEffect(() => {
     let timer;
@@ -179,7 +182,9 @@ export default function QuizScreen() {
     setIsScoreModalVisible(true); // Show the score modal
   };
 
-
+const showModalHint = () => {
+  setIsHintModalVisible(true);
+};
   const startQuiz = () => {
     setIsStartModalVisible(false);
     setIsTimerRunning(true);
@@ -292,9 +297,14 @@ export default function QuizScreen() {
                 </View>
               )}
               <View style={styles.navigationContainer}>
+              <GeoButton 
+                style={styles.hintButton}
+                onPress={showModalHint}>
+                  <Text style={styles.hintText}>Hint</Text>
+                </GeoButton>
                 <GeoButton
                   style={[
-                    styles.nextButton,
+                    styles.prevButton,
                     currentQuestionIndex === 0 && styles.disabled,
                   ]}
                   onPress={goToPreviousQuestion}
@@ -325,6 +335,21 @@ export default function QuizScreen() {
             </View>
           )}
           {/* Start Modal */}
+          <Modal isVisible={isHintModalVisible}
+            style={{justifyContent: 'flex-end', marginBottom: 90}}
+            animationIn={'tada'}
+            onBackdropPress={() => setIsHintModalVisible(false)}
+            backdropOpacity={0}
+          >
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.startboldText}>Hint</Text>
+              {questions[currentQuestionIndex] ? ( // Ensure the question exists before accessing properties
+                <Text style={styles.startText}>{questions[currentQuestionIndex].hint || "No hint available"}</Text>
+              ) : (
+                <Text style={styles.startText}>Loading hint...</Text>
+              )}
+            </View>
+          </Modal>
           <Modal isVisible={isStartModalVisible}>
             <View style={styles.modalContainer}>
             <Text style={styles.startboldText}>
@@ -384,6 +409,19 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
+  labelModalContainer: {
+    alignSelf: "center",
+    width: '80%',
+    height: '15%',
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 15
+  },
+  hintText: {
+    fontFamily: 'Roboto_500Medium',
+    fontSize: 15,
+    color: "#008000"
+  },
   navigationText: {
       fontFamily: 'Roboto_500Medium',
       fontSize: 15
@@ -392,13 +430,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between'
   },
+  hintButton: {
+    backgroundColor: "#ffffff",
+    width: "20%",
+    borderRadius: 10,
+    alignContent: "center",
+    justifyContent: "center",
+    height: 35
+  },
+  prevButton: {
+    backgroundColor: "#ffffff",
+    width: "28%",
+    borderRadius: 10,
+    alignContent: "center",
+    justifyContent: "center",
+    height: 35,
+    marginLeft: 50
+  },
   nextButton: {
     backgroundColor: "#ffffff",
     width: "28%",
-    borderRadius: 20,
+    borderRadius: 10,
     alignContent: "center",
     justifyContent: "center",
-    height: 25,
+    height: 35,
   },
   startboldText: {
     fontFamily: "Roboto_700Bold",
@@ -439,8 +494,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     position: 'sticky',
     top: 1,
-    zIndex: 1,
-    marginTop: 5
+    zIndex: 1
   },
   backIcon: {
     fontSize: 25,
@@ -448,7 +502,7 @@ const styles = StyleSheet.create({
   },
   backButtonContainer: {
     position: "absolute",
-    top: '1%',
+    top: '2%',
     left: 13,
     zIndex: 1,
   },
