@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState, useCallback } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Image, ImageBackground, TouchableHighlight, Pressable } from "react-native";
 import axios from "axios";
 import { GeoButton } from "@/components/GeoButton";
 import { StorageService } from "@/services/StorageService";
@@ -14,6 +14,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { colors } from "react-native-keyboard-controller/lib/typescript/components/KeyboardToolbar/colors";
+import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 const quizTime = 120;
 
@@ -44,6 +45,45 @@ export default function QuizScreen() {
   const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [isHintModalVisible, setIsHintModalVisible] = useState(false);
+  const [questionData, setQuestionData] = useState({});
+
+  const backgroundPicture = {
+    backgroundWallpaper1: require("@/assets/images/backgroundWallpaper1.png"),
+    backgroundWallpaper2: require("@/assets/images/backgroundWallpaper2.png"),
+    backgroundWallpaper3: require("@/assets/images/backgroundWallpaper3.png"),
+    backgroundWallpaper0: require("@/assets/images/backgroundWallpaper0.png")
+  }
+
+  const buttonImage = require("@/assets/images/button.png");
+
+  // const PICTURE = {
+  //   pictureA: require("@/assets/images/icon.png"),
+  //   pictureB: require("@/assets/images/Crown.png"),
+  //   pictureC: require("@/assets/images/icon.png"),
+  //   pictureD: require("@/assets/images/icon.png"),
+  // }
+
+
+  const shuffle = (array) => {
+
+    let currentIndex = array.length;
+  
+    // While there remain elements to shuffle...
+    while (currentIndex != 0) {
+  
+      // Pick a remaining element...
+      let randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+
+    }
+    array = array.slice(0, 5)
+    setQuestions(array)
+  }
+  
 
 
   useEffect(() => {
@@ -71,7 +111,7 @@ export default function QuizScreen() {
 
   useEffect(() => {
     if (quiz) {
-      getQuestions();
+      getQuestions() ;
     }
   }, [quiz]);
 
@@ -83,6 +123,24 @@ export default function QuizScreen() {
     });
   };
 
+  const goToLesson = () => {
+
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "(tabs)",
+            params: {
+              screen: "lesson",
+              params: { topic_id: params.topic_id  },
+            },
+          },
+        ],
+      })
+    );
+  };
+
   const getQuiz = () => {
     axios({
       url: ENDPOINTS.quiz,
@@ -90,6 +148,7 @@ export default function QuizScreen() {
       params: { lesson_id: params.lesson_id },
     }).then((res) => {
       setQuiz(res.data[0]);
+      console.log(res.data)
     });
   };
 
@@ -101,7 +160,8 @@ export default function QuizScreen() {
       params: { quiz_id: quiz.id },
     })
       .then((res) => {
-        setQuestions(res.data);
+        //setQuestions(res.data);
+        shuffle(res.data);
       })
       .finally(() => {
         setLoading(false);
@@ -153,11 +213,11 @@ export default function QuizScreen() {
     for (let [key, value] of Object.entries(selectedAnswers)) {
       for (let i = 0; i < questions.length; i++) {
         if (questions[i].id == key && questions[i].answer == value) {
-          tempScore += 10;
+          tempScore += 1;
         }
       }
     }
-    const totalScore = tempScore + remainingTime / 2;
+    const totalScore = tempScore;
     setFinalRemainingTime(quizTime - remainingTime);
     postScore(profile.id,quiz.id, totalScore);
     setquestionScore(tempScore);
@@ -226,6 +286,14 @@ const showModalHint = () => {
 
   return (
     <ScrollView style={styles.container}>
+       {
+      quiz ? (
+        <ImageBackground 
+          source={backgroundPicture[quiz.background]} 
+          style={styles.backgroundWallpaper} 
+          resizeMode="cover" // This will make the background cover the entire screen 
+             
+        > 
       {quiz === null ? (
         <View style={styles.loadingContainer}>
           <Image
@@ -235,8 +303,10 @@ const showModalHint = () => {
         </View>
       ) : (
         <>
+        <View 
+          style = {{padding: 15}}>
           <View style={styles.backButtonContainer}>
-            <GeoButton onPress={() => router.back()} theme="transparent">
+            <GeoButton onPress={goToLesson} theme="transparent">
               <Ionicons name="arrow-back" style={styles.backIcon} />
             </GeoButton>
           </View>
@@ -272,24 +342,44 @@ const showModalHint = () => {
                           selectedAnswers[
                             questions[currentQuestionIndex].id
                           ] === choice;
+                        const pictureName = questions[currentQuestionIndex][`${choiceKey}_picture`]; // assuming the question has a field like 'choice_a_picture'
 
                         return (
-                          <GeoButton
-                            key={choiceKey}
-                            style={
-                              isSelected
-                                ? styles.selectedCorrectChoice
-                                : styles.choiceButton
-                            }
-                            onPress={() =>
-                              handleSelectAnswer(
-                                questions[currentQuestionIndex].id,
-                                choice
-                              )
-                            }
+                          // <GeoButton
+
+                          //   key={choiceKey}
+                          //   style={isSelected ? styles.selectedCorrectChoice : styles.choiceButton}
+                          //   onPress={() => handleSelectAnswer(questions[currentQuestionIndex].id, choice)}
+                          // >
+                          //   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          //   <Image source={buttonImage} style={{ width: 200, height: 50 }} />
+                          //     <Text style={styles.choiceText}>{choice}</Text>
+                          //   </View>
+                          // </GeoButton>
+                          <Pressable
+                          key={choiceKey}
+                          style={isSelected ? styles.selectedCorrectChoice : styles.choiceButton}
+                          onPress={() => handleSelectAnswer(questions[currentQuestionIndex].id, choice)}
                           >
-                            <Text style={styles.choiceText}>{choice}</Text>
-                          </GeoButton>
+                            <View
+                              style={{ position: "relative", alignItems: "center" }}
+                            >
+                              <Image source={buttonImage} style={{width: 320, height: 75}} />
+                                <Text style={{
+                                  position: "absolute",
+                                  color: "white",
+                                  fontSize: 16,
+                                  fontWeight: "bold",
+                                  textAlign: "center",
+                                  width: "100%",
+                                  justifyContent: "center",
+                                  marginTop: '8%',
+                                  
+                                  }}>
+                                  {choice}
+                                </Text>
+                            </View>
+                          </Pressable>
                         );
                       }
                     )}
@@ -360,18 +450,9 @@ const showModalHint = () => {
                 🕹️ Game Rules & Scoring System{" "}
               </Text>
               <Text style={styles.startText}>
-                5 Questions, multiple choices (10 points each). {"\n"}
-                2-minute timer: Finish early and get a bonus! (Your remaining
-                time divided by 2 is added to your score). Final Score: Correct
-                answers (up to 50 points) {"\n"}
-                Time bonus (based on how quickly you finish).
-              </Text>
-              <Text style={styles.startboldText}>
-                🏆 Pro Tip for High Scores
-              </Text>
-              <Text style={styles.startText}>
-                Answer fast and accurately to boost your score! Ready? Let’s go!
-                🚀
+                5 Questions, multiple choices (1 point each). {"\n"}
+                The Questions are Randomized
+                2-minute timer {"\n"}
               </Text>
               <GeoButton
                 style={styles.learnButton}
@@ -387,7 +468,6 @@ const showModalHint = () => {
           <View style={styles.modalContainer}>
               <Text style={styles.startboldText}>
                 Final Score: {Math.round(score)} {"\n"}
-                Question Score: {questionScore} {"\n"}
                 Time: {formatTimer(finalRemainingTime)}
               </Text>
               <GeoButton
@@ -402,13 +482,21 @@ const showModalHint = () => {
               />
             </View>
           </Modal>
+        </View>
         </>
       )}
+      </ImageBackground>
+      ) : null
+    }
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  backgroundWallpaper: {
+    width: '100%',
+    height: '118%'
+  },
   labelModalContainer: {
     alignSelf: "center",
     width: '80%',
@@ -493,8 +581,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 10,
     position: 'sticky',
-    top: 1,
-    zIndex: 1
+    top: 5,
+    zIndex: 1,
+    marginTop: 5
   },
   backIcon: {
     fontSize: 25,
@@ -502,12 +591,12 @@ const styles = StyleSheet.create({
   },
   backButtonContainer: {
     position: "absolute",
-    top: '2%',
-    left: 13,
+    top: '6%',
+    left: 35,
     zIndex: 1,
   },
   questionNumber: {
-    color: "#008000",
+    color: "#ffffff",
     marginBottom: 20,
   },
   questionTitle: {
@@ -539,9 +628,9 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
   container: {
-    padding: 16,
-    backgroundColor: "#008000",
-    paddingTop: 25,
+    //padding: 16,
+    backgroundColor: "#ffffff",
+    //paddingTop: 25,
   },
   loadingContainer: {
     flex: 1,
@@ -559,14 +648,16 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 1,
     color: "#ffffff",
+    marginTop: 15
   },
   questionsContainer: {
     marginBottom: 20,
+
   },
   questionContainer: {
     marginBottom: 16,
     padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#008000",
     borderRadius: 8,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -576,16 +667,16 @@ const styles = StyleSheet.create({
   questionText: {
     fontSize: 18,
     marginBottom: 12,
-    color: "#333",
+    color: "#ffffff",
     fontFamily: "Roboto_500Medium",
   },
   choicesContainer: {
     marginTop: 10,
   },
   choiceButton: {
-    padding: 16,
+    //padding: 5,
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#008000",
     shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -593,10 +684,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   selectedCorrectChoice: {
-    padding: 16,
+    //padding: 16,
     borderRadius: 8,
-    backgroundColor: "#d3d3d3",
-    borderColor: "#000000",
+    backgroundColor: "#008000",
+    //borderColor: "#000000",
     borderWidth: 1,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -605,9 +696,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   selectedWrongChoice: {
-    padding: 16,
+    //padding: 16,
     borderRadius: 8,
-    backgroundColor: "#d3d3d3",
+    //backgroundColor: "#008000",
     borderColor: "#000000",
     borderWidth: 1,
     shadowColor: "#000",
@@ -620,6 +711,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#333",
     fontFamily: "Roboto_300Light",
+    float: 'left'
   },
   submitButton: {
     backgroundColor: "#ffffff",
@@ -627,6 +719,8 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: "center",
     marginTop: 20,
+    borderWidth: 2,
+    borderColor: "#008000"
   },
   submitButtonText: {
     fontSize: 18,

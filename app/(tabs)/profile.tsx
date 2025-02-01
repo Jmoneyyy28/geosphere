@@ -350,9 +350,9 @@ export default function ProfileScreen() {
       return BADGE_LOCK;
     }
 
-    if (score > 88) {
+    if (score > 4) {
       return badge.badge_gold;
-    } else if (score > 66) {
+    } else if (score > 3) {
       return badge.badge_silver;
     } else {
       return badge.badge_bronze;
