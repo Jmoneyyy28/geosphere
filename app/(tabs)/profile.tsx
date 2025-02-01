@@ -52,6 +52,10 @@ const STUDENT_SEGMENT_BUTTONS = [
 const TEACHER_SEGMENT_BUTTONS = [
   {
     name: "Feedback",
+    isActive: false,
+  },
+  {
+    name: "Students",
     isActive: true,
   }
 ];
@@ -682,6 +686,115 @@ export default function ProfileScreen() {
                     );
                   })}
                 </View>
+              </ScrollView>
+            );
+          } else if (
+            segment.name == "Students" &&
+            profile.isTeacher &&
+            segment.isActive
+          ) {
+            return (
+              <ScrollView
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refresh}
+                    onRefresh={() => pullRefresh()}
+                  />
+                }
+              >
+                {!getFilteredStudents() ? (
+                  <View style={styles.loadingContainer}>
+                    <Image
+                      style={{ height: 400, width: 400 }}
+                      source={require("@/assets/images/loading.gif")}
+                    />
+                  </View>
+                ) : (
+                  <View style={styles.studentsSegmentContainer}>
+                    <SelectList 
+                             setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
+                             data={data}
+                              search={false}
+                              save="value"
+                              placeholder="Choose your section"
+                              boxStyles={{borderColor:"#0000000", borderWidth: 1, width: '80%', marginBottom: 5, borderRadius: 5, height: 40, alignSelf: 'center'}}
+                              inputStyles={{color: "#000000", alignSelf: 'center'}}
+                              dropdownStyles={{backgroundColor: "#ffffff", width: '80%', alignSelf: 'center'}}
+                            />
+                    <View style={styles.studentIconContainer}>
+                      <Ionicons
+                        name="chatbubbles"
+                        theme="transparent"
+                        style={styles.studentIcon}
+                      />
+                      <Text style={styles.studentListText}>
+                        {" "}
+                        Give Feedback to {getFilteredStudents().length} Students
+                      </Text>
+                    </View>
+                    {getFilteredStudents()?.map((student) => {
+                      <View style={styles.studentIconContainer}></View>;
+                      return (
+                        <View style={styles.studentsSegmentContainer}>
+                          <View style={styles.studentNameFeedbackContainer}>
+                            <View
+                              style={[
+                                styles.picture,
+                                { backgroundColor: "#e2e2e2" },
+                              ]}
+                            >
+                              <Text style={styles.pictureInitial}>
+                                {(
+                                  student.first_name[0] + student.last_name[0]
+                                ).toUpperCase()}
+                              </Text>
+                            </View>
+                            <Text style={styles.studentListFont}>
+                              {student.first_name +
+                                " " +
+                                student.last_name +
+                                "_" +
+                                student.id_number}
+                            </Text>
+                          </View>
+                          <View style={styles.studentProgressContainer}>
+                            <Progress.Bar
+                              progress={progress}
+                              width={200}
+                              height={10}
+                              color="#008000"
+                              borderColor="#ffffff"
+                              unfilledColor="#d3d3d3"
+                              borderRadius={25}
+                            />
+                            <Text>Student Progress</Text>
+                          </View>
+                          <TextInput
+                            style={styles.feedbackborderUnderline}
+                            placeholder="feedback"
+                            onChangeText={(text) =>
+                              onChangeFeedback(student.id, text)
+                            }
+                            value={feedbacktext[student.id]}
+                            placeholderTextColor={"#808080"}
+                          />
+                          <GeoButton
+                            style={styles.feedbackSaveButton}
+                            onPress={() =>
+                              postFeedback(
+                                profile.id,
+                                student.id,
+                                feedbacktext[student.id]
+                              )
+                            }
+                          >
+                            <Text style={styles.saveButtonText}>Save</Text>
+                          </GeoButton>
+                        </View>
+                      );
+                    })}
+                  </View>
+                )}
               </ScrollView>
             );
           } else if (
