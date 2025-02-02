@@ -19,6 +19,8 @@ import { StorageService } from "@/services/StorageService";
 import * as Progress from "react-native-progress";
 import structuredClone from '@ungap/structured-clone';
 import { SelectList } from 'react-native-dropdown-select-list';
+import Modal from "react-native-modal";
+
 
 axios.defaults.baseURL = process.env.EXPO_PUBLIC_API_URL;
 const ENDPOINTS = {
@@ -32,6 +34,7 @@ const ENDPOINTS = {
   score: "topics/score",
   studentProgress: "topics/studentProgress",
   allStudentProgress: "topics/allStudentProgress",
+  deleteStudent: "students/deleteStudent"
 };
 
 const STUDENT_SEGMENT_BUTTONS = [
@@ -91,6 +94,14 @@ export default function ProfileScreen() {
   // example sa section
   const [selected, setSelected] = useState("");
   const [selectedSection, setSelectedSection] = useState("");
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+
+
+
+  const showDeleteModal = () => {
+    setIsDeleteModalVisible(true);
+    {() => deleteStudent(student)}
+  }
 
   const save = (teacher_id, student_ids) => {
     if (student_ids.length == 0) {
@@ -136,6 +147,24 @@ export default function ProfileScreen() {
     computeProgress();
   }, [studentProgress]);
 
+
+  const deleteStudent = (student) => {
+    console.log(student)
+    axios({
+      url: ENDPOINTS.deleteStudent,
+      method: "post",
+      data: {
+        student_id: student.student_id
+      }
+    }).then((data) => {
+      console.log (data)
+      getStudents();
+        getAllStudentProgress();
+        setPickedStudents([]);
+        getStudentFeedbackList(profile.id);
+    });
+  };
+
   const postFeedback = (teacher_id, student_id, feedback) => {
     axios({
       url: ENDPOINTS.teacherFeedback,
@@ -147,6 +176,7 @@ export default function ProfileScreen() {
       },
     }).then();
   };
+
 
   const getStudentFeedbackList = (teacher_id) => {
     axios({
@@ -285,6 +315,10 @@ export default function ProfileScreen() {
         console.error("Error fetching progress:", error);
       });
   };
+
+  const confirmedDeleted = () => {
+
+  }
 
   const getAllStudentProgress = () => {
     axios({
@@ -710,6 +744,7 @@ export default function ProfileScreen() {
                     />
                   </View>
                 ) : (
+                  
                   <View style={styles.studentsSegmentContainer}>
                     <SelectList 
                              setSelected={(selectedSection) => setSelectedSection(selectedSection)} 
@@ -723,13 +758,13 @@ export default function ProfileScreen() {
                             />
                     <View style={styles.studentIconContainer}>
                       <Ionicons
-                        name="chatbubbles"
+                        name="people"
                         theme="transparent"
                         style={styles.studentIcon}
                       />
                       <Text style={styles.studentListText}>
                         {" "}
-                        Give Feedback to {getFilteredStudents().length} Students
+                        Student List {getFilteredStudents().length}
                       </Text>
                     </View>
                     {getFilteredStudents()?.map((student) => {
@@ -737,59 +772,48 @@ export default function ProfileScreen() {
                       return (
                         <View style={styles.studentsSegmentContainer}>
                           <View style={styles.studentNameFeedbackContainer}>
-                            <View
-                              style={[
-                                styles.picture,
-                                { backgroundColor: "#e2e2e2" },
-                              ]}
-                            >
+                            <View style={[styles.picture, { backgroundColor: "#e2e2e2" }]}>
                               <Text style={styles.pictureInitial}>
-                                {(
-                                  student.first_name[0] + student.last_name[0]
-                                ).toUpperCase()}
+                                {(student.first_name[0] + student.last_name[0]).toUpperCase()}
                               </Text>
                             </View>
                             <Text style={styles.studentListFont}>
-                              {student.first_name +
-                                " " +
-                                student.last_name +
-                                "_" +
-                                student.id_number}
+                              {student.first_name + " " + student.last_name + "_" + student.id_number}
                             </Text>
+                            
+                            {/* Container to push the remove icon to the right */}
+                            <View style={{ flexDirection: "row", alignItems: "center", marginLeft: "auto" }}>
+                              <GeoButton 
+                                onPress={() => setIsDeleteModalVisible(true)}
+                              theme="transparent">
+                                <Ionicons name="remove-circle-outline" style={styles.removeIcon} />
+                              </GeoButton>
+                              <Modal isVisible={isDeleteModalVisible}
+                                          backdropOpacity={0}
+                                        >
+                                          <View style={styles.modalContainer}>
+                                                      <Text style={styles.startboldText}>
+                                                          Are you sure you want to remove this
+                                                          Student?
+                                                        </Text>
+                                                        <View style={{flexDirection: 'row', justifyContent: 'space-between', padding: 25}}>
+                                                        <GeoButton
+                                                          style={styles.learnButton}
+                                                          onPress={() => {deleteStudent(student); setIsDeleteModalVisible(false);}}
+                                                        >
+                                                          <Text style={styles.startQuizText}>Yes</Text>
+                                                        </GeoButton>
+                                                        <GeoButton
+                                                          style={styles.learnButton}
+                                                          onPress={() => setIsDeleteModalVisible(false)}
+                                                        >
+                                                          <Text style={styles.startQuizText}>No</Text>
+                                                        </GeoButton>
+                                                        </View>
+                                                      </View>
+                                        </Modal>
+                            </View>
                           </View>
-                          <View style={styles.studentProgressContainer}>
-                            <Progress.Bar
-                              progress={progress}
-                              width={200}
-                              height={10}
-                              color="#008000"
-                              borderColor="#ffffff"
-                              unfilledColor="#d3d3d3"
-                              borderRadius={25}
-                            />
-                            <Text>Student Progress</Text>
-                          </View>
-                          <TextInput
-                            style={styles.feedbackborderUnderline}
-                            placeholder="feedback"
-                            onChangeText={(text) =>
-                              onChangeFeedback(student.id, text)
-                            }
-                            value={feedbacktext[student.id]}
-                            placeholderTextColor={"#808080"}
-                          />
-                          <GeoButton
-                            style={styles.feedbackSaveButton}
-                            onPress={() =>
-                              postFeedback(
-                                profile.id,
-                                student.id,
-                                feedbacktext[student.id]
-                              )
-                            }
-                          >
-                            <Text style={styles.saveButtonText}>Save</Text>
-                          </GeoButton>
                         </View>
                       );
                     })}
@@ -914,6 +938,45 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+  startQuizText: {
+    fontSize: 18,
+    color: "#ffffff",
+    fontWeight: "bold"
+  },
+  learnButton: {
+    backgroundColor: "#008000",
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 15,
+    height: 40,
+    width: 100,
+    alignSelf: "center"
+  },
+  startboldText: {
+    fontFamily: "Roboto_700Bold",
+    marginBottom: 5,
+    fontSize: 20,
+  },
+  modalContainer: {
+    alignSelf: "center",
+    // width: 300,
+    // height: 200,
+    backgroundColor: "#ffffff",
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    borderColor: "#0000000",
+    borderWidth: 1,
+    
+  },
+  removeIcon: {
+    fontSize: 25,
+    color: "red",
+  },
   studentProgressContainer: {
     margin: 5,
     display: "flex",
