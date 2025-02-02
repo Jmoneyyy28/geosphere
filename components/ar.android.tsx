@@ -57,6 +57,19 @@ export default function ArScreen() {
   const [transformModalVisible, setTransformModalVisible] = useState(false);
   const [convergentModalVisible, setConvergentModalVisible] = useState(false);
   const [divergentModalVisible, setDivergentModalVisible] = useState(false);
+  const [mountainModalVisible, setMountainModalVisible] = useState(false);
+  const [midOnceanModalVisible, setMidOceanModalVisible] = useState(false);
+  const [lithosphericModalVisible, setLithosphericModalVisible] = useState(false);
+  const [transformMagmaModalVisible, setTransformMagmaModalVisible] = useState(false);
+  const [transformEarthquakeModalVisible, setTransformEarthquakeModalVisible] = useState(false);
+  const [transformAsthenosphereModalVisible, setTransformAsthenosphereModalVisible] = useState(false);
+  const [divergentMagmaModalVisible, setDivergentMagmaModalVisible] = useState(false);
+  const [divergentEarthquakeModalVisible, setDivergentEarthquakeModalVisible] = useState(false);
+  const [divergentAsthenosphereModalVisible, setDivergentAsthenosphereModalVisible] = useState(false);
+  const [convergentMagmaModalVisible, setConvergentMagmaModalVisible] = useState(false);
+  const [convergentEarthquakeModalVisible, setConvergentEarthquakeModalVisible] = useState(false);
+  const [convergentAsthenosphereModalVisible, setConvergentAsthenosphereModalVisible] = useState(false);
+
 
   useEffect(() => {
     setPlateBoundariesType("transform");
@@ -199,6 +212,54 @@ export default function ArScreen() {
     console.log("Clicked Divergent");
     setDivergentModalVisible(true);
   };
+  const onClickMountainModal = () => {
+    console.log("Clicked Mountain");
+    setMountainModalVisible(true);
+  };
+  const onClickMidOceanModal = () => {
+    console.log("Clicked Mid Ocean");
+    setMidOceanModalVisible(true);
+  }
+  const onClickLithosphericModal = () => {
+    console.log("Clicked Lithospheric");
+    setLithosphericModalVisible(true);
+  };
+  const onClickTransformMagmaModal = () => {
+    console.log("Clicked Transform Magma");
+    setTransformMagmaModalVisible(true);
+  };
+  const onClickTransformEarthquakeModal = () => {
+    console.log("Clicked Transform Earthquake");
+    setTransformEarthquakeModalVisible(true);
+  };
+  const onClickTransformAsthenosphereModal = () => {
+    console.log("Clicked Transform Asthenosphere");
+    setTransformAsthenosphereModalVisible(true);
+  };
+  const onClickDivergentMagmaModal = () => {
+    console.log("Clicked Divergent Magma");
+    setDivergentMagmaModalVisible(true);
+  };
+  const onClickDivergentEarthquakeModal = () => {
+    console.log("Clicked Divergent Earthquake");
+    setDivergentEarthquakeModalVisible(true);
+  };
+  const onClickDivergentAsthenosphereModal = () => {
+    console.log("Clicked Divergent Asthenosphere");
+    setDivergentAsthenosphereModalVisible(true);
+  };
+  const onClickConvergentMagmaModal = () => {
+    console.log("Clicked Convergent Magma");
+    setConvergentMagmaModalVisible(true);
+  };
+  const onClickConvergentEarthquakeModal = () => {
+    console.log("Clicked Convergent Earthquake");
+    setConvergentEarthquakeModalVisible(true);
+  };
+  const onClickConvergentAsthenosphereModal = () => {
+    console.log("Clicked Convergent Asthenosphere");
+    setConvergentAsthenosphereModalVisible(true);
+  };
 
 
   const getEarthStructure = (props) => {
@@ -290,11 +351,6 @@ export default function ArScreen() {
               [-0.15, 0.18, 0.1], //ibaba na line
             ]}
             thickness={0.005}
-            // animation={{
-            //   name: data.rotationDirection,
-            //   run: data.rotate,
-            //   onFinish: animationEnd,
-            // }}
           />
           <ViroPolyline
             position={[0, 0, 0]}
@@ -303,11 +359,6 @@ export default function ArScreen() {
               [0, 0.3, 0.1], //ibaba na line
             ]}
             thickness={0.005}
-            // animation={{
-            //   name: data.rotationDirection,
-            //   run: data.rotate,
-            //   onFinish: animationEnd,
-            // }}
           />
           <ViroPolyline
             position={[0, 0, 0]}
@@ -316,11 +367,6 @@ export default function ArScreen() {
               [0.15, 0.3, 0.1], //ibaba na line
             ]}
             thickness={0.005}
-            // animation={{
-            //   name: data.rotationDirection,
-            //   run: data.rotate,
-            //   onFinish: animationEnd,
-            // }}
           />
           <ViroAmbientLight color="#ffffff" intensity={5000} />
 
@@ -576,6 +622,44 @@ export default function ArScreen() {
         <ViroAmbientLight color="#ffffff" intensity={1000} />
         {data.object === "transform" ? (
           <>
+            <ViroNode
+            animation={{
+              name: "moveLoop",
+              run: true,
+              loop: true,
+              onFinish: plate1AnimationEnd,
+            }}
+            >
+            <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, 0.2, -.5], //taas na line
+                [-0.15, 0.1, -.7], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+            <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, -0.06, -.63], //taas na line
+                [-0.15, -0.2, -.63] //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+              <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Earthquake.png")}
+              position={[-0.01, .20, -.5]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickTransformEarthquakeModal}
+            />
+            <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Magma.png")}
+              position={[0, -0.2, -.63]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickTransformMagmaModal}
+            />
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
@@ -588,14 +672,38 @@ export default function ArScreen() {
               type="OBJ"
               onClick={onClickTransformModal}
               onLoadEnd={onLoadModel}
-              animation={{
-                name: "moveLoop",
-                run: true,
-                loop: true,
-                onFinish: plate1AnimationEnd,
-              }}
+              // animation={{
+              //   name: "moveLoop",
+              //   run: true,
+              //   loop: true,
+              //   onFinish: plate1AnimationEnd,
+              // }}
             />
-
+            </ViroNode>
+            
+            <ViroNode
+            animation={{
+              name: "moveLoop2",
+              run: true,
+              loop: true,
+              onFinish: plate2AnimationEnd,
+            }}
+            >
+              <ViroPolyline
+              position={[-0.18, 0, -.1]}
+              points={[
+                [-0.1, 0, -.55], //taas na line
+                [-0.15, -0.2, -.55], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+             <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Asthenosphere.png")}
+              position={[-0.25, -0.18, -.55]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickTransformAsthenosphereModal}
+            />
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
               resources={[
@@ -608,16 +716,55 @@ export default function ArScreen() {
               type="OBJ"
               onClick = {onClickTransformModal}
               onLoadEnd={onLoadModel}
-              animation={{
-                name: "moveLoop2",
-                run: true,
-                loop: true,
-                onFinish: plate2AnimationEnd,
-              }}
+              // animation={{
+              //   name: "moveLoop2",
+              //   run: true,
+              //   loop: true,
+              //   onFinish: plate2AnimationEnd,
+              // }}
             />
+            </ViroNode>
           </>
         ) : data.object === "divergent" ? (
           <>
+            <ViroNode
+            animation={{
+              name: "moveLoop3",
+              run: true,
+              loop: true,
+              onFinish: plate1AnimationEnd,
+            }}
+            >
+              <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, 0.2, -.5], //taas na line
+                [-0.15, 0.1, -.7], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+            <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, -0.06, -.63], //taas na line
+                [-0.15, -0.2, -.63] //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+            <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Earthquake.png")}
+              position={[-0.01, .20, -.5]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickDivergentEarthquakeModal}
+            />
+            <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Magma.png")}
+              position={[0, -0.2, -.63]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickDivergentMagmaModal}
+            />
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
@@ -630,12 +777,37 @@ export default function ArScreen() {
               type="OBJ"
               onClick={onClickDivergentModal}
               onLoadEnd={onLoadModel}
+              // animation={{
+              //   name: "moveLoop3",
+              //   run: true,
+              //   loop: true,
+              //   onFinish: plate1AnimationEnd,
+              // }}
+            />
+            </ViroNode>
+
+              <ViroNode
               animation={{
-                name: "moveLoop3",
+                name: "moveLoop4",
                 run: true,
                 loop: true,
-                onFinish: plate1AnimationEnd,
+                onFinish: plate2AnimationEnd,
               }}
+              >
+                 <ViroPolyline
+              position={[-0.18, 0, -.1]}
+              points={[
+                [-0.1, 0, -.55], //taas na line
+                [-0.15, -0.2, -.55], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+             <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Asthenosphere.png")}
+              position={[-0.25, -0.18, -.55]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickDivergentAsthenosphereModal}
             />
 
             <Viro3DObject
@@ -650,16 +822,55 @@ export default function ArScreen() {
               type="OBJ"
               onClick={onClickDivergentModal}
               onLoadEnd={onLoadModel}
-              animation={{
-                name: "moveLoop4",
-                run: true,
-                loop: true,
-                onFinish: plate2AnimationEnd,
-              }}
+              // animation={{
+              //   name: "moveLoop4",
+              //   run: true,
+              //   loop: true,
+              //   onFinish: plate2AnimationEnd,
+              // }}
             />
+            </ViroNode>
           </>
         ) : (
           <>
+            <ViroNode
+            animation={{
+              name: "moveLoop5",
+              run: true,
+              loop: true,
+              onFinish: plate1AnimationEnd,
+            }}
+            >
+              <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, 0.2, -.5], //taas na line
+                [-0.15, 0.1, -.7], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+            <ViroPolyline
+              position={[0.18, 0, -.1]}
+              points={[
+                [-0.15, -0.06, -.63], //taas na line
+                [-0.15, -0.2, -.63] //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+            <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Earthquake.png")}
+              position={[-0.01, .20, -.5]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickConvergentEarthquakeModal}
+            />
+            <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Magma.png")}
+              position={[0, -0.2, -.63]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickConvergentMagmaModal}
+            />
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065716_texture_obj1/Coastal_Cross_Section_1208065716_texture1.obj")}
               resources={[
@@ -672,14 +883,38 @@ export default function ArScreen() {
               type="OBJ"
               onClick={onClickConvergentModal}
               onLoadEnd={onLoadModel}
-              animation={{
-                name: "moveLoop6",
-                run: true,
-                loop: true,
-                onFinish: plate1AnimationEnd,
-              }}
+              // animation={{
+              //   name: "moveLoop6",
+              //   run: true,
+              //   loop: true,
+              //   onFinish: plate1AnimationEnd,
+              // }}
             />
+            </ViroNode>
 
+            <ViroNode
+            animation={{
+              name: "moveLoop6",
+              run: true,
+              loop: true,
+              onFinish: plate2AnimationEnd,
+            }}
+            >
+              <ViroPolyline
+              position={[-0.18, 0, -.1]}
+              points={[
+                [-0.1, 0, -.55], //taas na line
+                [-0.15, -0.2, -.55], //ibaba na line
+              ]}
+              thickness={0.005}
+            />
+             <ViroImage
+              scale={[0.15, 0.15, 0.15]}
+              source={require("@/assets/3d-models/label/Asthenosphere.png")}
+              position={[-0.25, -0.18, -.55]}
+              transformBehaviors={["billboard"]}
+              onClick={onClickConvergentAsthenosphereModal}
+            />
             <Viro3DObject
               source={require("@/assets/3d-models/test/Coastal_Cross_Section_1208065723_texture_obj2/Coastal_Cross_Section_1208065723_texture2.obj")}
               resources={[
@@ -699,6 +934,7 @@ export default function ArScreen() {
                 onFinish: plate2AnimationEnd,
               }}
             />
+            </ViroNode>
           </>
         )}
         {/* Plate 1 - Starting slightly left */}
@@ -774,25 +1010,79 @@ export default function ArScreen() {
 
     return (
       <ViroARScene onTrackingUpdated={onInitialized}>
+        <ViroNode
+          position={[0, 0, -1]}
+          animation={{
+            name: data.rotationDirection,
+            run: data.rotate,
+            onFinish: animationEnd,
+          }}
+        >
+          <ViroImage
+            scale={[0.26, 0.26, 0.26]}
+            source={require("@/assets/3d-models/label/Mountains.png")}
+            position={[-0.53, 0.45, -0.1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickMountainModal}
+          />
+          <ViroImage
+            scale={[0.24, 0.24, 0.24]}
+            source={require("@/assets/3d-models/label/MidOceanRidge.png")}
+            position={[0.08, 0.28, 0.1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickMidOceanModal}
+          />
+          <ViroImage
+            scale={[0.24, 0.24, 0.24]}
+            source={require("@/assets/3d-models/label/LithosphericCrust.png")}
+            position={[0.44, 0.26, 0.1]}
+            transformBehaviors={["billboard"]}
+            onClick={onClickLithosphericModal}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [-0.5, 0.40, -0.1], //taas na line
+              [-0.25, 0.17, -0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [0.1, 0.2, 0.1], // taas na line
+              [0.14, 0.05, 0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+          />
+          <ViroPolyline
+            position={[0, 0, 0]}
+            points={[
+              [0.38, 0.2, 0.1], // taas na line
+              [0.32, -0.13,0.1], //ibaba na line
+            ]}
+            thickness={0.005}
+          />
         <ViroAmbientLight color="#ffffff" intensity={1000} />
-
+        
         <Viro3DObject
           source={require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture.obj")}
           resources={[
             require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture_mtl.mtl"),
             require("@/assets/3d-models/test/Subduction_Zone_Diagr_1208071209_texture_obj/Subduction_Zone_Diagr_1208071209_texture_png.png"),
           ]}
-          position={[0, 0, -1]}
+          position={[0, 0, 0]}
           scale={[0.3, 0.3, 0.3]}
           rotation={[0, 1, 0]}
-          animation={{
-            name: data.rotationDirection,
-            run: data.rotate,
-            onFinish: animationEnd,
-          }}
+          // animation={{
+          //   name: data.rotationDirection,
+          //   run: data.rotate,
+          //   onFinish: animationEnd,
+          // }}
           type="OBJ"
           onClick={onClickModal}
         />
+        </ViroNode>
       </ViroARScene>
     );
   };
@@ -845,6 +1135,39 @@ export default function ArScreen() {
               <Text style={styles.questionText}>Plates slide horizontally past each other, causing earthquakes without creating or destroying crust. The movement is mostly lateral, with no volcanic activity.</Text>
             </View>
           </Modal>
+          <Modal isVisible={transformMagmaModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setTransformMagmaModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In transform boundaries, tectonic plates slide past each other horizontally, 
+                so there is little to no magma formation.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={transformEarthquakeModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setTransformEarthquakeModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In transform boundaries, plates slide past each other, causing friction 
+                and resulting in earthquakes when stress is released. No volcanic activity occurs.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={transformAsthenosphereModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setTransformAsthenosphereModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In transform boundaries, the asthenosphere allows tectonic plates to 
+                move past each other by flowing slowly, helping reduce friction and enabling the plates to slide.</Text>
+            </View>
+          </Modal>
           <Modal isVisible={convergentModalVisible}
           style={{justifyContent: 'flex-end', marginBottom: 180}}
           animationIn={'tada'}
@@ -853,6 +1176,36 @@ export default function ArScreen() {
             <View style={styles.labelModalContainer}>
               <Text style={styles.headerText}>Did you know?</Text>
               <Text style={styles.questionText}>Plates collide, leading to subduction, mountain formation, or volcanic arcs. The denser plate may be forced down into the mantle, causing trenches.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={convergentMagmaModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setConvergentMagmaModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In convergent boundaries, magma forms when one plate is forced beneath another, melting as it sinks into the mantle. This can lead to volcanic eruptions and mountain formation.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={convergentEarthquakeModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setConvergentEarthquakeModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In convergent boundaries, plates collide or subduct, causing intense pressure. When stress is released, it triggers strong earthquakes, often linked to volcanic activity.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={convergentAsthenosphereModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setConvergentAsthenosphereModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In convergent boundaries, the asthenosphere allows plate subduction, causing melting and magma formation, which can lead to volcanic activity.</Text>
             </View>
           </Modal>
           <Modal isVisible={divergentModalVisible}
@@ -865,6 +1218,38 @@ export default function ArScreen() {
               <Text style={styles.questionText}>Plates move apart, creating new crust as magma rises to fill the gap. This often forms mid-ocean ridges or rift valleys and can cause volcanic activity.</Text>
             </View>
           </Modal>
+          <Modal isVisible={divergentMagmaModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setDivergentMagmaModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In divergent boundaries, magma rises from the asthenosphere as plates 
+                pull apart, creating new crust and often leading to volcanic activity.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={divergentEarthquakeModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setDivergentEarthquakeModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In divergent boundaries, plates move apart, causing earthquakes as tension builds and is released. These quakes are typically small but frequent, linked to the creation of new crust.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={divergentAsthenosphereModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setDivergentAsthenosphereModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>In divergent boundaries, the asthenosphere's semi-fluid layer allows tectonic plates to separate. This movement lets magma rise to the surface, creating new crust as the plates move apart.</Text>
+            </View>
+          </Modal>
+          
         <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
               <Ionicons
                 name={
@@ -1045,6 +1430,48 @@ export default function ArScreen() {
               us!
             </Text>
           </View>
+        </Modal>
+        <Modal 
+            isVisible={mountainModalVisible}
+            style={{justifyContent: 'flex-end', marginBottom: 180}}
+            animationIn={'tada'}
+            onBackdropPress={() => setMountainModalVisible(false)}
+            backdropOpacity={0}>
+              <View style={styles.labelModalContainer}>
+                <Text style={styles.headerText}>Did you know?</Text>
+                <Text style={styles.questionText}>
+                Mountains are large landforms formed by tectonic forces, volcanic activity, or erosion. 
+                They rise due to plate collisions, folding, faulting, or eruptions.
+                </Text>
+              </View>
+        </Modal>
+        <Modal 
+            isVisible={midOnceanModalVisible}
+            style={{justifyContent: 'flex-end', marginBottom: 180}}
+            animationIn={'tada'}
+            onBackdropPress={() => setMidOceanModalVisible(false)}
+            backdropOpacity={0}>
+              <View style={styles.labelModalContainer}>
+                <Text style={styles.headerText}>Did you know?</Text>
+                <Text style={styles.questionText}>
+                A mid-ocean ridge is an underwater mountain range formed by tectonic plates pulling apart, 
+                allowing magma to create new ocean crust.
+                </Text>
+              </View>
+        </Modal>
+        <Modal 
+            isVisible={lithosphericModalVisible}
+            style={{justifyContent: 'flex-end', marginBottom: 180}}
+            animationIn={'tada'}
+            onBackdropPress={() => setLithosphericModalVisible(false)}
+            backdropOpacity={0}>
+              <View style={styles.labelModalContainer}>
+                <Text style={styles.headerText}>Did you know?</Text>
+                <Text style={styles.questionText}>
+                The lithospheric crust is the outermost layer of Earth, made up of solid rock. It includes the 
+                Earth's continents and ocean floors and is divided into tectonic plates.
+                </Text>
+              </View>
         </Modal>
         <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
               <Ionicons
