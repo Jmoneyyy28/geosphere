@@ -34,6 +34,7 @@ import Modal from "react-native-modal";
 import React from "react";
 import { Audio } from "expo-av";
 import { useFocusEffect } from "@react-navigation/native";
+import { transform } from "@babel/core";
 
 export default function ArScreen() {
   const params = useLocalSearchParams();
@@ -53,6 +54,9 @@ export default function ArScreen() {
   const [crustModalVisible, setCrustModalVisible] = useState(false);
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [transformModalVisible, setTransformModalVisible] = useState(false);
+  const [convergentModalVisible, setConvergentModalVisible] = useState(false);
+  const [divergentModalVisible, setDivergentModalVisible] = useState(false);
 
   useEffect(() => {
     setPlateBoundariesType("transform");
@@ -183,6 +187,19 @@ export default function ArScreen() {
     console.log("Clicked Crust");
     setCrustModalVisible(true);
   };
+  const onClickTransformModal = () => {
+    console.log("Clicked Transform");
+    setTransformModalVisible(true);
+  };
+  const onClickConvergentModal = () => {
+    console.log("Clicked Convergent");
+    setConvergentModalVisible(true);
+  };
+  const onClickDivergentModal = () => {
+    console.log("Clicked Divergent");
+    setDivergentModalVisible(true);
+  };
+
 
   const getEarthStructure = (props) => {
     if (!props) {
@@ -569,6 +586,7 @@ export default function ArScreen() {
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 100, 0]}
               type="OBJ"
+              onClick={onClickTransformModal}
               onLoadEnd={onLoadModel}
               animation={{
                 name: "moveLoop",
@@ -588,6 +606,7 @@ export default function ArScreen() {
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 100, 0]}
               type="OBJ"
+              onClick = {onClickTransformModal}
               onLoadEnd={onLoadModel}
               animation={{
                 name: "moveLoop2",
@@ -609,6 +628,7 @@ export default function ArScreen() {
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 100, 0]}
               type="OBJ"
+              onClick={onClickDivergentModal}
               onLoadEnd={onLoadModel}
               animation={{
                 name: "moveLoop3",
@@ -628,6 +648,7 @@ export default function ArScreen() {
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 100, 0]}
               type="OBJ"
+              onClick={onClickDivergentModal}
               onLoadEnd={onLoadModel}
               animation={{
                 name: "moveLoop4",
@@ -649,6 +670,7 @@ export default function ArScreen() {
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 0, -10]}
               type="OBJ"
+              onClick={onClickConvergentModal}
               onLoadEnd={onLoadModel}
               animation={{
                 name: "moveLoop6",
@@ -667,6 +689,7 @@ export default function ArScreen() {
               position={[-0.28, 0.1, -1]}
               scale={[0.3, 0.3, 0.3]}
               rotation={[0, 0, -10]}
+              onClick={onClickConvergentModal}
               type="OBJ"
               onLoadEnd={onLoadModel}
               animation={{
@@ -812,6 +835,36 @@ export default function ArScreen() {
           style={{ flex: 1 }}
           viroAppProps={{ object: object }}
         />
+          <Modal isVisible={transformModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setTransformModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>Plates slide horizontally past each other, causing earthquakes without creating or destroying crust. The movement is mostly lateral, with no volcanic activity.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={convergentModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setConvergentModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>Plates collide, leading to subduction, mountain formation, or volcanic arcs. The denser plate may be forced down into the mantle, causing trenches.</Text>
+            </View>
+          </Modal>
+          <Modal isVisible={divergentModalVisible}
+          style={{justifyContent: 'flex-end', marginBottom: 180}}
+          animationIn={'tada'}
+          onBackdropPress={() => setDivergentModalVisible(false)}
+          backdropOpacity={0}>
+            <View style={styles.labelModalContainer}>
+              <Text style={styles.headerText}>Did you know?</Text>
+              <Text style={styles.questionText}>Plates move apart, creating new crust as magma rises to fill the gap. This often forms mid-ocean ridges or rift valleys and can cause volcanic activity.</Text>
+            </View>
+          </Modal>
         <GeoButton style={{position: 'absolute', bottom: '20%', right: '5%'}} onPress={toggleSound}>
               <Ionicons
                 name={
