@@ -1,50 +1,50 @@
-# Welcome to your Expo app 👋
+# 🌍 Geosphere
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Geosphere is a web-based educational app designed to help Grade 10 students better understand geology through interactive content, quizzes, and 3D visual learning tools. It focuses on topics like plate tectonics, layers of the Earth, and other fundamental Earth science concepts — all presented in an engaging, student-friendly way.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- Interactive lessons and quizzes to reinforce key geology concepts  
+- Gamified progress tracking and feedback  
+- Engaging visuals and models to make learning geology fun and memorable  
+- Built with modern web technologies for performance and scalability
 
-   ```bash
-   npm install
-   ```
+## 📹 Demo Video
 
-2. Start the app
+Click the link below to watch a walkthrough/demo of Geosphere:  
+[Watch Geosphere Demo](https://drive.google.com/file/d/1G9SUoRttIYu0iB9BLs0CCAXxAKUa35MM/view?usp=sharing)
 
-   ```bash
-    npx expo start
-   ```
+> *Note:* GitHub READMEs can’t embed playable videos directly, so this link opens the video in your browser.
 
-In the output, you'll find options to open the app in a
+## 🛠 Technologies Used
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- React (front end)  
+- Vite (build tool)  
+- JavaScript / HTML / CSS  
+- AR/3D components for interactive visuals  
+- Quiz and progress logic built for clarity and performance
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## 📚 How to Run Locally
 
-## Get a fresh project
+Follow these steps to run Geosphere on your machine:
 
-When you're ready, run:
+### 1. Install Node.js
+Make sure you have Node.js installed (v18 or later recommended).  
+Check if it’s installed:  
 
-```bash
-npm run reset-project
-```
+node -v
+npm -v
+### 2. Clone Geosphere to your local machine:
+git clone https://github.com/httpsbz/geosphere.git
+Navigate into the project folder:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+cd geosphere
+### 3. Install Dependencies
+Install all the required packages:
 
-## Learn more
+npm install
+### 4. Start the Development Server
+Run the development server with:
 
-To learn more about developing your project with Expo, look at the following resources:
+npm run dev
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
