@@ -35,7 +35,7 @@ Check if it’s installed:
 node -v
 npm -v
 ### 2. Clone Geosphere to your local machine:
-git clone https://github.com/httpsbz/geosphere.git
+git clone https://github.com/Jmoneyyy28/geosphere.git
 Navigate into the project folder:
 
 cd geosphere
